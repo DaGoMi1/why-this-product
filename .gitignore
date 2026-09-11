@@ -1,0 +1,55 @@
+# Secrets
+.env
+.env.*
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+
+# Local caches / logs
+.cache/
+*.log
+*.tmp
+
+# Raw downloads (재다운로드 가능)
+data/raw/
+
+# Large artifacts (로컬에서 생성)
+*.faiss
+*.index
+checkpoints/
+mlruns/
+wandb/
+data/processed/faiss_index/
+data/processed/*.parquet
+data/processed/*.pkl
+data/processed/*.pt
+data/processed/*.bin
+!data/processed/.gitkeep
+!data/raw/.gitkeep
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Editors / OS
+.idea/
+.vscode/
+.cursor/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini

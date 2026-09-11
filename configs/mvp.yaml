@@ -1,0 +1,45 @@
+# MVP placeholder config — filled as Phase 1 lands
+
+project:
+  name: why-this-product
+  phase: mvp
+
+data:
+  dataset: amazon_reviews_2018_all_beauty
+  raw_dir: data/raw
+  processed_dir: data/processed
+  # temporal split (see docs/DATA.md)
+  train_ratio: 0.8
+  valid_ratio: 0.1
+  test_ratio: 0.1
+
+retrieval:
+  popularity_top_n: 200
+  content_faiss_top_k: 100
+  hybrid_merge_k: 150
+
+ranking:
+  # MVP: simple score blend.
+  # Phase 3: model TBD — compare boosting (e.g. LightGBM) vs DL (e.g. DeepFM) vs LTR; pick by offline metrics + latency.
+  strategy: score_blend
+  model: null
+  top_k: 50
+
+rerank:
+  strategy: mmr
+  lambda_diversity: 0.7
+  final_k: 10
+
+rag:
+  enabled: true
+  embedding_model: sentence-transformers/all-MiniLM-L6-v2
+  faiss_index_dir: data/processed/faiss_index
+  # OpenAI required: explains / selects within candidates only; never invents ASINs
+  llm_required: true
+  llm_model: gpt-4o-mini
+
+serving:
+  api_host: 0.0.0.0
+  api_port: 8000
+  recommend_path: /api/recommend
+  explain_path: /api/explain
