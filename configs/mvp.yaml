@@ -1,43 +1,46 @@
-# MVP placeholder config — filled as Phase 1 lands
+# MVP 설정
 
+# 프로젝트 설정
 project:
   name: why-this-product
-  phase: mvp
+  phase: phase1
 
+# 데이터 설정
 data:
-  dataset: amazon_reviews_2018_all_beauty
-  raw_dir: data/raw
-  processed_dir: data/processed
-  # temporal split (see docs/DATA.md)
-  train_ratio: 0.8
-  valid_ratio: 0.1
-  test_ratio: 0.1
+  dataset: amazon_reviews_2018_all_beauty   # 데이터셋 이름
+  raw_dir: data/raw                         # 원본 데이터 경로 (데이터 원본)
+  processed_dir: data/processed             # 처리된 데이터 경로 (데이터 처리)
+  train_ratio: 0.8                          # 학습 데이터 비율
+  valid_ratio: 0.1                          # 검증 데이터 비율
+  test_ratio: 0.1                           # 테스트 데이터 비율
 
+# 추천 설정
 retrieval:
-  popularity_top_n: 200
-  content_faiss_top_k: 100
-  hybrid_merge_k: 150
+  popularity_top_n: 200                     # 인기도 기준 추천 상품 개수
+  content_faiss_top_k: 100                  # 콘텐츠 기반 추천 상품 개수
+  hybrid_merge_k: 150                       # 인기도와 콘텐츠 기반 추천 결과를 혼합하여 추천 상품 개수
 
+# 랭킹 설정
 ranking:
-  # MVP: simple score blend.
-  # Phase 3: model TBD — compare boosting (e.g. LightGBM) vs DL (e.g. DeepFM) vs LTR; pick by offline metrics + latency.
   strategy: score_blend
   model: null
   top_k: 50
 
+# 리랭킹 설정
 rerank:
   strategy: mmr
   lambda_diversity: 0.7
   final_k: 10
 
+# RAG 설정
 rag:
   enabled: true
   embedding_model: sentence-transformers/all-MiniLM-L6-v2
   faiss_index_dir: data/processed/faiss_index
-  # OpenAI required: explains / selects within candidates only; never invents ASINs
   llm_required: true
   llm_model: gpt-4o-mini
 
+# 서비스 설정
 serving:
   api_host: 0.0.0.0
   api_port: 8000
