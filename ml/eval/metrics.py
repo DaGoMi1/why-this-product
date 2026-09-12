@@ -1,4 +1,4 @@
-"""오프라인 랭킹 메트릭."""
+"""오프라인 평가 지표"""
 
 from __future__ import annotations
 
