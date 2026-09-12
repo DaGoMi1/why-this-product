@@ -38,6 +38,7 @@ mlruns/
 wandb/
 data/processed/faiss_index/
 data/processed/ials/
+data/processed/two_tower/
 data/processed/*.parquet
 data/processed/*.pkl
 data/processed/*.pt
