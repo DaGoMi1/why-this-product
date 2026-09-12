@@ -8,6 +8,7 @@ class RecommendRequest(BaseModel):
     query: str | None = None
     k: int = Field(default=10, ge=1, le=50)
     use_content: bool = True
+    use_ials: bool = False
 
     @model_validator(mode="after")
     def require_user_or_query(self) -> RecommendRequest:
