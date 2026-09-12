@@ -30,6 +30,16 @@ ials:
   artifact_dir: data/processed/ials
   variant: rating_ge_5   # all | rating_ge_3 | rating_ge_4 | rating_ge_5 (eval 승자)
 
+# Two-Tower (히스토리 mean-pool, 짧은 탈락 실험 — 서빙 기본 채널 아님)
+two_tower:
+  dim: 64
+  last_n: 10
+  batch_size: 512
+  epochs: 5
+  lr: 0.001
+  min_rating: 5
+  artifact_dir: data/processed/two_tower
+
 # 랭킹 설정
 ranking:
   strategy: score_blend
