@@ -21,9 +21,9 @@
 ## Phase 2 — Hybrid retrieve (현재)
 
 - [x] iALS retrieve + implicit 라벨 ablation (`all` / `>=3` / `>=4` / `>=5`) — 승자 `rating_ge_5`
-- [ ] two-tower (상호작용 기반) 후보
+- [x] two-tower (히스토리 mean-pool) — 짧게 실험 후 탈락 (학습 페어 6.6%, Recall@10 0.0000)
 - [ ] content + CF hybrid / RRF fusion
-- [x] retrieve ablation 표 (iALS 라벨, `docs/EVAL.md`)
+- [x] retrieve ablation 표 (iALS 라벨, two-tower 탈락, `docs/EVAL.md`)
 
 ## Phase 3 — Ranking
 

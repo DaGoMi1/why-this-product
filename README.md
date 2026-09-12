@@ -21,7 +21,7 @@ LLM은 **이미 좁혀진 후보 안에서만** 설명·선택합니다. 없는 
 |------|------|
 | Frontend | Streamlit |
 | Backend | FastAPI |
-| Retrieval | popularity + content FAISS + iALS (이후 hybrid / two-tower) |
+| Retrieval | popularity + content FAISS + iALS (two-tower는 짧게 실험 후 탈락, 이후 hybrid) |
 | Ranking | MVP score blend → 모델 미정 (부스팅 / DeepFM 등 DL · 비교 후 선정) |
 | Re-rank | MMR |
 | RAG | sentence-transformers, FAISS |
@@ -83,7 +83,7 @@ flowchart LR
 ├── backend/          # FastAPI
 ├── frontend/         # Streamlit
 ├── ml/               # retrieval · ranking · rerank · rag · eval
-├── scripts/          # download · split · build_faiss · train_ials · eval_smoke
+├── scripts/          # download · split · build_faiss · train_ials · train_two_tower · eval_smoke
 ├── notebooks/        # EDA (exploratory)
 ├── configs/          # mvp.yaml
 ├── docs/
@@ -116,6 +116,7 @@ python -m scripts.download_data
 python -m scripts.prepare_splits
 python -m scripts.build_faiss
 python -m scripts.train_ials
+python -m scripts.train_two_tower
 python -m scripts.eval_smoke
 ```
 

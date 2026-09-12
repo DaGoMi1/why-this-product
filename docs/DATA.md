@@ -91,5 +91,6 @@ python -m scripts.download_data
 python -m scripts.prepare_splits
 python -m scripts.build_faiss
 python -m scripts.train_ials
+python -m scripts.train_two_tower
 python -m scripts.eval_smoke
 ```
