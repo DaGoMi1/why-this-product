@@ -22,6 +22,9 @@ def recommend(body: RecommendRequest) -> RecommendResponse:
     else:
         assert body.user_id is not None  # schema: user_id 또는 query 필수
         result = service.recommend_for_user(
-            body.user_id, k=body.k, use_content=body.use_content
+            body.user_id,
+            k=body.k,
+            use_content=body.use_content,
+            use_ials=body.use_ials,
         )
     return RecommendResponse(items=result.items, strategy=result.strategy, k=body.k)

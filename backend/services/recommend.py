@@ -1,15 +1,15 @@
-"""추천 서비스: 인기도 + 콘텐츠 FAISS 병합 (Phase 1)"""
+"""추천 서비스: 인기도 + 콘텐츠 FAISS + iALS (Phase 2 retrieve)"""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from functools import lru_cache
-from pathlib import Path
 
 import pandas as pd
 
 from ml.config import load_mvp_config, resolve_path
 from ml.retrieval.content_faiss import ContentFaissRetriever
+from ml.retrieval.ials import IALSRetriever
 from ml.retrieval.merge import merge_candidates
 from ml.retrieval.popularity import PopularityRetriever
 
@@ -25,12 +25,14 @@ class RecommendService:
         self,
         popularity: PopularityRetriever,        # 인기도 추천 서비스
         content: ContentFaissRetriever | None,  # 콘텐츠 추천 서비스
+        ials: IALSRetriever | None,             # iALS CF 추천 서비스
         train_by_user: dict[str, list[str]],    # 사용자 히스토리 [user_id: [item_id, ...]]
         items_meta: dict[str, dict],            # 아이템 메타데이터 [item_id: {title: str, brand: str, category: str}]
         cfg: dict,                              # 설정
     ) -> None:
         self.popularity = popularity
         self.content = content
+        self.ials = ials
         self.train_by_user = train_by_user
         self.items_meta = items_meta
         self.cfg = cfg
@@ -74,9 +76,17 @@ class RecommendService:
         if (index_dir / "index.faiss").exists(): # FAISS 인덱스 파일이 존재하면
             content = ContentFaissRetriever.load(index_dir, cfg["rag"]["embedding_model"]) # 콘텐츠 추천 서비스 초기화
 
+        ials = None
+        ials_cfg = cfg.get("ials", {})
+        variant = str(ials_cfg.get("variant", "all"))
+        ials_dir = resolve_path(ials_cfg.get("artifact_dir", "data/processed/ials")) / variant
+        if (ials_dir / "user_factors.npy").exists():
+            ials = IALSRetriever.load(ials_dir)
+
         return cls(
             popularity=pop,
-            content=content,   
+            content=content,
+            ials=ials,
             train_by_user=train_by_user,
             items_meta=items_meta,
             cfg=cfg,
@@ -88,6 +98,8 @@ class RecommendService:
         user_id: str,
         k: int | None = None,
         use_content: bool = True,
+        use_ials: bool = False,
+        ials: IALSRetriever | None = None,
     ) -> RecommendResult:
         final_k = k or int(self.cfg["rerank"]["final_k"])               # 최종 추천 상품 개수
         pop_n = int(self.cfg["retrieval"]["popularity_top_n"])          # 인기도 추천 상품 개수
@@ -97,6 +109,19 @@ class RecommendService:
         history = self.train_by_user.get(user_id, [])                   # 사용자 히스토리
         exclude = set(history)                                     # 제외할 아이템 목록
         pop_hits = self.popularity.recommend(k=pop_n, exclude=exclude)  # 인기도 추천 결과
+
+        # 이 슬라이스는 CF와 content를 합치지 않는다. use_ials가 켜지면 iALS만 쓴다.
+        ials_model = ials if ials is not None else self.ials
+        if use_ials:
+            ials_k = int(self.cfg.get("ials", {}).get("top_k", 100))
+            hits: list[tuple[str, float]] = []
+            if ials_model is not None and ials_model.has_user(user_id):
+                hits = ials_model.recommend(
+                    user_id, k=max(final_k, ials_k), exclude=exclude
+                )
+            if hits:
+                return self._to_result(hits[:final_k], f"ials_{ials_model.variant}")
+            return self._to_result(pop_hits[:final_k], "popularity")
 
         content_hits: list[tuple[str, float]] = []  # 콘텐츠 추천 결과
         strategy = "popularity"                     # 추천 전략
@@ -110,11 +135,16 @@ class RecommendService:
         else:
             merged = pop_hits[:merge_k] # 인기도 추천 결과
 
-        # 최종 추천 결과
-        top = merged[:final_k]
-        items = [] # 추천 상품 목록
-        for item_id, score in top:
-            meta = self.items_meta.get(item_id, {}) # 아이템 메타데이터
+        return self._to_result(merged[:final_k], strategy)
+
+    def _to_result(
+        self,
+        hits: list[tuple[str, float]],
+        strategy: str,
+    ) -> RecommendResult:
+        items = []
+        for item_id, score in hits:
+            meta = self.items_meta.get(item_id, {})
             items.append(
                 {
                     "item_id": item_id,
