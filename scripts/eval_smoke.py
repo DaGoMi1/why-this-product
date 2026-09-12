@@ -53,11 +53,45 @@ def main() -> None:
         if i % 50 == 0:
             print(f"  ... {i}/{len(user_ids)}")
 
+    content_mean_recs: dict[str, list[str]] = {}
+    content_per_seed_recs: dict[str, list[str]] = {}
+    multi_seed_users: list[str] = []
+    if service.content is None:
+        raise RuntimeError("Content FAISS is required for content mean/per_seed eval")
+    for user_id in user_ids:
+        history = service.train_by_user.get(user_id, [])
+        seeds = history[-5:]
+        exclude = set(history)
+        if len(seeds) >= 2:
+            multi_seed_users.append(user_id)
+        mean_hits = service.content.recommend_from_item_ids(
+            seeds, k=k, exclude=exclude, mode="mean"
+        )
+        per_hits = service.content.recommend_from_item_ids(
+            seeds, k=k, exclude=exclude, mode="per_seed"
+        )
+        content_mean_recs[user_id] = [item_id for item_id, _ in mean_hits]
+        content_per_seed_recs[user_id] = [item_id for item_id, _ in per_hits]
+
     pop_recall = mean_recall_at_k(pop_recs, truth, k)
     hybrid_recall = mean_recall_at_k(hybrid_recs, truth, k)
+    content_mean_recall = mean_recall_at_k(content_mean_recs, truth, k)
+    content_per_seed_recall = mean_recall_at_k(content_per_seed_recs, truth, k)
+    multi_truth = {u: truth[u] for u in multi_seed_users}
+    multi_mean = mean_recall_at_k(
+        {u: content_mean_recs[u] for u in multi_seed_users}, multi_truth, k
+    )
+    multi_per_seed = mean_recall_at_k(
+        {u: content_per_seed_recs[u] for u in multi_seed_users}, multi_truth, k
+    )
     print("--- smoke results ---")
     print(f"Recall@{k} popularity          : {pop_recall:.6f}")
     print(f"Recall@{k} popularity+content  : {hybrid_recall:.6f}")
+    print(f"Recall@{k} content_mean        : {content_mean_recall:.6f}")
+    print(f"Recall@{k} content_per_seed    : {content_per_seed_recall:.6f}")
+    print(f"[content] multi-seed users (history[-5:] >= 2): {len(multi_seed_users)}/{len(user_ids)}")
+    print(f"Recall@{k} content_mean multi  : {multi_mean:.6f}")
+    print(f"Recall@{k} content_per_seed multi: {multi_per_seed:.6f}")
 
     ials_cfg = cfg.get("ials", {})
     ials_root = resolve_path(ials_cfg.get("artifact_dir", "data/processed/ials"))
