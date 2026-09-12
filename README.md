@@ -72,6 +72,7 @@ flowchart LR
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | funnel · 모듈 책임 |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | MVP → Phase 6 체크리스트 |
 | [docs/DATA.md](docs/DATA.md) | 데이터셋 · 스키마 · temporal split |
+| [docs/FIELDS.md](docs/FIELDS.md) | raw / processed 필드 사전 |
 | [docs/EVAL.md](docs/EVAL.md) | 오프라인 지표 · 스모크 기준 |
 
 ---

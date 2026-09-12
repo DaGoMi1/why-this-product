@@ -31,6 +31,8 @@ Ni, Jianmo, Jiacheng Li, and Julian McAuley.
 EMNLP-IJCNLP 2019.
 ```
 
+필드 의미·원본 매핑은 [FIELDS.md](FIELDS.md).
+
 ## 목표 스키마 (processed)
 
 ### interactions

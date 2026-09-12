@@ -50,4 +50,5 @@
 - [ARCHITECTURE.md](ARCHITECTURE.md) — 모듈 책임
 - [ROADMAP.md](ROADMAP.md) — 단계별 체크리스트
 - [DATA.md](DATA.md) — 데이터·split
+- [FIELDS.md](FIELDS.md) — raw / processed 필드
 - [EVAL.md](EVAL.md) — 지표
