@@ -1,4 +1,4 @@
-"""오프라인 평가: popularity / content / iALS 라벨 variant Recall@10"""
+"""오프라인 평가: popularity / content / iALS 라벨 variant / two-tower Recall@10"""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from backend.services.recommend import RecommendService
 from ml.config import load_mvp_config, resolve_path
 from ml.eval.metrics import mean_recall_at_k
 from ml.retrieval.ials import IALSRetriever
+from ml.retrieval.two_tower import TwoTowerRetriever
 
 
 def main() -> None:
@@ -75,6 +76,25 @@ def main() -> None:
             ials_recs[user_id] = [x["item_id"] for x in result.items]
         ials_recall = mean_recall_at_k(ials_recs, truth, k)
         print(f"Recall@{k} ials_{variant:<14}: {ials_recall:.6f}")
+
+    tt_cfg = cfg.get("two_tower", {})
+    tt_dir = resolve_path(tt_cfg.get("artifact_dir", "data/processed/two_tower"))
+    if not (tt_dir / "item_factors.npy").exists():
+        print(f"Recall@{k} two_tower        : SKIP (run python -m scripts.train_two_tower)")
+    else:
+        retriever = TwoTowerRetriever.load(tt_dir)
+        tt_recs: dict[str, list[str]] = {}
+        for user_id in user_ids:
+            history = service.train_by_user.get(user_id, [])
+            exclude = set(history)
+            hits = retriever.recommend(history, k=k, exclude=exclude)
+            if hits:
+                tt_recs[user_id] = [item_id for item_id, _score in hits]
+            else:
+                pop = service.recommend_for_user(user_id, k=k, use_content=False)
+                tt_recs[user_id] = [x["item_id"] for x in pop.items]
+        tt_recall = mean_recall_at_k(tt_recs, truth, k)
+        print(f"Recall@{k} two_tower        : {tt_recall:.6f}")
     print("OK")
 
 
