@@ -11,3 +11,6 @@ pytest>=8.3.0
 faiss-cpu>=1.8.0
 sentence-transformers>=3.0.0
 openai>=1.50.0
+pyarrow>=17.0.0
+tqdm>=4.66.0
+matplotlib>=3.9.0

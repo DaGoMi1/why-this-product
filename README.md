@@ -84,6 +84,7 @@ flowchart LR
 ├── frontend/         # Streamlit
 ├── ml/               # retrieval · ranking · rerank · rag · eval
 ├── scripts/          # download · split · build_faiss · eval_smoke
+├── notebooks/        # EDA (exploratory)
 ├── configs/          # mvp.yaml
 ├── docs/
 ├── data/raw/         # gitignore (다운로드)
@@ -105,10 +106,19 @@ python -m venv .venv
 # macOS/Linux: source .venv/bin/activate
 
 pip install -r requirements.txt
-# 루트에 .env 생성 후 OPENAI_API_KEY 필수 (설명·후보 내 선택)
+# 루트에 .env 생성 후 OPENAI_API_KEY 필수 (설명·후보 내 선택 — Phase 5)
 ```
 
-### 2. API
+### 2. 데이터 파이프라인 (Phase 1)
+
+```bash
+python -m scripts.download_data
+python -m scripts.prepare_splits
+python -m scripts.build_faiss
+python -m scripts.eval_smoke
+```
+
+### 3. API
 
 ```bash
 python -m uvicorn backend.main:app --reload
@@ -116,14 +126,13 @@ python -m uvicorn backend.main:app --reload
 
 - Health: http://localhost:8000/health  
 - Docs: http://localhost:8000/docs  
+- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`
 
-### 3. UI (placeholder)
+### 4. UI (placeholder)
 
 ```bash
 python -m streamlit run frontend/app.py
 ```
-
-데이터 다운로드·인덱스 빌드·추천 API는 ROADMAP Phase 1부터 채웁니다.
 
 ---
 

@@ -2,21 +2,21 @@
 
 플래그십을 **MVP부터** 키웁니다. 체크박스는 완료 시 채웁니다.
 
-## Phase 0 — Scaffold (현재)
+## Phase 0 — Scaffold
 
 - [x] README, LICENSE, .gitignore, .env, requirements
 - [x] docs (OVERVIEW / ARCHITECTURE / ROADMAP / DATA / EVAL)
 - [x] 패키지 트리 + FastAPI `/health` + Streamlit placeholder
 
-## Phase 1 — Data & baselines (MVP 핵심)
+## Phase 1 — Data & baselines (현재)
 
-- [ ] Amazon Reviews 2018 All_Beauty 다운로드 스크립트
-- [ ] 상호작용·상품 메타 정규화 (`docs/DATA.md` 스키마)
-- [ ] **temporal split** (누수 방지)
-- [ ] popularity baseline
-- [ ] content FAISS 인덱스 빌드
-- [ ] `scripts/eval_smoke.py` — Recall@K 스모크
-- [ ] `POST /api/recommend` stub → popularity + content 병합
+- [x] Amazon Reviews 2018 All_Beauty 다운로드 스크립트
+- [x] 상호작용·상품 메타 정규화 (`docs/DATA.md` 스키마)
+- [x] **temporal split** (누수 방지)
+- [x] popularity baseline
+- [x] content FAISS 인덱스 빌드
+- [x] `scripts/eval_smoke.py` — Recall@K 스모크
+- [x] `POST /api/recommend` → popularity + content 병합
 
 ## Phase 2 — Hybrid retrieve
 

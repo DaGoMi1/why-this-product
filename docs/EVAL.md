@@ -27,7 +27,14 @@ Phase 1 완료 기준:
 3. popularity-only vs popularity+content 비교 한 줄이 출력된다
 4. 실패 시 non-zero exit
 
-스캐폴딩 단계의 `eval_smoke`는 NotImplemented stub이다.
+### 최근 스모크 결과 (warm valid 200 users)
+
+| 구성 | Recall@10 |
+|------|----------|
+| popularity | 0.1689 |
+| popularity+content | 0.0400 |
+
+이 데이터·split에서는 popularity가 강하다. content 채널은 쿼리/시드 아이템 유사도용으로 유지하고, Phase 2 hybrid CF·랭커로 보완한다.
 
 ## Ablation 템플릿 (README에 채울 표)
 
