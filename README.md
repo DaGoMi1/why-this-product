@@ -21,7 +21,7 @@ LLM은 **이미 좁혀진 후보 안에서만** 설명·선택합니다. 없는 
 |------|------|
 | Frontend | Streamlit |
 | Backend | FastAPI |
-| Retrieval | popularity + content FAISS + iALS (two-tower는 짧게 실험 후 탈락, 이후 hybrid) |
+| Retrieval | popularity (기본) + content FAISS + iALS. RRF hybrid는 pop 미달. two-tower 탈락 |
 | Ranking | MVP score blend → 모델 미정 (부스팅 / DeepFM 등 DL · 비교 후 선정) |
 | Re-rank | MMR |
 | RAG | sentence-transformers, FAISS |
@@ -55,12 +55,12 @@ flowchart LR
 
 ## MVP 범위
 
-- popularity + content FAISS + iALS retrieve (`use_ials`, 라벨 승자 `rating_ge_5`)
+- popularity retrieve (기본). content FAISS(`per_seed`) + iALS(`rating_ge_5`). RRF는 `use_hybrid`
 - 단순 점수 블렌드 rank
 - MMR 다양성
 - RAG 기반 “왜 이 상품?” 설명 API / UI
 
-이후 단계( hybrid retrieve → 랭커 선정·ablation → cold-start → 비용·지연 리포트 → Docker )는 [docs/ROADMAP.md](docs/ROADMAP.md)를 보세요.
+이후 단계( 랭커 선정·ablation → cold-start → 비용·지연 리포트 → Docker )는 [docs/ROADMAP.md](docs/ROADMAP.md)를 보세요.
 
 ---
 
@@ -129,7 +129,7 @@ python -m uvicorn backend.main:app --reload
 
 - Health: http://localhost:8000/health  
 - Docs: http://localhost:8000/docs  
-- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`. CF만 쓰려면 `"use_ials": true` (이 슬라이스에서는 content와 합치지 않음).
+- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`. CF만 `"use_ials": true`. RRF 합치기는 `"use_hybrid": true` (기본 retrieve는 popularity).
 
 ### 4. UI (placeholder)
 

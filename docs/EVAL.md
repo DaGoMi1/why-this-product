@@ -28,14 +28,15 @@ Phase 1–2 스모크 기준:
 4. iALS artifact가 있으면 라벨 variant 4줄(Recall@10)이 출력된다
 5. two-tower artifact가 있으면 Recall@10 한 줄이 출력된다
 6. content 단독 `mean` vs `per_seed` Recall@10이 출력된다 (전체 + multi-seed 세그먼트)
-7. 실패 시 non-zero exit
+7. RRF 세 줄이 출력된다: pop+content / pop+iALS / pop+iALS+content
+8. 실패 시 non-zero exit
 
 ### 최근 스모크 결과 (warm valid 200 users)
 
 | 구성 | Recall@10 |
 |------|----------|
 | popularity | 0.1689 |
-| popularity+content | 0.0400 |
+| popularity+content (가중합, `per_seed`) | 0.0525 |
 | iALS `all` | 0.0475 |
 | iALS `rating_ge_3` | 0.0450 |
 | iALS `rating_ge_4` | 0.0675 |
@@ -43,15 +44,16 @@ Phase 1–2 스모크 기준:
 | two-tower (history mean-pool) | 0.0000 |
 | content `mean` (단독) | 0.0450 |
 | content `per_seed` (단독) | 0.0525 |
+| RRF(pop, content) | 0.0875 |
+| RRF(pop, iALS) | 0.1114 |
+| RRF(pop, iALS, content) | 0.0817 |
 
-이 데이터·split에서는 popularity가 강하다. content 채널은 쿼리/시드 아이템 유사도용으로 유지하고, iALS는 별도 CF retrieve 채널로 둔다 (이 슬라이스에서는 hybrid 합치기 없음). two-tower는 짧게 실험 후 탈락했다. content 시드 쿼리 기본값은 `per_seed`.
+이 데이터·split에서는 popularity가 강하다. two-tower는 탈락, content 시드 기본값은 `per_seed`. RRF 세 조합은 모두 pop을 못 넘겼다. 서빙 기본 retrieve는 popularity.
 
 ## iALS implicit 라벨 (실험 전 예측 → 실측)
 
 explicit 평점(1~5)은 회귀하지 않는다. train 상호작용만 양성으로 바꿀 때 기준을 나눈다.
 `0`은 네거티브 샘플링이 아니다. 임계 미달 리뷰는 양성에서 **빼는 것**이고, 미관측 칸은 iALS가 약한 부정으로 취급한다.
-
-이 데이터 평점은 정수라 `>= 4.5`와 `>= 5`는 같다. 만점 기준은 `rating_ge_5` 하나다.
 
 EDA 전체 상호작용 평점:
 
@@ -120,18 +122,41 @@ train 유저 90.3%는 리뷰 1개다. 차이는 시드 2개 이상인 소수에�
 | Recall@10 content `mean` (multi-seed) | `per_seed`보다 낮을 것 | 0.0204 |
 | Recall@10 content `per_seed` (multi-seed) | `mean`보다 나을 것 | **0.0510** |
 
-실험 후: 예측이 맞았다. 전체는 0.0450 → 0.0525로 소폭. multi-seed(49명)에서는 0.0204 → 0.0510으로 `mean`이 더 크게 졌다. 시드가 섞이면 평균 쿼리가 의미를 뭉갠다는 가설과 같다. 서빙 기본값은 `retrieval.content_query_mode: per_seed`. 그래도 popularity(0.1689)에는 한참 못 미친다. `popularity+content` 0.0400은 예전 `mean` 가중합 숫자로, hybrid/RRF는 다음 칸이다.
+실험 후: 예측이 맞았다. 전체는 0.0450 → 0.0525로 소폭. multi-seed(49명)에서는 0.0204 → 0.0510으로 `mean`이 더 크게 졌다. 시드가 섞이면 평균 쿼리가 의미를 뭉갠다는 가설과 같다. 서빙 기본값은 `retrieval.content_query_mode: per_seed`. 그래도 popularity(0.1689)에는 한참 못 미친다. `popularity+content` 0.0400은 `mean` 가중합 숫자다.
+
+## Hybrid retrieve (RRF)
+
+RRF는 점수가 아니라 **등수**만 더한다.
+
+`RRF(i) = sum_c 1 / (60 + rank_c(i))`
+
+리스트에 없는 채널은 0. two-tower는 넣지 않는다. content는 `per_seed`, iALS는 `rating_ge_5`.
+
+가중합 `popularity+content`는 0.1689 → 0.0400으로 깎였다. 이번엔 순위만 합친다.
+
+### 실험 전 예측
+
+같은 warm valid 200 users.
+
+| 구성 | 사전 예측 | 실측 |
+|------|-----------|------|
+| RRF(pop, content) | 가중합 0.0400보다는 나을 것. popularity(0.1689)를 넘기기는 어렵다 | **0.0875** |
+| RRF(pop, iALS) | iALS(0.1048)보다는 나을 것. pop과 경합 | **0.1114** |
+| RRF(pop, iALS, content) | 후보 풀은 넓어짐. content가 헤드를 밀면 pop보다 낮을 수 있음 | **0.0817** |
+
+실험 후: 예측이 맞았다. RRF(pop, content)는 가중합(지금 `per_seed` 기준 0.0525, 예전 `mean` 0.0400)보다 낫고, RRF(pop, iALS)는 iALS 단독(0.1048)보다 낫다. 3채널은 content가 헤드를 밀어 0.0817로 내려갔다. **세 조합 모두 popularity(0.1689)를 못 넘겼다.** 서빙 기본은 popularity (`use_hybrid` 기본 false). 합칠 때는 가중합이 아니라 RRF를 쓴다. API는 `use_hybrid: true`로 3채널 RRF를 켤 수 있다.
 
 ## Ablation 템플릿 (README에 채울 표)
 
 | 구성 | Recall@10 | NDCG@10 | Coverage | p50 ms |
 |------|----------|---------|----------|--------|
 | popularity | 0.1689 | — | — | — |
-| + content FAISS (`mean` 가중합) | 0.0400 | — | — | — |
+| + content FAISS (가중합, `per_seed`) | 0.0525 | — | — | — |
 | content `per_seed` (단독) | 0.0525 | — | — | — |
 | iALS (`rating_ge_5`) | 0.1048 | — | — | — |
 | two-tower (탈락) | 0.0000 | — | — | — |
-| + hybrid CF | — | — | — | — |
+| RRF(pop, iALS) | 0.1114 | — | — | — |
+| RRF(pop, iALS, content) | 0.0817 | — | — | — |
 | + ranker (선정 모델) | — | — | — | — |
 | + MMR | — | — | — | — |
 | + RAG + OpenAI explain | — | — | — | cost |

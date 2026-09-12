@@ -18,15 +18,15 @@
 - [x] `scripts/eval_smoke.py` — Recall@K 스모크
 - [x] `POST /api/recommend` → popularity + content 병합
 
-## Phase 2 — Hybrid retrieve (현재)
+## Phase 2 — Hybrid retrieve
 
 - [x] iALS retrieve + implicit 라벨 ablation (`all` / `>=3` / `>=4` / `>=5`) — 승자 `rating_ge_5`
 - [x] two-tower (히스토리 mean-pool) — 짧게 실험 후 탈락 (학습 페어 6.6%, Recall@10 0.0000)
 - [x] content 시드 쿼리 `mean` vs `per_seed` — 승자 `per_seed` (multi-seed 0.0204 → 0.0510)
-- [ ] content + CF hybrid / RRF fusion
-- [x] retrieve ablation 표 (iALS 라벨, two-tower 탈락, content 시드, `docs/EVAL.md`)
+- [x] content + CF hybrid / RRF fusion — 최고 RRF(pop, iALS)=0.1114, pop(0.1689) 미달 → 서빙 기본은 popularity
+- [x] retrieve ablation 표 (iALS 라벨, two-tower 탈락, content 시드, RRF, `docs/EVAL.md`)
 
-## Phase 3 — Ranking
+## Phase 3 — Ranking (현재)
 
 - [ ] 랭커 후보 실험 (고정하지 않음): LightGBM/XGBoost 등 부스팅, DeepFM 등 DL, 필요 시 LambdaMART 등 LTR
 - [ ] hard negative / feature 정의

@@ -26,7 +26,7 @@ flowchart LR
 |--------|--------|------|
 | Serving | `backend/` | HTTP API, 스키마, 요청 오케스트레이션 |
 | UI | `frontend/` | Streamlit 데모 (유저/쿼리 입력 → 추천·설명) |
-| Retrieve | `ml/retrieval/` | popularity, content FAISS, iALS. two-tower는 짧게 실험 후 탈락 (이후 hybrid) |
+| Retrieve | `ml/retrieval/` | popularity (기본), content FAISS, iALS. RRF로 합칠 수 있음. two-tower 탈락 |
 | Rank | `ml/ranking/` | MVP score blend → 랭커 미정 (LightGBM 등 부스팅, DeepFM 등 DL, LTR 후보를 ablation으로 선정) |
 | Re-rank | `ml/rerank/` | MMR, 카테고리·브랜드 다양성, 비즈니스 룰 |
 | RAG | `ml/rag/` | 상품 문서 검색 + OpenAI 설명/선택 (후보 id만, API 키 필수) |
@@ -37,7 +37,7 @@ flowchart LR
 ## 요청 흐름 (목표)
 
 1. `POST /api/recommend` — user_id 또는 seed item / query
-2. Retrieve: popularity ∪ content ANN → 후보 집합
+2. Retrieve: 기본 popularity. `use_hybrid`면 pop ∪ iALS ∪ content를 RRF
 3. Rank: 점수화 후 top-N
 4. Re-rank: MMR로 final_k
 5. (옵션) `POST /api/explain` — 각 ASIN에 대해 메타+리뷰 근거로 설명
