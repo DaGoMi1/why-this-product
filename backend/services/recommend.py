@@ -10,7 +10,7 @@ import pandas as pd
 from ml.config import load_mvp_config, resolve_path
 from ml.retrieval.content_faiss import ContentFaissRetriever
 from ml.retrieval.ials import IALSRetriever
-from ml.retrieval.merge import merge_candidates
+from ml.retrieval.merge import merge_candidates, rrf_fuse
 from ml.retrieval.popularity import PopularityRetriever
 
 
@@ -93,13 +93,42 @@ class RecommendService:
         )
 
     # 사용자 기반 추천
+    def _content_hits(
+        self,
+        history: list[str],
+        exclude: set[str],
+        content_k: int,
+    ) -> list[tuple[str, float]]:
+        if self.content is None or not history:
+            return []
+        seeds = history[-5:]
+        content_mode = str(self.cfg["retrieval"].get("content_query_mode", "mean"))
+        return self.content.recommend_from_item_ids(
+            seeds, k=content_k, exclude=exclude, mode=content_mode
+        )
+
+    def _ials_hits(
+        self,
+        user_id: str,
+        exclude: set[str],
+        final_k: int,
+        ials: IALSRetriever | None = None,
+    ) -> list[tuple[str, float]]:
+        ials_model = ials if ials is not None else self.ials
+        if ials_model is None or not ials_model.has_user(user_id):
+            return []
+        ials_k = int(self.cfg.get("ials", {}).get("top_k", 100))
+        return ials_model.recommend(user_id, k=max(final_k, ials_k), exclude=exclude)
+
     def recommend_for_user(
         self,
         user_id: str,
         k: int | None = None,
         use_content: bool = True,
         use_ials: bool = False,
+        use_hybrid: bool = False,
         ials: IALSRetriever | None = None,
+        hybrid_channels: list[str] | None = None,
     ) -> RecommendResult:
         final_k = k or int(self.cfg["rerank"]["final_k"])               # 최종 추천 상품 개수
         pop_n = int(self.cfg["retrieval"]["popularity_top_n"])          # 인기도 추천 상품 개수
@@ -110,31 +139,41 @@ class RecommendService:
         exclude = set(history)                                     # 제외할 아이템 목록
         pop_hits = self.popularity.recommend(k=pop_n, exclude=exclude)  # 인기도 추천 결과
 
-        # 이 슬라이스는 CF와 content를 합치지 않는다. use_ials가 켜지면 iALS만 쓴다.
+        if use_hybrid:
+            channels = hybrid_channels or list(
+                self.cfg["retrieval"].get("hybrid_channels", ["popularity", "ials", "content"])
+            )
+            lists: list[list[tuple[str, float]]] = []
+            names: list[str] = []
+            if "popularity" in channels:
+                lists.append(pop_hits)
+                names.append("pop")
+            if "ials" in channels:
+                lists.append(self._ials_hits(user_id, exclude, final_k, ials=ials))
+                names.append("ials")
+            if "content" in channels:
+                lists.append(self._content_hits(history, exclude, content_k))
+                names.append("content")
+            rrf_k = int(self.cfg["retrieval"].get("rrf_k", 60))
+            merged = rrf_fuse(lists, rrf_k=rrf_k, merge_k=merge_k)
+            return self._to_result(merged[:final_k], "rrf_" + "_".join(names))
+
+        # use_ials가 켜지면 iALS만 쓴다 (hybrid가 아닐 때).
         ials_model = ials if ials is not None else self.ials
         if use_ials:
-            ials_k = int(self.cfg.get("ials", {}).get("top_k", 100))
-            hits: list[tuple[str, float]] = []
-            if ials_model is not None and ials_model.has_user(user_id):
-                hits = ials_model.recommend(
-                    user_id, k=max(final_k, ials_k), exclude=exclude
-                )
+            hits = self._ials_hits(user_id, exclude, final_k, ials=ials)
             if hits:
-                return self._to_result(hits[:final_k], f"ials_{ials_model.variant}")
+                variant = ials_model.variant if ials_model is not None else "ials"
+                return self._to_result(hits[:final_k], f"ials_{variant}")
             return self._to_result(pop_hits[:final_k], "popularity")
 
-        content_hits: list[tuple[str, float]] = []  # 콘텐츠 추천 결과
-        strategy = "popularity"                     # 추천 전략
         if use_content and self.content is not None and history:
-            seeds = history[-5:] # 콘텐츠 추천 시드
-            content_mode = str(self.cfg["retrieval"].get("content_query_mode", "mean"))
-            content_hits = self.content.recommend_from_item_ids(
-                seeds, k=content_k, exclude=exclude, mode=content_mode
-            ) # 콘텐츠 추천 결과
-            strategy = "popularity+content" # 추천 전략
-            merged = merge_candidates(pop_hits, content_hits, merge_k=merge_k) # 인기도와 콘텐츠 기반 추천 결과를 혼합하여 추천 상품 개수
+            content_hits = self._content_hits(history, exclude, content_k)
+            strategy = "popularity+content"
+            merged = merge_candidates(pop_hits, content_hits, merge_k=merge_k)
         else:
-            merged = pop_hits[:merge_k] # 인기도 추천 결과
+            merged = pop_hits[:merge_k]
+            strategy = "popularity"
 
         return self._to_result(merged[:final_k], strategy)
 
@@ -171,21 +210,11 @@ class RecommendService:
 
         pop_hits = self.popularity.recommend(k=int(self.cfg["retrieval"]["popularity_top_n"])) # 인기도 추천 결과
         content_hits = self.content.recommend_from_text(query, k=content_k) # 콘텐츠 추천 결과
-
-        merged = merge_candidates(pop_hits, content_hits, merge_k=merge_k)[:final_k] # 인기도와 콘텐츠 기반 추천 결과를 혼합하여 추천 상품 개수
-        items = [] # 추천 상품 목록
-        for item_id, score in merged:
-            meta = self.items_meta.get(item_id, {}) # 아이템 메타데이터
-            items.append(
-                {
-                    "item_id": item_id,
-                    "score": round(float(score), 6),
-                    "title": meta.get("title"),
-                    "brand": meta.get("brand"),
-                    "category": meta.get("category"),
-                }
-            )
-        return RecommendResult(items=items, strategy="popularity+content_query")
+        rrf_k = int(self.cfg["retrieval"].get("rrf_k", 60))
+        merged = rrf_fuse(
+            [pop_hits, content_hits], rrf_k=rrf_k, merge_k=merge_k
+        )[:final_k]
+        return self._to_result(merged, "rrf_pop_content_query")
 
 # 추천 서비스 인스턴스 캐시
 @lru_cache(maxsize=1)
