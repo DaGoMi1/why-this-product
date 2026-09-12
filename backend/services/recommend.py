@@ -127,8 +127,9 @@ class RecommendService:
         strategy = "popularity"                     # 추천 전략
         if use_content and self.content is not None and history:
             seeds = history[-5:] # 콘텐츠 추천 시드
+            content_mode = str(self.cfg["retrieval"].get("content_query_mode", "mean"))
             content_hits = self.content.recommend_from_item_ids(
-                seeds, k=content_k, exclude=exclude
+                seeds, k=content_k, exclude=exclude, mode=content_mode
             ) # 콘텐츠 추천 결과
             strategy = "popularity+content" # 추천 전략
             merged = merge_candidates(pop_hits, content_hits, merge_k=merge_k) # 인기도와 콘텐츠 기반 추천 결과를 혼합하여 추천 상품 개수
