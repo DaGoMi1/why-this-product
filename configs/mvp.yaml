@@ -20,6 +20,16 @@ retrieval:
   content_faiss_top_k: 100                  # 콘텐츠 기반 추천 상품 개수
   hybrid_merge_k: 150                       # 인기도와 콘텐츠 기반 추천 결과를 혼합하여 추천 상품 개수
 
+# iALS (implicit CF retrieve)
+ials:
+  factors: 64
+  regularization: 0.01
+  iterations: 15
+  alpha: 40
+  top_k: 100
+  artifact_dir: data/processed/ials
+  variant: rating_ge_5   # all | rating_ge_3 | rating_ge_4 | rating_ge_5 (eval 승자)
+
 # 랭킹 설정
 ranking:
   strategy: score_blend
