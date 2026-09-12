@@ -129,6 +129,20 @@ def main() -> None:
                 tt_recs[user_id] = [x["item_id"] for x in pop.items]
         tt_recall = mean_recall_at_k(tt_recs, truth, k)
         print(f"Recall@{k} two_tower        : {tt_recall:.6f}")
+
+    rrf_specs = [
+        ("rrf_pop_content", ["popularity", "content"]),
+        ("rrf_pop_ials", ["popularity", "ials"]),
+        ("rrf_pop_ials_content", ["popularity", "ials", "content"]),
+    ]
+    for label, channels in rrf_specs:
+        recs: dict[str, list[str]] = {}
+        for user_id in user_ids:
+            result = service.recommend_for_user(
+                user_id, k=k, use_hybrid=True, hybrid_channels=channels
+            )
+            recs[user_id] = [x["item_id"] for x in result.items]
+        print(f"Recall@{k} {label:<22}: {mean_recall_at_k(recs, truth, k):.6f}")
     print("OK")
 
 

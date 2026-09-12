@@ -36,3 +36,18 @@ def merge_candidates(
 
     scored.sort(key=lambda x: x[1], reverse=True)               # 점수를 내림차순으로 정렬
     return scored[:merge_k]                                     # 추천할 상품 개수만큼 반환
+
+
+def rrf_fuse(
+    lists: list[list[tuple[str, float]]],
+    rrf_k: int = 60,
+    merge_k: int = 150,
+) -> list[tuple[str, float]]:
+    # RRF(item) = sum over channels of [1 / (rrf_k + rank)]
+    # rank는 1부터. 원 점수(_score)는 쓰지 않음. 없는 채널은 0.
+    scores: dict[str, float] = {}
+    for ranked in lists:
+        for rank, (item_id, _score) in enumerate(ranked, start=1):
+            scores[item_id] = scores.get(item_id, 0.0) + 1.0 / (rrf_k + rank)
+    scored = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    return scored[:merge_k]
