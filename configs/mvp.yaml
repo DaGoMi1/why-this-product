@@ -18,6 +18,7 @@ data:
 retrieval:
   popularity_top_n: 200                     # 인기도 기준 추천 상품 개수
   content_faiss_top_k: 100                  # 콘텐츠 기반 추천 상품 개수
+  content_query_mode: per_seed              # mean | per_seed (eval 승자)
   hybrid_merge_k: 150                       # 인기도와 콘텐츠 기반 추천 결과를 혼합하여 추천 상품 개수
 
 # iALS (implicit CF retrieve)

@@ -22,41 +22,73 @@ class ContentFaissRetriever:
     def load(cls, index_dir: Path, model_name: str) -> ContentFaissRetriever:
         return cls(index=FaissItemIndex.load(index_dir), embedder=Embedder(model_name))
 
+    # 시드 아이템 ID로 벡터 리스트 반환
+    def _seed_vectors(self, seed_item_ids: list[str]) -> list[np.ndarray]:
+        vecs: list[np.ndarray] = []
+        for iid in seed_item_ids:
+            pos = self._id_to_pos.get(iid)
+            if pos is None:
+                continue
+            vec = np.asarray(self.index.index.reconstruct(int(pos)), dtype=np.float32)
+            vecs.append(vec)
+        return vecs
+
+    # L2 정규화
+    @staticmethod
+    def _l2_normalize(matrix: np.ndarray) -> np.ndarray:
+        norm = np.linalg.norm(matrix, axis=1, keepdims=True) + 1e-12
+        return (matrix / norm).astype(np.float32)
+
+    # 검색 결과 중 추천 아이템 리스트 반환
+    def _take_hits(
+        self,
+        hits: list[tuple[str, float]],
+        k: int,
+        exclude: set[str],
+        seed_item_ids: list[str],
+    ) -> list[tuple[str, float]]:
+        out: list[tuple[str, float]] = []
+        for item_id, score in hits:
+            if item_id in exclude or item_id in seed_item_ids:
+                continue
+            out.append((item_id, score))
+            if len(out) >= k:
+                break
+        return out
+
     # 아이템 ID 리스트로 콘텐츠 기반 추천
     # 목적: 최근에 본/산 상품들(시드)과 텍스트가 비슷한 상품 k개 찾기.
     def recommend_from_item_ids(
         self,
-        seed_item_ids: list[str],                           # 최근에 본/산 상품들(시드)
-        k: int,                                             # 추천할 상품 개수
-        exclude: set[str] | None = None,                    # 제외할 상품 ID 집합
+        seed_item_ids: list[str],
+        k: int,
+        exclude: set[str] | None = None,
+        mode: str = "mean",
     ) -> list[tuple[str, float]]:
         exclude = exclude or set()
-        vecs: list[np.ndarray] = []
-
-        # 존재하는 아이템 ID로 벡터 재구성
-        for iid in seed_item_ids:
-            pos = self._id_to_pos.get(iid)                  # 아이템 ID에 대한 인덱스 조회
-            if pos is None:
-                continue
-            vec = self.index.index.reconstruct(int(pos))    # 인덱스에서 벡터 재구성
-            vecs.append(np.asarray(vec, dtype=np.float32))  # 벡터를 numpy 배열로 변환
-
-        if not vecs:                                        # 벡터가 없으면 빈 리스트 반환
+        vecs = self._seed_vectors(seed_item_ids)
+        if not vecs:
             return []
 
-        query = np.mean(np.stack(vecs, axis=0), axis=0, keepdims=True)      # 벡터 평균
-        norm = np.linalg.norm(query, axis=1, keepdims=True) + 1e-12         # 벡터 정규화
-        query = (query / norm).astype(np.float32)                           # 벡터 정규화 결과를 numpy 배열로 변환
-        hits = self.index.search(query, top_k=k + len(exclude) + len(seed_item_ids))[0]    # 검색 결과 반환
+        extra = k + len(exclude) + len(seed_item_ids)
+        if mode == "per_seed":
+            queries = self._l2_normalize(np.stack(vecs, axis=0))
+            rows = self.index.search(queries, top_k=extra)
+            best: dict[str, float] = {}
+            for hits in rows:
+                for item_id, score in hits:
+                    prev = best.get(item_id)
+                    if prev is None or score > prev:
+                        best[item_id] = score
+            ranked = sorted(best.items(), key=lambda x: x[1], reverse=True)
+            return self._take_hits(ranked, k, exclude, seed_item_ids)
 
-        out: list[tuple[str, float]] = []
-        for item_id, score in hits:                                 # 검색 결과 순회
-            if item_id in exclude or item_id in seed_item_ids:
-                continue                                            # 제외할 아이템 ID이거나 시드 아이템 ID이면 건너뜀
-            out.append((item_id, score))                            # 추천 아이템 추가
-            if len(out) >= k:                                       # 추천 아이템 개수가 k개 이상이면 종료
-                break
-        return out                                                  # 추천 아이템 리스트 반환
+        if mode != "mean":
+            raise ValueError(f"unknown content query mode: {mode}")
+
+        query = self._l2_normalize(np.mean(np.stack(vecs, axis=0), axis=0, keepdims=True))
+        hits = self.index.search(query, top_k=extra)[0]
+        return self._take_hits(hits, k, exclude, seed_item_ids)
 
     # 텍스트로 콘텐츠 기반 추천
     # 목적: 텍스트와 비슷한 상품 k개 찾기.
