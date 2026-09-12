@@ -21,7 +21,7 @@ LLM은 **이미 좁혀진 후보 안에서만** 설명·선택합니다. 없는 
 |------|------|
 | Frontend | Streamlit |
 | Backend | FastAPI |
-| Retrieval | popularity + content FAISS (이후 hybrid / two-tower) |
+| Retrieval | popularity + content FAISS + iALS (이후 hybrid / two-tower) |
 | Ranking | MVP score blend → 모델 미정 (부스팅 / DeepFM 등 DL · 비교 후 선정) |
 | Re-rank | MMR |
 | RAG | sentence-transformers, FAISS |
@@ -55,7 +55,7 @@ flowchart LR
 
 ## MVP 범위
 
-- popularity + content FAISS retrieve
+- popularity + content FAISS + iALS retrieve (`use_ials`, 라벨 승자 `rating_ge_5`)
 - 단순 점수 블렌드 rank
 - MMR 다양성
 - RAG 기반 “왜 이 상품?” 설명 API / UI
@@ -83,7 +83,7 @@ flowchart LR
 ├── backend/          # FastAPI
 ├── frontend/         # Streamlit
 ├── ml/               # retrieval · ranking · rerank · rag · eval
-├── scripts/          # download · split · build_faiss · eval_smoke
+├── scripts/          # download · split · build_faiss · train_ials · eval_smoke
 ├── notebooks/        # EDA (exploratory)
 ├── configs/          # mvp.yaml
 ├── docs/
@@ -109,12 +109,13 @@ pip install -r requirements.txt
 # 루트에 .env 생성 후 OPENAI_API_KEY 필수 (설명·후보 내 선택 — Phase 5)
 ```
 
-### 2. 데이터 파이프라인 (Phase 1)
+### 2. 데이터 파이프라인 (Phase 1–2)
 
 ```bash
 python -m scripts.download_data
 python -m scripts.prepare_splits
 python -m scripts.build_faiss
+python -m scripts.train_ials
 python -m scripts.eval_smoke
 ```
 
@@ -126,7 +127,7 @@ python -m uvicorn backend.main:app --reload
 
 - Health: http://localhost:8000/health  
 - Docs: http://localhost:8000/docs  
-- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`
+- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`. CF만 쓰려면 `"use_ials": true` (이 슬라이스에서는 content와 합치지 않음).
 
 ### 4. UI (placeholder)
 

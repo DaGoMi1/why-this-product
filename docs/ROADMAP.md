@@ -8,7 +8,7 @@
 - [x] docs (OVERVIEW / ARCHITECTURE / ROADMAP / DATA / EVAL)
 - [x] 패키지 트리 + FastAPI `/health` + Streamlit placeholder
 
-## Phase 1 — Data & baselines (현재)
+## Phase 1 — Data & baselines
 
 - [x] Amazon Reviews 2018 All_Beauty 다운로드 스크립트
 - [x] 상호작용·상품 메타 정규화 (`docs/DATA.md` 스키마)
@@ -18,11 +18,12 @@
 - [x] `scripts/eval_smoke.py` — Recall@K 스모크
 - [x] `POST /api/recommend` → popularity + content 병합
 
-## Phase 2 — Hybrid retrieve
+## Phase 2 — Hybrid retrieve (현재)
 
-- [ ] iALS 또는 two-tower (상호작용 기반) 후보
+- [x] iALS retrieve + implicit 라벨 ablation (`all` / `>=3` / `>=4` / `>=5`) — 승자 `rating_ge_5`
+- [ ] two-tower (상호작용 기반) 후보
 - [ ] content + CF hybrid / RRF fusion
-- [ ] retrieve ablation 표 (README 또는 `docs/EVAL.md`)
+- [x] retrieve ablation 표 (iALS 라벨, `docs/EVAL.md`)
 
 ## Phase 3 — Ranking
 

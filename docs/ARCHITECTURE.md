@@ -26,7 +26,7 @@ flowchart LR
 |--------|--------|------|
 | Serving | `backend/` | HTTP API, 스키마, 요청 오케스트레이션 |
 | UI | `frontend/` | Streamlit 데모 (유저/쿼리 입력 → 추천·설명) |
-| Retrieve | `ml/retrieval/` | popularity, content FAISS, (이후) CF / two-tower / hybrid |
+| Retrieve | `ml/retrieval/` | popularity, content FAISS, iALS, (이후) two-tower / hybrid |
 | Rank | `ml/ranking/` | MVP score blend → 랭커 미정 (LightGBM 등 부스팅, DeepFM 등 DL, LTR 후보를 ablation으로 선정) |
 | Re-rank | `ml/rerank/` | MMR, 카테고리·브랜드 다양성, 비즈니스 룰 |
 | RAG | `ml/rag/` | 상품 문서 검색 + OpenAI 설명/선택 (후보 id만, API 키 필수) |

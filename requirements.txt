@@ -14,3 +14,5 @@ openai>=1.50.0
 pyarrow>=17.0.0
 tqdm>=4.66.0
 matplotlib>=3.9.0
+implicit>=0.7.0
+scipy>=1.11.0
