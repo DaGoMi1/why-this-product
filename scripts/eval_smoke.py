@@ -1,4 +1,4 @@
-"""오프라인 평가: popularity / content / iALS 라벨 variant / two-tower Recall@10"""
+"""오프라인 평가: popularity / content / iALS / two-tower / RRF / LightGBM Recall@10"""
 
 from __future__ import annotations
 
@@ -143,6 +143,18 @@ def main() -> None:
             )
             recs[user_id] = [x["item_id"] for x in result.items]
         print(f"Recall@{k} {label:<22}: {mean_recall_at_k(recs, truth, k):.6f}")
+
+    rank_dir = resolve_path(cfg.get("ranking", {}).get("artifact_dir", "data/processed/ranker"))
+    if service.ranker is None or not (rank_dir / "model.txt").exists():
+        print(f"Recall@{k} ranker_lgbm          : SKIP (run python -m scripts.train_ranker)")
+    else:
+        rank_recs: dict[str, list[str]] = {}
+        for user_id in user_ids:
+            result = service.recommend_for_user(
+                user_id, k=k, use_content=False, use_ranker=True
+            )
+            rank_recs[user_id] = [x["item_id"] for x in result.items]
+        print(f"Recall@{k} ranker_lgbm          : {mean_recall_at_k(rank_recs, truth, k):.6f}")
     print("OK")
 
 
