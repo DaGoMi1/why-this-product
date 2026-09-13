@@ -1,4 +1,4 @@
-"""추천 서비스: 인기도 + 콘텐츠 FAISS + iALS (Phase 2 retrieve)"""
+"""추천 서비스: 인기도 + 콘텐츠 FAISS + iALS + LightGBM 재정렬"""
 
 from __future__ import annotations
 
@@ -8,6 +8,8 @@ from functools import lru_cache
 import pandas as pd
 
 from ml.config import load_mvp_config, resolve_path
+from ml.ranking.features import FeatureBuilder
+from ml.ranking.lightgbm_ranker import LightGBMRanker
 from ml.retrieval.content_faiss import ContentFaissRetriever
 from ml.retrieval.ials import IALSRetriever
 from ml.retrieval.merge import merge_candidates, rrf_fuse
@@ -29,6 +31,8 @@ class RecommendService:
         train_by_user: dict[str, list[str]],    # 사용자 히스토리 [user_id: [item_id, ...]]
         items_meta: dict[str, dict],            # 아이템 메타데이터 [item_id: {title: str, brand: str, category: str}]
         cfg: dict,                              # 설정
+        features: FeatureBuilder | None = None, # 피처 빌더
+        ranker: LightGBMRanker | None = None,   # 랭커
     ) -> None:
         self.popularity = popularity
         self.content = content
@@ -36,6 +40,8 @@ class RecommendService:
         self.train_by_user = train_by_user
         self.items_meta = items_meta
         self.cfg = cfg
+        self.features = features
+        self.ranker = ranker
 
     # 처리된 데이터로 추천 서비스 초기화
     @classmethod
@@ -48,7 +54,7 @@ class RecommendService:
             raise FileNotFoundError("처리된 데이터가 없습니다. download_data → prepare_splits 순서로 실행해주세요.")
 
         pop = PopularityRetriever.from_train(train_path, top_n=int(cfg["retrieval"]["popularity_top_n"])) # 인기도 추천 서비스 초기화
-        train = pd.read_parquet(train_path, columns=["user_id", "item_id", "timestamp"]) # 학습 데이터 로드
+        train = pd.read_parquet(train_path, columns=["user_id", "item_id", "rating", "timestamp"]) # 학습 데이터 로드
         train = train.sort_values("timestamp") # 학습 데이터 정렬
         train_by_user = (train.groupby("user_id")["item_id"].apply(lambda s: s.astype(str).tolist()).to_dict()) # 사용자 히스토리 생성
         items = pd.read_parquet(items_path) # 아이템 데이터 로드
@@ -83,6 +89,12 @@ class RecommendService:
         if (ials_dir / "user_factors.npy").exists():
             ials = IALSRetriever.load(ials_dir)
 
+        features = FeatureBuilder.from_train(train, pop, items_meta, content, ials)
+        ranker = None
+        rank_dir = resolve_path(cfg.get("ranking", {}).get("artifact_dir", "data/processed/ranker"))
+        if (rank_dir / "model.txt").exists():
+            ranker = LightGBMRanker.load(rank_dir)
+
         return cls(
             popularity=pop,
             content=content,
@@ -90,6 +102,8 @@ class RecommendService:
             train_by_user=train_by_user,
             items_meta=items_meta,
             cfg=cfg,
+            features=features,
+            ranker=ranker,
         )
 
     # 사용자 기반 추천
@@ -127,6 +141,7 @@ class RecommendService:
         use_content: bool = True,
         use_ials: bool = False,
         use_hybrid: bool = False,
+        use_ranker: bool = False,
         ials: IALSRetriever | None = None,
         hybrid_channels: list[str] | None = None,
     ) -> RecommendResult:
@@ -166,6 +181,14 @@ class RecommendService:
                 variant = ials_model.variant if ials_model is not None else "ials"
                 return self._to_result(hits[:final_k], f"ials_{variant}")
             return self._to_result(pop_hits[:final_k], "popularity")
+
+        if use_ranker and self.ranker is not None and self.features is not None and pop_hits:
+            cand_ids = [item_id for item_id, _ in pop_hits]
+            feat = self.features.matrix(user_id, history, cand_ids)
+            scores = self.ranker.score(feat)
+            order = scores.argsort()[::-1]
+            ranked = [(cand_ids[int(i)], float(scores[int(i)])) for i in order]
+            return self._to_result(ranked[:final_k], "ranker_lgbm")
 
         if use_content and self.content is not None and history:
             content_hits = self._content_hits(history, exclude, content_k)

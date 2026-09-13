@@ -10,6 +10,7 @@ class RecommendRequest(BaseModel):
     use_content: bool = True
     use_ials: bool = False
     use_hybrid: bool = False
+    use_ranker: bool = False
 
     @model_validator(mode="after")
     def require_user_or_query(self) -> RecommendRequest:

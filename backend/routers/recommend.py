@@ -27,5 +27,6 @@ def recommend(body: RecommendRequest) -> RecommendResponse:
             use_content=body.use_content,
             use_ials=body.use_ials,
             use_hybrid=body.use_hybrid,
+            use_ranker=body.use_ranker,
         )
     return RecommendResponse(items=result.items, strategy=result.strategy, k=body.k)
