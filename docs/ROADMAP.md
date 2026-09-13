@@ -28,8 +28,9 @@
 
 ## Phase 3 — Ranking (현재)
 
-- [ ] 랭커 후보 실험 (고정하지 않음): LightGBM/XGBoost 등 부스팅, DeepFM 등 DL, 필요 시 LambdaMART 등 LTR
-- [ ] hard negative / feature 정의
+- [x] 피처 + hard negative 정의 (train 마지막 아이템 양성, pop 200 위 hard neg, train 통계만)
+- [x] 첫 모델 LightGBM (pop 후보 재정렬). Recall@10 0.0813 < pop 0.1689 → 서빙 기본은 popularity, `use_ranker` 플래그
+- [ ] 랭커 후보 실험 (고정하지 않음): XGBoost 등 부스팅, DeepFM 등 DL, 필요 시 LambdaMART 등 LTR
 - [ ] ranker ablation (baseline vs 후보들) 후 **오프라인 지표·latency 기준으로 하나 선정**
 - [ ] 선정 이유·탈락 이유를 `docs/EVAL.md` 또는 README ablation 표에 기록
 

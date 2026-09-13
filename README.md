@@ -22,7 +22,7 @@ LLM은 **이미 좁혀진 후보 안에서만** 설명·선택합니다. 없는 
 | Frontend | Streamlit |
 | Backend | FastAPI |
 | Retrieval | popularity (기본) + content FAISS + iALS. RRF hybrid는 pop 미달. two-tower 탈락 |
-| Ranking | MVP score blend → 모델 미정 (부스팅 / DeepFM 등 DL · 비교 후 선정) |
+| Ranking | LightGBM on popularity 후보 (`use_ranker`, 기본 off — pop 미달). DeepFM/LTR 비교는 남음 |
 | Re-rank | MMR |
 | RAG | sentence-transformers, FAISS |
 | LLM | OpenAI `gpt-4o-mini` (필수) |
@@ -56,7 +56,7 @@ flowchart LR
 ## MVP 범위
 
 - popularity retrieve (기본). content FAISS(`per_seed`) + iALS(`rating_ge_5`). RRF는 `use_hybrid`
-- 단순 점수 블렌드 rank
+- LightGBM rank (`use_ranker`, 기본 off — Recall@10 0.0813 < pop 0.1689)
 - MMR 다양성
 - RAG 기반 “왜 이 상품?” 설명 API / UI
 
@@ -84,7 +84,7 @@ flowchart LR
 ├── backend/          # FastAPI
 ├── frontend/         # Streamlit
 ├── ml/               # retrieval · ranking · rerank · rag · eval
-├── scripts/          # download · split · build_faiss · train_ials · train_two_tower · eval_smoke
+├── scripts/          # download · split · build_faiss · train_ials · train_two_tower · train_ranker · eval_smoke
 ├── notebooks/        # EDA (exploratory)
 ├── configs/          # mvp.yaml
 ├── docs/
@@ -110,7 +110,7 @@ pip install -r requirements.txt
 # 루트에 .env 생성 후 OPENAI_API_KEY 필수 (설명·후보 내 선택 — Phase 5)
 ```
 
-### 2. 데이터 파이프라인 (Phase 1–2)
+### 2. 데이터 파이프라인 (Phase 1–3)
 
 ```bash
 python -m scripts.download_data
@@ -118,6 +118,7 @@ python -m scripts.prepare_splits
 python -m scripts.build_faiss
 python -m scripts.train_ials
 python -m scripts.train_two_tower
+python -m scripts.train_ranker
 python -m scripts.eval_smoke
 ```
 
@@ -129,7 +130,7 @@ python -m uvicorn backend.main:app --reload
 
 - Health: http://localhost:8000/health  
 - Docs: http://localhost:8000/docs  
-- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`. CF만 `"use_ials": true`. RRF 합치기는 `"use_hybrid": true` (기본 retrieve는 popularity).
+- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`. CF만 `"use_ials": true`. RRF 합치기는 `"use_hybrid": true`. LightGBM 재정렬은 `"use_ranker": true` (기본 retrieve는 popularity).
 
 ### 4. UI (placeholder)
 

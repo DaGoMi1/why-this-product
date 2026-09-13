@@ -84,6 +84,9 @@ data/processed/
   interactions_test.parquet
   items.parquet
   faiss_index/     # gitignore (로컬 빌드)
+  ials/            # gitignore
+  two_tower/       # gitignore
+  ranker/          # gitignore (LightGBM)
 ```
 
 ## 재현
@@ -94,5 +97,6 @@ python -m scripts.prepare_splits
 python -m scripts.build_faiss
 python -m scripts.train_ials
 python -m scripts.train_two_tower
+python -m scripts.train_ranker
 python -m scripts.eval_smoke
 ```

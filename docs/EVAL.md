@@ -29,7 +29,8 @@ Phase 1–2 스모크 기준:
 5. two-tower artifact가 있으면 Recall@10 한 줄이 출력된다
 6. content 단독 `mean` vs `per_seed` Recall@10이 출력된다 (전체 + multi-seed 세그먼트)
 7. RRF 세 줄이 출력된다: pop+content / pop+iALS / pop+iALS+content
-8. 실패 시 non-zero exit
+8. 랭커 artifact가 있으면 `ranker_lgbm` Recall@10 한 줄이 출력된다
+9. 실패 시 non-zero exit
 
 ### 최근 스모크 결과 (warm valid 200 users)
 
@@ -47,8 +48,9 @@ Phase 1–2 스모크 기준:
 | RRF(pop, content) | 0.0875 |
 | RRF(pop, iALS) | 0.1114 |
 | RRF(pop, iALS, content) | 0.0817 |
+| LightGBM ranker (pop 200 재정렬) | 0.0813 |
 
-이 데이터·split에서는 popularity가 강하다. two-tower는 탈락, content 시드 기본값은 `per_seed`. RRF 세 조합은 모두 pop을 못 넘겼다. 서빙 기본 retrieve는 popularity.
+이 데이터·split에서는 popularity가 강하다. two-tower는 탈락, content 시드 기본값은 `per_seed`. RRF 세 조합과 LightGBM 재정렬은 모두 pop을 못 넘겼다. 서빙 기본 retrieve는 popularity. `use_ranker`는 플래그만.
 
 ## iALS implicit 라벨 (실험 전 예측 → 실측)
 
@@ -146,6 +148,31 @@ RRF는 점수가 아니라 **등수**만 더한다.
 
 실험 후: 예측이 맞았다. RRF(pop, content)는 가중합(지금 `per_seed` 기준 0.0525, 예전 `mean` 0.0400)보다 낫고, RRF(pop, iALS)는 iALS 단독(0.1048)보다 낫다. 3채널은 content가 헤드를 밀어 0.0817로 내려갔다. **세 조합 모두 popularity(0.1689)를 못 넘겼다.** 서빙 기본은 popularity (`use_hybrid` 기본 false). 합칠 때는 가중합이 아니라 RRF를 쓴다. API는 `use_hybrid: true`로 3채널 RRF를 켤 수 있다.
 
+## Ranker (LightGBM, popularity 후보 재정렬)
+
+카탈로그 전체가 아니라 **popularity top-200**만 다시 줄 세운다. valid로 학습하지 않는다. 라벨은 train 안에서만 만든다.
+
+- 대상: train 상호작용 2개 이상 유저
+- 히스토리 = 마지막 제외, 양성 = 마지막 아이템 (존재 여부)
+- 후보에 양성이 없으면 그 유저는 버림
+- 음성 = 같은 후보의 나머지 (hard negative = 이미 인기라서 들어온 아이템)
+
+피처는 train 통계만. 타깃 리뷰 텍스트·valid 평점 금지.
+
+`log_pop_count`, `item_n`, `item_mean_rating`, `user_n`, `pop_rank`, `content_max_sim`, `ials_score`, `same_brand`, `same_category`
+
+### 실험 전 예측
+
+같은 warm valid 200. retrieve는 popularity 200 → 랭커 top-10.
+
+| 항목 | 사전 예측 | 실측 |
+|------|-----------|------|
+| train 2개+ 유저 중 양성이 pop 후보에 있는 비율 | 작을 것 | 13,322 / 24,761 = **53.8%** (전체 train 유저의 5.2%) |
+| 학습 페어 수 | 소수 유저 × ~200 | 13,322 유저 × 200 = **2,651,592** (양성 13,322 / 음성 2,638,270) |
+| Recall@10 LightGBM | popularity(0.1689)를 못 넘을 가능성이 큼 | **0.0813** |
+
+실험 후: 학습에 쓴 2개+ 유저는 전체의 9.7%(24,761)이고, 그중 양성-in-pop은 53.8%라 “아주 작다”기보다 **쓸 수 있는 유저가 적다**. Recall@10은 예측대로 popularity(0.1689)를 못 넘겼다. two-tower(0.0)보다는 낫고, iALS(0.1048)·RRF(pop, iALS)(0.1114)보다 낮다. pop 순서를 흐트러뜨린 대가. **서빙 기본은 popularity. `use_ranker`는 플래그만.**
+
 ## Ablation 템플릿 (README에 채울 표)
 
 | 구성 | Recall@10 | NDCG@10 | Coverage | p50 ms |
@@ -157,7 +184,7 @@ RRF는 점수가 아니라 **등수**만 더한다.
 | two-tower (탈락) | 0.0000 | — | — | — |
 | RRF(pop, iALS) | 0.1114 | — | — | — |
 | RRF(pop, iALS, content) | 0.0817 | — | — | — |
-| + ranker (선정 모델) | — | — | — | — |
+| + LightGBM (pop 재정렬, 미선정) | 0.0813 | — | — | — |
 | + MMR | — | — | — | — |
 | + RAG + OpenAI explain | — | — | — | cost |
 
