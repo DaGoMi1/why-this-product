@@ -43,11 +43,15 @@ two_tower:
   min_rating: 5
   artifact_dir: data/processed/two_tower
 
-# 랭킹 설정
+# 랭킹 설정 (서빙 기본은 off — use_ranker 플래그)
 ranking:
-  strategy: score_blend
-  model: null
+  strategy: lightgbm
+  model: lightgbm
   top_k: 50
+  num_leaves: 31
+  n_estimators: 200
+  learning_rate: 0.05
+  artifact_dir: data/processed/ranker
 
 # 리랭킹 설정
 rerank:
