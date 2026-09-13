@@ -40,6 +40,13 @@ class IALSRetriever:
     def has_user(self, user_id: str) -> bool: # 사용자 ID가 존재하는지 확인
         return user_id in self._user_index
 
+    def score_item(self, user_id: str, item_id: str) -> float:
+        uidx = self._user_index.get(user_id)
+        iidx = self._item_index.get(item_id)
+        if uidx is None or iidx is None:
+            return 0.0
+        return float(self.user_factors[uidx] @ self.item_factors[iidx])
+
     def recommend(
         self,
         user_id: str,                       # 사용자 ID
