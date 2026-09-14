@@ -1,4 +1,4 @@
-"""추천 서비스: 인기도 + 콘텐츠 FAISS + iALS + LightGBM 재정렬"""
+"""추천 서비스: 인기도 + 콘텐츠 FAISS + iALS + 부스팅 재정렬"""
 
 from __future__ import annotations
 
@@ -8,8 +8,8 @@ from functools import lru_cache
 import pandas as pd
 
 from ml.config import load_mvp_config, resolve_path
+from ml.ranking import Ranker, load_ranker
 from ml.ranking.features import FeatureBuilder
-from ml.ranking.lightgbm_ranker import LightGBMRanker
 from ml.retrieval.content_faiss import ContentFaissRetriever
 from ml.retrieval.ials import IALSRetriever
 from ml.retrieval.merge import merge_candidates, rrf_fuse
@@ -32,7 +32,7 @@ class RecommendService:
         items_meta: dict[str, dict],            # 아이템 메타데이터 [item_id: {title: str, brand: str, category: str}]
         cfg: dict,                              # 설정
         features: FeatureBuilder | None = None, # 피처 빌더
-        ranker: LightGBMRanker | None = None,   # 랭커
+        ranker: Ranker | None = None,   # 랭커
     ) -> None:
         self.popularity = popularity
         self.content = content
@@ -90,10 +90,9 @@ class RecommendService:
             ials = IALSRetriever.load(ials_dir)
 
         features = FeatureBuilder.from_train(train, pop, items_meta, content, ials)
-        ranker = None
-        rank_dir = resolve_path(cfg.get("ranking", {}).get("artifact_dir", "data/processed/ranker"))
-        if (rank_dir / "model.txt").exists():
-            ranker = LightGBMRanker.load(rank_dir)
+        rank_cfg = cfg.get("ranking", {})
+        rank_dir = resolve_path(rank_cfg.get("artifact_dir", "data/processed/ranker"))
+        ranker = load_ranker(rank_dir, str(rank_cfg.get("model", "lightgbm")))
 
         return cls(
             popularity=pop,
@@ -143,6 +142,7 @@ class RecommendService:
         use_hybrid: bool = False,
         use_ranker: bool = False,
         ials: IALSRetriever | None = None,
+        ranker: Ranker | None = None,
         hybrid_channels: list[str] | None = None,
     ) -> RecommendResult:
         final_k = k or int(self.cfg["rerank"]["final_k"])               # 최종 추천 상품 개수
@@ -182,13 +182,14 @@ class RecommendService:
                 return self._to_result(hits[:final_k], f"ials_{variant}")
             return self._to_result(pop_hits[:final_k], "popularity")
 
-        if use_ranker and self.ranker is not None and self.features is not None and pop_hits:
+        active_ranker = ranker if ranker is not None else self.ranker
+        if use_ranker and active_ranker is not None and self.features is not None and pop_hits:
             cand_ids = [item_id for item_id, _ in pop_hits]
             feat = self.features.matrix(user_id, history, cand_ids)
-            scores = self.ranker.score(feat)
+            scores = active_ranker.score(feat)
             order = scores.argsort()[::-1]
             ranked = [(cand_ids[int(i)], float(scores[int(i)])) for i in order]
-            return self._to_result(ranked[:final_k], "ranker_lgbm")
+            return self._to_result(ranked[:final_k], getattr(active_ranker, "name", "ranker_lgbm"))
 
         if use_content and self.content is not None and history:
             content_hits = self._content_hits(history, exclude, content_k)
