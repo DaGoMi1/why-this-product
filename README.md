@@ -22,7 +22,7 @@ LLM은 **이미 좁혀진 후보 안에서만** 설명·선택합니다. 없는 
 | Frontend | Streamlit |
 | Backend | FastAPI |
 | Retrieval | popularity (기본) + content FAISS + iALS. RRF hybrid는 pop 미달. two-tower 탈락 |
-| Ranking | LightGBM on popularity 후보 (`use_ranker`, 기본 off — pop 미달). DeepFM/LTR 비교는 남음 |
+| Ranking | LightGBM / XGBoost / CatBoost on popularity 후보 (`use_ranker`, 기본 off — 최고 XGB 0.0938 < pop). DeepFM/LTR 비교는 남음 |
 | Re-rank | MMR |
 | RAG | sentence-transformers, FAISS |
 | LLM | OpenAI `gpt-4o-mini` (필수) |
@@ -56,7 +56,7 @@ flowchart LR
 ## MVP 범위
 
 - popularity retrieve (기본). content FAISS(`per_seed`) + iALS(`rating_ge_5`). RRF는 `use_hybrid`
-- LightGBM rank (`use_ranker`, 기본 off — Recall@10 0.0813 < pop 0.1689)
+- LightGBM / XGBoost / CatBoost rank (`use_ranker`, 기본 off — 최고 XGB 0.0938 < pop 0.1689)
 - MMR 다양성
 - RAG 기반 “왜 이 상품?” 설명 API / UI
 

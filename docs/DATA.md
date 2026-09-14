@@ -86,7 +86,7 @@ data/processed/
   faiss_index/     # gitignore (로컬 빌드)
   ials/            # gitignore
   two_tower/       # gitignore
-  ranker/          # gitignore (LightGBM)
+  ranker/          # gitignore (lightgbm / xgboost / catboost)
 ```
 
 ## 재현

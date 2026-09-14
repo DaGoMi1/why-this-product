@@ -29,7 +29,7 @@ Phase 1–2 스모크 기준:
 5. two-tower artifact가 있으면 Recall@10 한 줄이 출력된다
 6. content 단독 `mean` vs `per_seed` Recall@10이 출력된다 (전체 + multi-seed 세그먼트)
 7. RRF 세 줄이 출력된다: pop+content / pop+iALS / pop+iALS+content
-8. 랭커 artifact가 있으면 `ranker_lgbm` Recall@10 한 줄이 출력된다
+8. 랭커 artifact가 있으면 `ranker_lgbm` / `ranker_xgb` / `ranker_catboost` Recall@10이 출력된다 (없으면 SKIP)
 9. 실패 시 non-zero exit
 
 ### 최근 스모크 결과 (warm valid 200 users)
@@ -49,8 +49,10 @@ Phase 1–2 스모크 기준:
 | RRF(pop, iALS) | 0.1114 |
 | RRF(pop, iALS, content) | 0.0817 |
 | LightGBM ranker (pop 200 재정렬) | 0.0813 |
+| XGBoost ranker (pop 200 재정렬) | 0.0938 |
+| CatBoost ranker (pop 200 재정렬) | 0.0650 |
 
-이 데이터·split에서는 popularity가 강하다. two-tower는 탈락, content 시드 기본값은 `per_seed`. RRF 세 조합과 LightGBM 재정렬은 모두 pop을 못 넘겼다. 서빙 기본 retrieve는 popularity. `use_ranker`는 플래그만.
+이 데이터·split에서는 popularity가 강하다. two-tower는 탈락, content 시드 기본값은 `per_seed`. RRF와 부스팅 세 개 모두 pop을 못 넘겼다. 서빙 기본 retrieve는 popularity. `use_ranker`는 플래그만.
 
 ## iALS implicit 라벨 (실험 전 예측 → 실측)
 
@@ -173,6 +175,22 @@ RRF는 점수가 아니라 **등수**만 더한다.
 
 실험 후: 학습에 쓴 2개+ 유저는 전체의 9.7%(24,761)이고, 그중 양성-in-pop은 53.8%라 “아주 작다”기보다 **쓸 수 있는 유저가 적다**. Recall@10은 예측대로 popularity(0.1689)를 못 넘겼다. two-tower(0.0)보다는 낫고, iALS(0.1048)·RRF(pop, iALS)(0.1114)보다 낮다. pop 순서를 흐트러뜨린 대가. **서빙 기본은 popularity. `use_ranker`는 플래그만.**
 
+## Ranker boosting (XGBoost · CatBoost, 같은 테이블)
+
+피처·라벨·후보(pop 200)는 LightGBM과 **같다**. 트리 구현체만 바꾼다. 예산 `n_estimators=200`, `learning_rate=0.05`, `scale_pos_weight`. LightGBM `num_leaves=31`에 맞춰 XGBoost·CatBoost는 `max_depth=5`.
+
+### 실험 전 예측
+
+같은 warm valid 200. retrieve는 popularity 200 → 각 랭커 top-10.
+
+| 구성 | 사전 예측 | 실측 |
+|------|-----------|------|
+| LightGBM (재측정, 테이블 동일) | 기존 0.0813과 같거나 거의 같을 것 | **0.0813** |
+| XGBoost | LightGBM(0.0813)과 비슷할 것. pop(0.1689)은 못 넘을 가능성이 큼 | **0.0938** |
+| CatBoost | LightGBM·XGBoost와 비슷할 것. 셋 사이 차이는 작을 것 | **0.0650** |
+
+실험 후: 테이블은 그대로(13,322 유저 / 2,651,592행). LightGBM은 재측정이 같았다. XGBoost가 셋 중 최고(0.0938)지만 popularity(0.1689)와 iALS(0.1048)를 못 넘긴다. CatBoost는 0.0650으로 가장 낮다. “비슷할 것”은 방향은 맞았고, 셋 사이 간격은 예상보다 조금 크다. **서빙 기본은 popularity. `use_ranker`는 플래그만.**
+
 ## Ablation 템플릿 (README에 채울 표)
 
 | 구성 | Recall@10 | NDCG@10 | Coverage | p50 ms |
@@ -184,7 +202,9 @@ RRF는 점수가 아니라 **등수**만 더한다.
 | two-tower (탈락) | 0.0000 | — | — | — |
 | RRF(pop, iALS) | 0.1114 | — | — | — |
 | RRF(pop, iALS, content) | 0.0817 | — | — | — |
-| + LightGBM (pop 재정렬, 미선정) | 0.0813 | — | — | — |
+| + LightGBM (pop 재정렬) | 0.0813 | — | — | — |
+| + XGBoost (pop 재정렬, 부스팅 중 최고) | 0.0938 | — | — | — |
+| + CatBoost (pop 재정렬) | 0.0650 | — | — | — |
 | + MMR | — | — | — | — |
 | + RAG + OpenAI explain | — | — | — | cost |
 
