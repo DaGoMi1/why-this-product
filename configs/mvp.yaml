@@ -59,7 +59,7 @@ ranking:
 # 리랭킹 설정
 rerank:
   strategy: mmr
-  lambda_diversity: 0.7
+  lambda_diversity: 0.5
   final_k: 10
 
 # RAG 설정
