@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import math
+from collections.abc import Callable
+
+import numpy as np
 
 
 def recall_at_k(recommended: list[str], ground_truth: set[str], k: int) -> float:
@@ -53,4 +56,52 @@ def mean_ndcg_at_k(
             continue
         recs = user_recs.get(user_id, [])
         scores.append(ndcg_at_k(recs, item_rel, k))
+    return float(sum(scores) / len(scores)) if scores else 0.0
+
+
+def coverage_at_k(user_recs: dict[str, list[str]], catalog_n: int, k: int) -> float:
+    if catalog_n <= 0:
+        return 0.0
+    uniq: set[str] = set()
+    for recs in user_recs.values():
+        uniq.update(recs[:k])
+    return float(len(uniq) / catalog_n)
+
+
+def mean_unique_categories_at_k(
+    user_recs: dict[str, list[str]],
+    item_category: dict[str, str | None],
+    k: int,
+) -> float:
+    scores: list[float] = []
+    for recs in user_recs.values():
+        cats = {item_category.get(item_id) for item_id in recs[:k] if item_category.get(item_id)}
+        scores.append(float(len(cats)))
+    return float(sum(scores) / len(scores)) if scores else 0.0
+
+
+def ild_at_k(
+    recommended: list[str],
+    vector_of: Callable[[str], np.ndarray | None],
+    k: int,
+) -> float:
+    vecs = [v for item_id in recommended[:k] if (v := vector_of(item_id)) is not None]
+    n = len(vecs)
+    if n < 2:
+        return 0.0
+    total = 0.0
+    pairs = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            total += 1.0 - float(vecs[i] @ vecs[j])
+            pairs += 1
+    return total / pairs if pairs else 0.0
+
+
+def mean_ild_at_k(
+    user_recs: dict[str, list[str]],
+    vector_of: Callable[[str], np.ndarray | None],
+    k: int,
+) -> float:
+    scores = [ild_at_k(recs, vector_of, k) for recs in user_recs.values()]
     return float(sum(scores) / len(scores)) if scores else 0.0
