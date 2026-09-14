@@ -67,6 +67,10 @@ rag:
   enabled: true
   embedding_model: sentence-transformers/all-MiniLM-L6-v2
   faiss_index_dir: data/processed/faiss_index
+  rag_index_dir: data/processed/rag_index
+  max_reviews_per_item: 5
+  chunk_chars: 512
+  snippets_per_item: 3
   llm_required: true
   llm_model: gpt-4o-mini
 
