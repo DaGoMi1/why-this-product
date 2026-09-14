@@ -262,25 +262,23 @@ class RecommendService:
             )
         return RecommendResult(items=items, strategy=strategy)
 
-    # 쿼리 기반 추천
+    # 쿼리 기반 추천 (검색: pop을 섞지 않음)
     def recommend_from_query(
         self,
         query: str,
         k: int | None = None,
+        use_mmr: bool = True,
     ) -> RecommendResult:
-        final_k = k or int(self.cfg["rerank"]["final_k"]) # 최종 추천 상품 개수
+        final_k = k or int(self.cfg["rerank"]["final_k"])
         if self.content is None:
             raise RuntimeError("Content FAISS index not built. Run scripts.build_faiss")
-        content_k = int(self.cfg["retrieval"]["content_faiss_top_k"]) # 콘텐츠 추천 상품 개수
-        merge_k = int(self.cfg["retrieval"]["hybrid_merge_k"]) # 인기도와 콘텐츠 기반 추천 결과를 혼합하여 추천 상품 개수
-
-        pop_hits = self.popularity.recommend(k=int(self.cfg["retrieval"]["popularity_top_n"])) # 인기도 추천 결과
-        content_hits = self.content.recommend_from_text(query, k=content_k) # 콘텐츠 추천 결과
-        rrf_k = int(self.cfg["retrieval"].get("rrf_k", 60))
-        merged = rrf_fuse(
-            [pop_hits, content_hits], rrf_k=rrf_k, merge_k=merge_k
-        )[:final_k]
-        return self._to_result(merged, "rrf_pop_content_query")
+        content_k = int(self.cfg["retrieval"]["content_faiss_top_k"])
+        pool = self.content.recommend_from_text(query, k=content_k)
+        if use_mmr and pool:
+            lam = float(self.cfg.get("rerank", {}).get("lambda_diversity", 0.7))
+            ranked = mmr_rerank(pool, final_k, lam, self.similarity)
+            return self._to_result(ranked, "content+mmr")
+        return self._to_result(pool[:final_k], "content")
 
 # 추천 서비스 인스턴스 캐시
 @lru_cache(maxsize=1)

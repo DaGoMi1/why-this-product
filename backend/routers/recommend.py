@@ -18,7 +18,9 @@ def recommend(body: RecommendRequest) -> RecommendResponse:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
 
     if body.query:
-        result = service.recommend_from_query(body.query, k=body.k)
+        result = service.recommend_from_query(
+            body.query, k=body.k, use_mmr=body.use_mmr
+        )
     else:
         assert body.user_id is not None  # schema: user_id 또는 query 필수
         result = service.recommend_for_user(
