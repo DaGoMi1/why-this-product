@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from functools import lru_cache
 
@@ -10,10 +11,13 @@ import pandas as pd
 from ml.config import load_mvp_config, resolve_path
 from ml.ranking import Ranker, load_ranker
 from ml.ranking.features import FeatureBuilder
+from ml.rerank.mmr import ItemSimilarity, mmr_rerank
 from ml.retrieval.content_faiss import ContentFaissRetriever
 from ml.retrieval.ials import IALSRetriever
 from ml.retrieval.merge import merge_candidates, rrf_fuse
 from ml.retrieval.popularity import PopularityRetriever
+
+COLD_CONTENT_MAX = 20
 
 
 @dataclass
@@ -33,6 +37,7 @@ class RecommendService:
         cfg: dict,                              # 설정
         features: FeatureBuilder | None = None, # 피처 빌더
         ranker: Ranker | None = None,   # 랭커
+        train_item_ids: set[str] | None = None,
     ) -> None:
         self.popularity = popularity
         self.content = content
@@ -42,6 +47,8 @@ class RecommendService:
         self.cfg = cfg
         self.features = features
         self.ranker = ranker
+        self.train_item_ids = train_item_ids or set()
+        self.similarity = ItemSimilarity(content, items_meta)
 
     # 처리된 데이터로 추천 서비스 초기화
     @classmethod
@@ -63,6 +70,7 @@ class RecommendService:
         train = pd.read_parquet(train_path, columns=["user_id", "item_id", "rating", "timestamp"]) # 학습 데이터 로드
         train = train.sort_values("timestamp") # 학습 데이터 정렬
         train_by_user = (train.groupby("user_id")["item_id"].apply(lambda s: s.astype(str).tolist()).to_dict()) # 사용자 히스토리 생성
+        train_item_ids = {str(i) for i in train["item_id"].astype(str).unique()}
         items = pd.read_parquet(items_path) # 아이템 데이터 로드
         items_meta: dict[str, dict] = {}
 
@@ -109,6 +117,7 @@ class RecommendService:
             cfg=cfg,
             features=features,
             ranker=ranker,
+            train_item_ids=train_item_ids,
         )
 
     # 사용자 기반 추천
@@ -143,10 +152,11 @@ class RecommendService:
         self,
         user_id: str,
         k: int | None = None,
-        use_content: bool = True,
+        use_content: bool = False,
         use_ials: bool = False,
         use_hybrid: bool = False,
         use_ranker: bool = False,
+        use_mmr: bool = True,
         ials: IALSRetriever | None = None,
         ranker: Ranker | None = None,
         hybrid_channels: list[str] | None = None,
@@ -199,13 +209,39 @@ class RecommendService:
 
         if use_content and self.content is not None and history:
             content_hits = self._content_hits(history, exclude, content_k)
-            strategy = "popularity+content"
             merged = merge_candidates(pop_hits, content_hits, merge_k=merge_k)
-        else:
-            merged = pop_hits[:merge_k]
-            strategy = "popularity"
+            return self._to_result(merged[:final_k], "popularity+content")
 
-        return self._to_result(merged[:final_k], strategy)
+        pool = self.candidate_pool(user_id)
+        if use_mmr and pool:
+            lam = float(self.cfg.get("rerank", {}).get("lambda_diversity", 0.7))
+            ranked = mmr_rerank(pool, final_k, lam, self.similarity)
+            has_cold = any(iid not in self.train_item_ids for iid, _ in pool)
+            strategy = "popularity+cold+mmr" if has_cold else "popularity+mmr"
+            return self._to_result(ranked, strategy)
+        return self._to_result(pool[:final_k], "popularity")
+
+    def candidate_pool(self, user_id: str) -> list[tuple[str, float]]:
+        """pop-200 + train에 없는 content 이웃 최대 20. rel은 log pop count."""
+        history = self.train_by_user.get(user_id, [])
+        exclude = set(history)
+        pop_n = int(self.cfg["retrieval"]["popularity_top_n"])
+        content_k = int(self.cfg["retrieval"]["content_faiss_top_k"])
+        pop_hits = self.popularity.recommend(k=pop_n, exclude=exclude)
+        seen = {item_id for item_id, _ in pop_hits}
+        pool = [(item_id, math.log1p(score)) for item_id, score in pop_hits]
+        if self.content is None or not history:
+            return pool
+        cold_n = 0
+        for item_id, _score in self._content_hits(history, exclude, content_k):
+            if item_id in seen or item_id in self.train_item_ids:
+                continue
+            pool.append((item_id, math.log1p(self.popularity.score(item_id))))
+            seen.add(item_id)
+            cold_n += 1
+            if cold_n >= COLD_CONTENT_MAX:
+                break
+        return pool
 
     def _to_result(
         self,

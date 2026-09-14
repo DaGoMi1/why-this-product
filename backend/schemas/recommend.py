@@ -7,10 +7,11 @@ class RecommendRequest(BaseModel):
     user_id: str | None = None
     query: str | None = None
     k: int = Field(default=10, ge=1, le=50)
-    use_content: bool = True
+    use_content: bool = False
     use_ials: bool = False
     use_hybrid: bool = False
     use_ranker: bool = False
+    use_mmr: bool = True
 
     @model_validator(mode="after")
     def require_user_or_query(self) -> RecommendRequest:
