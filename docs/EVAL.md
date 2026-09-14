@@ -12,8 +12,8 @@
 |------|------|------|
 | Recall@K (관련) | retrieve 풀 / 최종 리스트 | GT = valid `rating >= 5`. retrieve K=200, 최종 K=10 |
 | NDCG@10 (등급) | 리스트 순위 (Recall과 별도) | 관련도 = valid 별점 1~5, 없으면 0. DCG gain = `2^rel - 1` |
-| Coverage | 롱테일·다양성 | 추천된 unique item / catalog (아직 미사용) |
-| Intra-list diversity | MMR 효과 | Phase 4 |
+| Coverage | 롱테일·다양성 | 추천 unique / catalog |
+| Intra-list diversity | MMR 효과 | 리스트 안 1 - 평균 페어 코사인. unique category는 All_Beauty에서 상수 |
 | Latency p50/p95 | 서빙 | Phase 6 |
 
 주 문제는 별점 예측(RMSE)이 아니라 **리스트 추천**. 존재 Recall·관련>=4 숫자는 레거시.
@@ -56,16 +56,55 @@
 
 하지 않은 것: DeepFM, LambdaMART, 채널별 랭커 재학습, RMSE. 같은 희소 라벨·pop-200 후보에서 순서를 흔드는 모델이라 격자를 뒤집는 근거가 없다. 이 결론은 All_Beauty 리스트 추천 본체에만 해당한다.
 
+## Phase 4: MMR + 신규 상품 fallback + cold 세그먼트
+
+pop top-10 위에 다양성 리랭크만 얹는다. 랭커는 다시 안 돌린다.
+
+풀: pop-200 + (히스토리 있으면 content `per_seed` 중 **train 미등장** 아이템 최대 20). MMR greedy, `λ_rel = 1 - lambda_diversity`. sim = 임베딩 코사인, 없으면 같은 카테고리=1.
+
+서빙 규칙: ILD 또는 unique category가 pop보다 오르면 Recall이 조금 내려도 MMR on. ILD가 안 오르거나 Recall이 절대 0.04 이상 떨어지면(0.1900→0.15 미만) off. 후보 λ: 0.3 / 0.5 / 0.7.
+
+표본: warm valid 5점 최대 200. 추가로 valid cold-user·cold-item GT 세그먼트 최대 200.
+
+### 실험 전 예측
+
+| 항목 | 사전 예측 | 실측 |
+|------|-----------|------|
+| MMR Recall@10 / NDCG@10 | pop(0.1900 / 0.0698)보다 낮을 것 | λ=0.3은 **0.1950 / 0.0844**로 오름. λ=0.5는 0.1700 / 0.0747. λ=0.7은 0.0275로 붕괴 |
+| unique category · ILD | 오를 것 | unique cat는 전부 **1.0** (카탈로그 카테고리 단일). ILD는 0.759 → 0.799 / 0.864 / 0.913 |
+| Coverage | 조금 오를 것 (cold 슬롯) | pop 0.00037 → λ=0.5 **0.00055**. pop+cold@10은 pop과 동일 |
+| cold-user | 히스토리 없음 → pop과 같고 MMR만 다름 | pop 0.0860 / 0.0431 vs MMR0.5 0.0785 / 0.0396. ILD 0.757 → 0.800 |
+| cold-item GT | pop은 0에 가깝고, content fallback이 조금이라도 칠 수 있음 | n=17 전부 **0**. fallback이 top-10에 못 들어옴 |
+
+실험 후: unique category는 이 데이터에서 신호가 없다. ILD는 λ가 클수록 오른다. 규칙(ILD 상승 ∧ Recall 하락 < 0.04 ∧ Recall≥0.15)을 통과한 건 0.3과 0.5. 그중 ILD가 더 높은 **λ=0.5**를 서빙한다. 0.7은 Recall 0.0275로 탈락. 신규 상품 슬롯은 @10에 안 보여 Coverage 이득은 MMR 재정렬 몫이다.
+
+### warm @10 (관련 >=5)
+
+| 구성 | Recall@10 | NDCG@10 | Coverage | ILD | uniqCat |
+|------|----------|---------|----------|-----|---------|
+| pop | 0.1900 | 0.0698 | 0.00037 | 0.7585 | 1.0 |
+| pop+cold (풀 앞 10) | 0.1900 | 0.0698 | 0.00037 | 0.7585 | 1.0 |
+| MMR λ=0.3 | 0.1950 | 0.0844 | 0.00040 | 0.7993 | 1.0 |
+| MMR λ=0.5 | **서빙** 0.1700 | 0.0747 | 0.00055 | 0.8638 | 1.0 |
+| MMR λ=0.7 | 0.0275 | 0.0113 | 0.00068 | 0.9132 | 1.0 |
+
+### 세그먼트 @10
+
+| 세그먼트 | 구성 | n | Recall@10 | NDCG@10 | ILD |
+|----------|------|---|----------|---------|-----|
+| cold-user | pop | 200 | 0.0860 | 0.0431 | 0.7570 |
+| cold-user | MMR 0.5 | 200 | 0.0785 | 0.0396 | 0.7997 |
+| cold-item GT | pop / pop+cold / MMR 전부 | 17 | 0.0000 | 0.0000 | — |
+
+**서빙: pop-200 → MMR `lambda_diversity=0.5` (`use_mmr` 기본 on). `use_content` 기본 off.**
 
 ## MVP 스모크 (`scripts/eval_smoke.py`)
 
-1. popularity `min_rating=5`. 랭커는 ge_5 재학습 artifact
-2. valid 5점 있는 warm 최대 200명
-3. 채널별 Recall@200 과 단독 top-10 (Recall+NDCG): pop, iALS, content `per_seed`, RRF 세 조합. two-tower는 @200만
-4. 각 채널 200 × 랭커 3 → top-10 (Recall+NDCG)
-5. 카탈로그 단독 부스팅 3줄
-6. artifact 없으면 SKIP
-7. 실패 시 non-zero exit
+1. popularity `min_rating=5`
+2. warm valid 5점 최대 200: pop@10 vs pop+cold vs MMR λ 0.3/0.5/0.7 (Recall / NDCG / Coverage / ILD / unique cat)
+3. cold-user · cold-item 세그먼트 (각 최대 200)
+4. 실패 시 non-zero exit
+
 
 ### retrieve Recall@200 (관련 >=5)
 
@@ -327,17 +366,19 @@ RRF는 점수가 아니라 **등수**만 더한다.
 
 | 구성 | Recall@10 | NDCG@10 | Coverage | p50 ms |
 |------|----------|---------|----------|--------|
-| popularity (`min_rating=5`) | **0.1900** | **0.0698** | — | — |
+| popularity (`min_rating=5`) | 0.1900 | 0.0698 | 0.00037 | — |
+| + MMR λ=0.3 | 0.1950 | 0.0844 | 0.00040 | — |
+| + MMR λ=0.5 (서빙) | 0.1700 | 0.0747 | 0.00055 | — |
+| + MMR λ=0.7 | 0.0275 | 0.0113 | 0.00068 | — |
 | RRF(pop, content) retrieve@10 | 0.1100 | 0.0496 | — | — |
 | RRF(pop, content) retrieve@200 | 0.3500 | — | — | — |
 | iALS (`rating_ge_5`) retrieve@10 | 0.0425 | 0.0213 | — | — |
 | content `per_seed` retrieve@10 | 0.0550 | 0.0421 | — | — |
 | + CatBoost (RRF pop+content 재정렬) | 0.0575 | 0.0364 | — | — |
 | catalog + CatBoost | 0.0400 | 0.0275 | — | — |
-| + MMR | — | — | — | — |
 | + RAG + OpenAI explain | — | — | — | cost |
 
-최종 리스트 승자는 pop 단일. @200 풀 1위 RRF는 top-10 승자가 아니다.
+Phase 3 본체 승자는 pop 순서. Phase 4 서빙은 pop-200 + MMR `lambda_diversity=0.5`. @200 풀 1위 RRF는 top-10 승자가 아니다.
 
 존재(1점도 양성)·관련>=4 숫자는 위 레거시 표. DeepFM은 돌리지 않고 Phase 3를 닫는다.
 

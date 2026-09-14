@@ -40,15 +40,13 @@
 - [x] ranker ablation 종료. 선정은 **랭커 없음 = popularity 단일** (`use_ranker` 기본 off)
 - [x] 선정·탈락·미실험 이유 `docs/EVAL.md`
 
-## Phase 4 — Re-rank & cold-start (현재)
+## Phase 4 — Re-rank & cold-start
 
-- [ ] MMR (카테고리·임베딩 다양성)
-- [ ] 신규 상품: 텍스트 임베딩 fallback
-- [ ] cold-start 세그먼트 지표
+- [x] MMR (임베딩 ILD). λ=0.5 서빙 (R@10 0.1700, ILD 0.864). λ=0.7은 Recall 붕괴. unique category는 이 카탈로그에서 상수 1
+- [x] 신규 상품: train 미등장 ASIN을 content `per_seed`로 풀에 최대 20. @10 히트는 0
+- [x] cold-start 세그먼트: cold-user n=200 pop 0.0860 vs MMR0.5 0.0785. cold-item GT n=17 전부 0
 
-
-
-## Phase 5 — RAG shopping assistant
+## Phase 5 — RAG shopping assistant (현재)
 
 - [ ] 상품 문서 청크 + FAISS (설명용)
 - [ ] `POST /api/explain` — 근거 스니펫 + OpenAI로 한두 문장 이유 (`OPENAI_API_KEY` 필수)

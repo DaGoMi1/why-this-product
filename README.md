@@ -23,7 +23,7 @@ LLM은 **이미 좁혀진 후보 안에서만** 설명·선택합니다. 없는 
 | Backend | FastAPI |
 | Retrieval | popularity (기본, `rating>=5` 카운트) + content FAISS + iALS. RRF·two-tower는 pop@10 미달 |
 | Ranking | LightGBM / XGBoost / CatBoost 실험 후 서빙 off. 관련 R@10 최고 재정렬 0.0575 < pop 0.1900 |
-| Re-rank | MMR |
+| Re-rank | MMR `lambda_diversity=0.5` (`use_mmr` 기본 on). R@10 0.1700, ILD 0.864 |
 | RAG | sentence-transformers, FAISS |
 | LLM | OpenAI `gpt-4o-mini` (필수) |
 | Data | Amazon Reviews 2018 **All_Beauty** |
@@ -57,10 +57,10 @@ flowchart LR
 
 - popularity retrieve (기본, train `rating>=5` 카운트). content FAISS(`per_seed`) + iALS(`rating_ge_5`). RRF는 `use_hybrid`
 - LightGBM / XGBoost / CatBoost rank (`use_ranker` 플래그만, 서빙 off). Phase 3에서 pop 0.1900이 이김. DeepFM 없음
-- MMR 다양성
+- MMR 다양성 (`use_mmr` 기본 on, `lambda_diversity=0.5`). warm R@10 0.1700 / ILD 0.864
 - RAG 기반 “왜 이 상품?” 설명 API / UI
 
-이후 단계( MMR·cold-start → RAG 설명 → 비용·지연 리포트 → Docker )는 [docs/ROADMAP.md](docs/ROADMAP.md)를 보세요.
+이후 단계( RAG 설명 → 비용·지연 리포트 → Docker )는 [docs/ROADMAP.md](docs/ROADMAP.md)를 보세요.
 
 ---
 
@@ -130,7 +130,7 @@ python -m uvicorn backend.main:app --reload
 
 - Health: http://localhost:8000/health  
 - Docs: http://localhost:8000/docs  
-- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`. CF만 `"use_ials": true`. RRF 합치기는 `"use_hybrid": true`. LightGBM 재정렬은 `"use_ranker": true` (기본 retrieve는 popularity).
+- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`. 기본은 popularity + MMR(`lambda_diversity=0.5`). `"use_mmr": false`면 pop 순서. CF만 `"use_ials": true`. RRF는 `"use_hybrid": true`. 부스팅은 `"use_ranker": true`.
 
 ### 4. UI (placeholder)
 
