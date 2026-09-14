@@ -1,4 +1,4 @@
-"""오프라인 평가: popularity / content / iALS / two-tower / RRF / LightGBM Recall@10"""
+"""오프라인 평가: popularity / content / iALS / two-tower / RRF / boosting rankers Recall@10"""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ import pandas as pd
 from backend.services.recommend import RecommendService
 from ml.config import load_mvp_config, resolve_path
 from ml.eval.metrics import mean_recall_at_k
+from ml.ranking import RANKERS, load_ranker
 from ml.retrieval.ials import IALSRetriever
 from ml.retrieval.two_tower import TwoTowerRetriever
 
@@ -145,16 +146,19 @@ def main() -> None:
         print(f"Recall@{k} {label:<22}: {mean_recall_at_k(recs, truth, k):.6f}")
 
     rank_dir = resolve_path(cfg.get("ranking", {}).get("artifact_dir", "data/processed/ranker"))
-    if service.ranker is None or not (rank_dir / "model.txt").exists():
-        print(f"Recall@{k} ranker_lgbm          : SKIP (run python -m scripts.train_ranker)")
-    else:
+    for model_name, cls in RANKERS.items():
+        loaded = load_ranker(rank_dir, model_name)
+        label = cls.name
+        if loaded is None:
+            print(f"Recall@{k} {label:<22}: SKIP (run python -m scripts.train_ranker)")
+            continue
         rank_recs: dict[str, list[str]] = {}
         for user_id in user_ids:
             result = service.recommend_for_user(
-                user_id, k=k, use_content=False, use_ranker=True
+                user_id, k=k, use_content=False, use_ranker=True, ranker=loaded
             )
             rank_recs[user_id] = [x["item_id"] for x in result.items]
-        print(f"Recall@{k} ranker_lgbm          : {mean_recall_at_k(rank_recs, truth, k):.6f}")
+        print(f"Recall@{k} {label:<22}: {mean_recall_at_k(rank_recs, truth, k):.6f}")
     print("OK")
 
 

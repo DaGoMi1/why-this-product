@@ -1,17 +1,20 @@
-"""popularity 후보 위 LightGBM 랭커 학습."""
+"""popularity 후보 위 부스팅 랭커 학습 (LightGBM / XGBoost / CatBoost)."""
 
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
+import xgboost as xgb
+from catboost import CatBoostClassifier
 
 from ml.config import load_mvp_config, resolve_path
+from ml.ranking.catboost_ranker import CatBoostRanker
 from ml.ranking.features import FEATURE_NAMES, FeatureBuilder
 from ml.ranking.lightgbm_ranker import LightGBMRanker
+from ml.ranking.xgboost_ranker import XGBoostRanker
 from ml.retrieval.content_faiss import ContentFaissRetriever
 from ml.retrieval.ials import IALSRetriever
 from ml.retrieval.popularity import PopularityRetriever
@@ -30,15 +33,13 @@ def _items_meta(items: pd.DataFrame) -> dict[str, dict]:
     return meta
 
 
-def main() -> None:
-    cfg = load_mvp_config()
+def _build_table(cfg: dict) -> tuple[np.ndarray, np.ndarray]:
     processed = resolve_path(cfg["data"]["processed_dir"])
     train_path = processed / "interactions_train.parquet"
     items_path = processed / "items.parquet"
     if not train_path.exists() or not items_path.exists():
         raise FileNotFoundError(f"Missing {train_path} or {items_path}. Run prepare_splits first.")
 
-    rank_cfg = cfg.get("ranking", {})
     pop_n = int(cfg["retrieval"]["popularity_top_n"])
     train = pd.read_parquet(train_path, columns=["user_id", "item_id", "rating", "timestamp"])
     train = train.sort_values("timestamp")
@@ -108,7 +109,12 @@ def main() -> None:
     n_pos = int(y.sum())
     n_neg = int(len(y) - n_pos)
     print(f"[coverage] rows={len(y):,} positives={n_pos:,} negatives={n_neg:,}")
+    return x, y
 
+
+def _train_lightgbm(x: np.ndarray, y: np.ndarray, rank_cfg: dict) -> LightGBMRanker:
+    n_pos = int(y.sum())
+    n_neg = int(len(y) - n_pos)
     dtrain = lgb.Dataset(x, label=y, feature_name=list(FEATURE_NAMES))
     params = {
         "objective": "binary",
@@ -120,9 +126,63 @@ def main() -> None:
         "scale_pos_weight": (n_neg / n_pos) if n_pos else 1.0,
     }
     booster = lgb.train(params, dtrain, num_boost_round=int(rank_cfg.get("n_estimators", 200)))
-    out_dir = resolve_path(rank_cfg.get("artifact_dir", "data/processed/ranker"))
-    LightGBMRanker(booster).save(out_dir)
-    print(f"[done] {out_dir}")
+    return LightGBMRanker(booster)
+
+
+def _train_xgboost(x: np.ndarray, y: np.ndarray, rank_cfg: dict) -> XGBoostRanker:
+    n_pos = int(y.sum())
+    n_neg = int(len(y) - n_pos)
+    dtrain = xgb.DMatrix(x, label=y, feature_names=list(FEATURE_NAMES))
+    params = {
+        "objective": "binary:logistic",
+        "eval_metric": "logloss",
+        "max_depth": int(rank_cfg.get("max_depth", 5)),
+        "eta": float(rank_cfg.get("learning_rate", 0.05)),
+        "seed": 42,
+        "scale_pos_weight": (n_neg / n_pos) if n_pos else 1.0,
+        "tree_method": "hist",
+    }
+    booster = xgb.train(params, dtrain, num_boost_round=int(rank_cfg.get("n_estimators", 200)))
+    return XGBoostRanker(booster)
+
+
+def _train_catboost(x: np.ndarray, y: np.ndarray, rank_cfg: dict) -> CatBoostRanker:
+    n_pos = int(y.sum())
+    n_neg = int(len(y) - n_pos)
+    model = CatBoostClassifier(
+        iterations=int(rank_cfg.get("n_estimators", 200)),
+        learning_rate=float(rank_cfg.get("learning_rate", 0.05)),
+        depth=int(rank_cfg.get("max_depth", 5)),
+        loss_function="Logloss",
+        scale_pos_weight=(n_neg / n_pos) if n_pos else 1.0,
+        random_seed=42,
+        verbose=False,
+        allow_writing_files=False,
+    )
+    model.fit(x, y)
+    return CatBoostRanker(model)
+
+
+def main() -> None:
+    cfg = load_mvp_config()
+    rank_cfg = cfg.get("ranking", {})
+    models = [str(m) for m in rank_cfg.get("models", ["lightgbm", "xgboost", "catboost"])]
+    x, y = _build_table(cfg)
+    out_root = resolve_path(rank_cfg.get("artifact_dir", "data/processed/ranker"))
+    trainers = {
+        "lightgbm": _train_lightgbm,
+        "xgboost": _train_xgboost,
+        "catboost": _train_catboost,
+    }
+    for name in models:
+        trainer = trainers.get(name)
+        if trainer is None:
+            raise ValueError(f"unknown ranker model: {name}")
+        print(f"[train] {name}")
+        ranker = trainer(x, y, rank_cfg)
+        out_dir = out_root / name
+        ranker.save(out_dir)
+        print(f"[done] {name} {out_dir}")
 
 
 if __name__ == "__main__":
