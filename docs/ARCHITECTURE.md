@@ -34,14 +34,16 @@ flowchart LR
 | Vectorstore | `ml/vectorstore/` | FAISS 로드/검색 |
 | Eval | `ml/eval/` | Recall@K, NDCG@K, coverage, ILD |
 
-## 요청 흐름 (목표)
+## 요청 흐름
 
-1. `POST /api/recommend` — user_id 또는 seed item / query
-2. Retrieve: 기본 popularity. `use_hybrid`면 pop ∪ iALS ∪ content를 RRF
-3. Rank: 기본은 retrieve 순서(popularity). `use_ranker`는 플래그만 — 부스팅은 pop@10을 못 넘겨 서빙 off
-4. Re-rank: 기본 MMR(`lambda_diversity=0.5`). `"use_mmr": false`면 pop 순서 그대로
-5. (옵션) `POST /api/explain` — 각 ASIN에 대해 메타+리뷰 근거로 설명
-6. 응답: `{ items: [{asin, score, reason?}], latency_ms }`
+1. `POST /api/recommend` — `user_id` 또는 `query`
+2. Retrieve: `user_id`는 popularity top-200. `query`는 content FAISS(`content_faiss_top_k`). `use_hybrid`면 user_id만 pop ∪ iALS ∪ content를 RRF
+3. Rank: `user_id` 기본은 retrieve 순서(popularity). `use_ranker`는 플래그만 — 부스팅은 pop@10을 못 넘겨 서빙 off. 쿼리는 랭커 없음
+4. Re-rank: 기본 MMR(`lambda_diversity=0.5`). `"use_mmr": false`면 `user_id`는 pop 순서, `query`는 content 점수 순서
+5. `POST /api/explain` — 이미 고른 `item_ids`(1–10)만. 설명용 RAG FAISS에서 해당 ASIN 스니펫을 고른 뒤 `gpt-4o-mini`가 한국어 한두 문장. `select_k>0`이면 후보 안 부분집합만. `OPENAI_API_KEY` 없으면 **503**
+6. 추천 응답은 `{ items, strategy, ... }`. 설명 응답은 `{ items: [{item_id, reason, snippets}], selected_ids, model, tokens }`
+
+retrieve FAISS(`data/processed/faiss_index/`)와 RAG 청크 FAISS(`data/processed/rag_index/`)는 분리한다. 청크는 train 메타 + train 리뷰만.
 
 ## LLM 경계
 
@@ -68,4 +70,4 @@ configs/          # Hydra-less YAML
 data/raw|processed/
 ```
 
-스캐폴딩 단계에서는 패키지 docstring·스텁만 존재합니다. 구현은 [ROADMAP.md](ROADMAP.md) 순서를 따릅니다.
+구현 순서는 [ROADMAP.md](ROADMAP.md)를 따릅니다.

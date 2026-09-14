@@ -96,7 +96,7 @@ pop top-10 위에 다양성 리랭크만 얹는다. 랭커는 다시 안 돌린�
 | cold-user | MMR 0.5 | 200 | 0.0785 | 0.0396 | 0.7997 |
 | cold-item GT | pop / pop+cold / MMR 전부 | 17 | 0.0000 | 0.0000 | — |
 
-**서빙: pop-200 → MMR `lambda_diversity=0.5` (`use_mmr` 기본 on). `use_content` 기본 off.**
+**서빙: `user_id`는 pop-200 → MMR `lambda_diversity=0.5` (`use_mmr` 기본 on). `use_content` 기본 off. `query`는 검색이라 pop을 안 섞고 content FAISS → MMR.**
 
 ## MVP 스모크 (`scripts/eval_smoke.py`)
 
@@ -376,13 +376,31 @@ RRF는 점수가 아니라 **등수**만 더한다.
 | content `per_seed` retrieve@10 | 0.0550 | 0.0421 | — | — |
 | + CatBoost (RRF pop+content 재정렬) | 0.0575 | 0.0364 | — | — |
 | catalog + CatBoost | 0.0400 | 0.0275 | — | — |
-| + RAG + OpenAI explain | — | — | — | cost |
+| + RAG + OpenAI explain | — | — | — | 14157 ms (~$0.0008/req) |
 
 Phase 3 본체 승자는 pop 순서. Phase 4 서빙은 pop-200 + MMR `lambda_diversity=0.5`. @200 풀 1위 RRF는 top-10 승자가 아니다.
 
 존재(1점도 양성)·관련>=4 숫자는 위 레거시 표. DeepFM은 돌리지 않고 Phase 3를 닫는다.
 
 OpenAI는 설명/후보 내 선택에 **항상** 사용한다. 키 없는 fallback 경로는 두지 않는다.
+
+## Phase 5: RAG 설명 (보조 지표)
+
+LLM은 추천 Recall을 올리지 않는다. 후보 `item_ids` 안에서만 한두 문장 이유를 쓴다. 청크는 **train 메타 + train 리뷰**만 (valid 누수 없음). retrieve FAISS와 인덱스를 분리한다. 키 없으면 `/api/explain`은 503.
+
+표본: recommend가 고른 후보 10개 × 소수 쿼리(또는 user_id 1명). 주 지표와 섞지 않는다.
+
+### 실험 전 예측
+
+| 항목 | 사전 예측 | 실측 |
+|------|-----------|------|
+| 환각률 (응답에 후보 밖 id) | 프롬프트 제약으로 **0** | **0.0000** (0/2) |
+| 설명 길이 | 한두 문장 (대략 40–120자) | **90.8자** (20/20 reasons) |
+| p50 latency (10개 explain) | 수 초 (OpenAI) | **14.157s** (후보 10개, ASIN당 1호출 + `select_k=3`) |
+| 요청당 비용 | gpt-4o-mini 기준 수 센트 미만 | **~$0.00078/요청** (2요청 합 $0.001565, 5405+1257 tok) |
+| 키 없음 | 503, fallback 없음 | **503** (`POST /api/explain`) |
+
+실험 후: `scripts/eval_rag.py` (쿼리 `hydrating serum` / `gentle cleanser` → recommend 10 → explain). 한 JSON에 N개를 맡기면 사유가 비는 경우가 있어 **상품마다 호출**로 바꿨다. 환각 0, 사유 20/20. latency·비용은 왕복 수만큼 올랐고 추천 Recall과 섞지 않는다. 키 없으면 설명 경로가 기동하지 않는다.
 
 ## LLM 평가
 

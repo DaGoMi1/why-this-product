@@ -71,6 +71,7 @@ EMNLP-IJCNLP 2019.
 - 테스트 구간의 리뷰·평점을 학습 feature로 쓰지 않음
 - 인기도·아이템 통계는 **train 구간만**으로 계산
 - content 임베딩은 메타데이터(`doc_text`)만 사용
+- RAG 청크는 **train 메타 + train `review_text`**만 (valid/test 리뷰 금지). retrieve FAISS와 인덱스 분리
 
 ## 디렉터리
 
@@ -83,7 +84,8 @@ data/processed/
   interactions_valid.parquet
   interactions_test.parquet
   items.parquet
-  faiss_index/     # gitignore (로컬 빌드)
+  faiss_index/     # gitignore (retrieve용 로컬 빌드)
+  rag_index/       # gitignore (설명 청크 FAISS, train만)
   ials/            # gitignore
   two_tower/       # gitignore
   ranker/          # gitignore (lightgbm / xgboost / catboost)
@@ -95,8 +97,10 @@ data/processed/
 python -m scripts.download_data
 python -m scripts.prepare_splits
 python -m scripts.build_faiss
+python -m scripts.build_rag_index
 python -m scripts.train_ials
 python -m scripts.train_two_tower
 python -m scripts.train_ranker
 python -m scripts.eval_smoke
+python -m scripts.eval_rag
 ```

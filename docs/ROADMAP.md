@@ -46,16 +46,14 @@
 - [x] 신규 상품: train 미등장 ASIN을 content `per_seed`로 풀에 최대 20. @10 히트는 0
 - [x] cold-start 세그먼트: cold-user n=200 pop 0.0860 vs MMR0.5 0.0785. cold-item GT n=17 전부 0
 
-## Phase 5 — RAG shopping assistant (현재)
+## Phase 5 — RAG shopping assistant
 
-- [ ] 상품 문서 청크 + FAISS (설명용)
-- [ ] `POST /api/explain` — 근거 스니펫 + OpenAI로 한두 문장 이유 (`OPENAI_API_KEY` 필수)
-- [ ] LLM: 후보 안에서만 선택/문장 다듬기 (키 없으면 기동 실패)
-- [ ] latency·API 비용 표
+- [x] 상품 문서 청크 + FAISS (설명용, train 메타+리뷰, retrieve 인덱스와 분리)
+- [x] `POST /api/explain` — 근거 스니펫 + OpenAI로 한두 문장 이유 (`OPENAI_API_KEY` 필수)
+- [x] LLM: 후보 안에서만 선택/문장 다듬기 (키 없으면 503)
+- [x] latency·API 비용 표 (p50 14.16s, ~$0.0008/req, 환각 0, 사유 20/20)
 
-
-
-## Phase 6 — Production polish
+## Phase 6 — Production polish (현재)
 
 - [ ] Docker Compose (API + UI)
 - [ ] 요청당 latency breakdown (retrieve / rank / rerank / rag)

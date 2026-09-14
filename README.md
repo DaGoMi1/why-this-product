@@ -58,9 +58,9 @@ flowchart LR
 - popularity retrieve (기본, train `rating>=5` 카운트). content FAISS(`per_seed`) + iALS(`rating_ge_5`). RRF는 `use_hybrid`
 - LightGBM / XGBoost / CatBoost rank (`use_ranker` 플래그만, 서빙 off). Phase 3에서 pop 0.1900이 이김. DeepFM 없음
 - MMR 다양성 (`use_mmr` 기본 on, `lambda_diversity=0.5`). warm R@10 0.1700 / ILD 0.864
-- RAG 기반 “왜 이 상품?” 설명 API / UI
+- RAG 기반 “왜 이 상품?” 설명 API / UI (`POST /api/explain`, `OPENAI_API_KEY` 필수)
 
-이후 단계( RAG 설명 → 비용·지연 리포트 → Docker )는 [docs/ROADMAP.md](docs/ROADMAP.md)를 보세요.
+이후 단계(비용·지연 리포트 → Docker)는 [docs/ROADMAP.md](docs/ROADMAP.md)를 보세요.
 
 ---
 
@@ -84,7 +84,7 @@ flowchart LR
 ├── backend/          # FastAPI
 ├── frontend/         # Streamlit
 ├── ml/               # retrieval · ranking · rerank · rag · eval
-├── scripts/          # download · split · build_faiss · train_ials · train_two_tower · train_ranker · eval_smoke
+├── scripts/          # download · split · build_faiss · build_rag_index · train_* · eval_smoke · eval_rag
 ├── notebooks/        # EDA (exploratory)
 ├── configs/          # mvp.yaml
 ├── docs/
@@ -110,16 +110,18 @@ pip install -r requirements.txt
 # 루트에 .env 생성 후 OPENAI_API_KEY 필수 (설명·후보 내 선택 — Phase 5)
 ```
 
-### 2. 데이터 파이프라인 (Phase 1–3)
+### 2. 데이터 파이프라인 (Phase 1–5)
 
 ```bash
 python -m scripts.download_data
 python -m scripts.prepare_splits
 python -m scripts.build_faiss
+python -m scripts.build_rag_index
 python -m scripts.train_ials
 python -m scripts.train_two_tower
 python -m scripts.train_ranker
 python -m scripts.eval_smoke
+python -m scripts.eval_rag
 ```
 
 ### 3. API
@@ -130,13 +132,16 @@ python -m uvicorn backend.main:app --reload
 
 - Health: http://localhost:8000/health  
 - Docs: http://localhost:8000/docs  
-- Recommend: `POST /api/recommend` — `{"user_id": "..."}` 또는 `{"query": "hydrating serum"}`. 기본은 popularity + MMR(`lambda_diversity=0.5`). `"use_mmr": false`면 pop 순서. CF만 `"use_ials": true`. RRF는 `"use_hybrid": true`. 부스팅은 `"use_ranker": true`.
+- Recommend: `POST /api/recommend` — `{"user_id": "..."}`는 popularity + MMR(`lambda_diversity=0.5`). `{"query": "hydrating serum"}`는 content FAISS + MMR (pop RRF 없음). `"use_mmr": false`면 각각 pop / content 점수 순서. CF만 `"use_ials": true`. RRF는 `"use_hybrid": true`(user_id만). 부스팅은 `"use_ranker": true`.
+- Explain: `POST /api/explain` — `{"item_ids": ["B0..."], "query": "...", "select_k": 0}`. 후보 ASIN 안에서만 한두 문장. 키 없으면 **503**. `select_k>0`이면 그 목록의 부분집합만 고른다.
 
-### 4. UI (placeholder)
+### 4. UI
 
 ```bash
 python -m streamlit run frontend/app.py
 ```
+
+기본은 영어 `query` 검색입니다. 화면에 영어 예시와 데모 `user_id` 5명이 있습니다. 추천 후 `POST /api/explain`을 호출합니다. API는 `API_URL`(기본 `http://127.0.0.1:8000`)입니다.
 
 ---
 
