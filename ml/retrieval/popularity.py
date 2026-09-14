@@ -20,8 +20,13 @@ class PopularityRetriever:
         cls,
         train_path: Path,
         top_n: int | None = None,
+        min_rating: float | None = None,
     ) -> PopularityRetriever:
-        train = pd.read_parquet(train_path, columns=["item_id"])
+        if min_rating is None:
+            train = pd.read_parquet(train_path, columns=["item_id"])
+        else:
+            train = pd.read_parquet(train_path, columns=["item_id", "rating"])
+            train = train[train["rating"] >= float(min_rating)]
         counts = train["item_id"].value_counts()
         if top_n is not None:
             counts = counts.head(top_n)

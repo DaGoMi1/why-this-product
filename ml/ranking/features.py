@@ -95,33 +95,87 @@ class FeatureBuilder:
             best = max(best, float(sv @ cand))
         return best
 
+    def _content_max_sims(self, seeds: list[str], candidate_ids: list[str]) -> np.ndarray:
+        n = len(candidate_ids)
+        out = np.zeros(n, dtype=np.float32)
+        seed_vecs = [v for s in seeds if (v := self._item_vec(s)) is not None]
+        if not seed_vecs:
+            return out
+        have: list[np.ndarray] = []
+        pos: list[int] = []
+        for i, item_id in enumerate(candidate_ids):
+            vec = self._item_vec(item_id)
+            if vec is None:
+                continue
+            have.append(vec)
+            pos.append(i)
+        if not have:
+            return out
+        sims = np.stack(seed_vecs) @ np.stack(have).T
+        out[np.asarray(pos, dtype=np.int32)] = sims.max(axis=0)
+        return out
+
+    def _ials_scores(self, user_id: str, candidate_ids: list[str]) -> np.ndarray:
+        n = len(candidate_ids)
+        out = np.zeros(n, dtype=np.float32)
+        if self.ials is None:
+            return out
+        uidx = self.ials._user_index.get(user_id)
+        if uidx is None:
+            return out
+        user_f = self.ials.user_factors[uidx]
+        idxs = np.fromiter(
+            (self.ials._item_index.get(item_id, -1) for item_id in candidate_ids),
+            dtype=np.int32,
+            count=n,
+        )
+        valid = idxs >= 0
+        if not np.any(valid):
+            return out
+        out[valid] = self.ials.item_factors[idxs[valid]] @ user_f
+        return out
+
     def matrix(
         self,
         user_id: str,
         history: list[str],
         candidate_ids: list[str],
     ) -> np.ndarray:
+        n = len(candidate_ids)
+        if n == 0:
+            return np.zeros((0, len(FEATURE_NAMES)), dtype=np.float32)
         seeds = history[-5:]
         last = seeds[-1] if seeds else None
         last_meta = self.items_meta.get(last, {}) if last else {}
         last_brand = last_meta.get("brand")
         last_cat = last_meta.get("category")
-        user_n = float(len(history))
-        rows: list[list[float]] = []
-        for item_id in candidate_ids:
-            count = float(self.popularity._scores.get(item_id, 0.0))
+        pop_fallback = len(self._pop_rank) + 1
+        log_pop = np.empty(n, dtype=np.float32)
+        item_n = np.empty(n, dtype=np.float32)
+        item_mean = np.empty(n, dtype=np.float32)
+        pop_rank = np.empty(n, dtype=np.float32)
+        same_brand = np.zeros(n, dtype=np.float32)
+        same_cat = np.zeros(n, dtype=np.float32)
+        for i, item_id in enumerate(candidate_ids):
+            log_pop[i] = math.log1p(float(self.popularity._scores.get(item_id, 0.0)))
+            item_n[i] = float(self.item_n.get(item_id, 0))
+            item_mean[i] = float(self.item_mean_rating.get(item_id, 0.0))
+            pop_rank[i] = float(self._pop_rank.get(item_id, pop_fallback))
             meta = self.items_meta.get(item_id, {})
-            rows.append(
-                [
-                    math.log1p(count),
-                    float(self.item_n.get(item_id, 0)),
-                    float(self.item_mean_rating.get(item_id, 0.0)),
-                    user_n,
-                    float(self._pop_rank.get(item_id, len(self._pop_rank) + 1)),
-                    self._content_max_sim(seeds, item_id),
-                    self.ials.score_item(user_id, item_id) if self.ials is not None else 0.0,
-                    1.0 if last_brand and meta.get("brand") == last_brand else 0.0,
-                    1.0 if last_cat and meta.get("category") == last_cat else 0.0,
-                ]
+            if last_brand and meta.get("brand") == last_brand:
+                same_brand[i] = 1.0
+            if last_cat and meta.get("category") == last_cat:
+                same_cat[i] = 1.0
+        return np.column_stack(
+            (
+                log_pop,
+                item_n,
+                item_mean,
+                np.full(n, float(len(history)), dtype=np.float32),
+                pop_rank,
+                self._content_max_sims(seeds, candidate_ids),
+                self._ials_scores(user_id, candidate_ids),
+                same_brand,
+                same_cat,
             )
-        return np.asarray(rows, dtype=np.float32)
+        )
