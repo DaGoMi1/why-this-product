@@ -1,4 +1,4 @@
-"""오프라인 평가: rating>=5 통일. retrieve 단독 / 채널×랭커 / 카탈로그 부스팅 단독."""
+"""오프라인 평가: pop vs MMR 람다 + cold 세그먼트."""
 
 from __future__ import annotations
 
@@ -8,31 +8,66 @@ import pandas as pd
 
 from backend.services.recommend import RecommendService
 from ml.config import load_mvp_config, resolve_path
-from ml.eval.metrics import mean_ndcg_at_k, mean_recall_at_k
-from ml.ranking import RANKERS, Ranker, load_ranker
-from ml.retrieval.ials import IALSRetriever
-from ml.retrieval.merge import rrf_fuse
-from ml.retrieval.two_tower import TwoTowerRetriever
+from ml.eval.metrics import (
+    coverage_at_k,
+    mean_ild_at_k,
+    mean_ndcg_at_k,
+    mean_recall_at_k,
+    mean_unique_categories_at_k,
+)
+from ml.rerank.mmr import mmr_rerank
 
 POOL_K = 200
 FINAL_K = 10
 RELEVANT_MIN = 5.0
-RANK_CHANNELS = [
-    "popularity",
-    "ials_rating_ge_5",
-    "content_per_seed",
-    "rrf_pop_content",
-    "rrf_pop_ials",
-    "rrf_pop_ials_content",
-]
+MMR_LAMBDAS = (0.3, 0.5, 0.7)
+MAX_USERS = 200
 
 
 def _ids(hits: list[tuple[str, float]]) -> list[str]:
     return [item_id for item_id, _ in hits]
 
 
-def _print_pair(kind: str, k: int, label: str, recall: float, ndcg: float) -> None:
-    print(f"{kind}@{k} {label:<28}: Recall={recall:.6f}  NDCG={ndcg:.6f}")
+def _relevant_maps(
+    frame: pd.DataFrame,
+) -> tuple[dict[str, dict[str, float]], dict[str, set[str]]]:
+    rel: dict[str, dict[str, float]] = {}
+    for r in frame.itertuples(index=False):
+        rel.setdefault(str(r.user_id), {})[str(r.item_id)] = float(r.rating)
+    truth = {
+        user_id: {iid for iid, rating in items.items() if rating >= RELEVANT_MIN}
+        for user_id, items in rel.items()
+    }
+    truth = {u: s for u, s in truth.items() if s}
+    rel = {u: rel[u] for u in truth}
+    return rel, truth
+
+
+def _cap(truth: dict[str, set[str]], rel: dict[str, dict[str, float]], n: int):
+    user_ids = list(truth.keys())[:n]
+    return {u: truth[u] for u in user_ids}, {u: rel[u] for u in user_ids}, user_ids
+
+
+def _print_row(
+    label: str,
+    recs: dict[str, list[str]],
+    truth: dict[str, set[str]],
+    rel: dict[str, dict[str, float]],
+    catalog_n: int,
+    item_category: dict[str, str | None],
+    vector_of,
+) -> dict[str, float]:
+    recall = mean_recall_at_k(recs, truth, FINAL_K)
+    ndcg = mean_ndcg_at_k(recs, rel, FINAL_K)
+    cov = coverage_at_k(recs, catalog_n, FINAL_K)
+    ild = mean_ild_at_k(recs, vector_of, FINAL_K)
+    uniq = mean_unique_categories_at_k(recs, item_category, FINAL_K)
+    print(
+        f"{label:<22} n={len(truth):<4}  "
+        f"Recall={recall:.6f}  NDCG={ndcg:.6f}  "
+        f"Cov={cov:.6f}  ILD={ild:.6f}  uniqCat={uniq:.3f}"
+    )
+    return {"recall": recall, "ndcg": ndcg, "cov": cov, "ild": ild, "uniq": uniq}
 
 
 def main() -> None:
@@ -51,163 +86,143 @@ def main() -> None:
 
     print("[load] recommend service...")
     service = RecommendService.from_processed()
-    catalog_ids = list(service.items_meta.keys())
-    print(f"[eval] catalog items: {len(catalog_ids):,}")
+    catalog_n = len(service.items_meta)
+    item_category = {
+        iid: (meta.get("category") if isinstance(meta.get("category"), str) else None)
+        for iid, meta in service.items_meta.items()
+    }
+    vector_of = service.similarity.vec
+    print(f"[eval] catalog items: {catalog_n:,}  train items: {len(service.train_item_ids):,}")
 
     valid = pd.read_parquet(valid_path, columns=["user_id", "item_id", "rating"])
-    train_users = set(service.train_by_user.keys())
-    valid = valid[valid["user_id"].isin(train_users)]
     valid = valid.groupby(["user_id", "item_id"], as_index=False)["rating"].max()
+    train_users = set(service.train_by_user.keys())
 
-    rel: dict[str, dict[str, float]] = {}
-    for r in valid.itertuples(index=False):
-        rel.setdefault(str(r.user_id), {})[str(r.item_id)] = float(r.rating)
-    truth = {
-        user_id: {iid for iid, rating in items.items() if rating >= RELEVANT_MIN}
-        for user_id, items in rel.items()
-    }
-    truth = {u: s for u, s in truth.items() if s}
-    max_users = 200
-    user_ids = list(truth.keys())[:max_users]
-    truth = {u: truth[u] for u in user_ids}
-    rel = {u: rel[u] for u in user_ids}
-    print(f"[eval] warm valid users with rating>={RELEVANT_MIN:.0f}: {len(truth)}")
+    warm_df = valid[valid["user_id"].isin(train_users)]
+    cold_user_df = valid[~valid["user_id"].isin(train_users)]
+    warm_rel, warm_truth = _relevant_maps(warm_df)
+    warm_truth, warm_rel, warm_ids = _cap(warm_truth, warm_rel, MAX_USERS)
+    print(f"[eval] warm valid users with rating>={RELEVANT_MIN:.0f}: {len(warm_truth)}")
 
-    rrf_k = int(cfg["retrieval"].get("rrf_k", 60))
-    ials_cfg = cfg.get("ials", {})
-    ials_root = resolve_path(ials_cfg.get("artifact_dir", "data/processed/ials"))
-    ials_ge5 = None
-    ials_ge5_dir = ials_root / "rating_ge_5"
-    if (ials_ge5_dir / "user_factors.npy").exists():
-        ials_ge5 = IALSRetriever.load(ials_ge5_dir)
-
-    tt_cfg = cfg.get("two_tower", {})
-    tt_dir = resolve_path(tt_cfg.get("artifact_dir", "data/processed/two_tower"))
-    two_tower = None
-    if (tt_dir / "item_factors.npy").exists():
-        two_tower = TwoTowerRetriever.load(tt_dir)
-
-    pools: dict[str, dict[str, list[str]]] = {name: {} for name in [*RANK_CHANNELS, "two_tower"]}
-
-    for i, user_id in enumerate(user_ids, start=1):
+    pop_recs: dict[str, list[str]] = {}
+    cold_pool_recs: dict[str, list[str]] = {}
+    mmr_recs: dict[float, dict[str, list[str]]] = {lam: {} for lam in MMR_LAMBDAS}
+    for i, user_id in enumerate(warm_ids, start=1):
         history = service.train_by_user.get(user_id, [])
         exclude = set(history)
-        pop_hits = service.popularity.recommend(k=POOL_K, exclude=exclude)
-        pools["popularity"][user_id] = _ids(pop_hits)
-
-        ials_hits: list[tuple[str, float]] = []
-        if ials_ge5 is not None and ials_ge5.has_user(user_id):
-            ials_hits = ials_ge5.recommend(user_id, k=POOL_K, exclude=exclude)
-        pools["ials_rating_ge_5"][user_id] = _ids(ials_hits)
-
-        content_hits: list[tuple[str, float]] = []
-        if service.content is not None and history:
-            content_hits = service.content.recommend_from_item_ids(
-                history[-5:], k=POOL_K, exclude=exclude, mode="per_seed"
-            )
-        pools["content_per_seed"][user_id] = _ids(content_hits)
-
-        pools["rrf_pop_content"][user_id] = _ids(
-            rrf_fuse([pop_hits, content_hits], rrf_k=rrf_k, merge_k=POOL_K)
-        )
-        pools["rrf_pop_ials"][user_id] = _ids(
-            rrf_fuse([pop_hits, ials_hits], rrf_k=rrf_k, merge_k=POOL_K)
-        )
-        pools["rrf_pop_ials_content"][user_id] = _ids(
-            rrf_fuse([pop_hits, ials_hits, content_hits], rrf_k=rrf_k, merge_k=POOL_K)
-        )
-
-        tt_hits: list[tuple[str, float]] = []
-        if two_tower is not None:
-            tt_hits = two_tower.recommend(history, k=POOL_K, exclude=exclude)
-        pools["two_tower"][user_id] = _ids(tt_hits)
-
+        pop_ids = _ids(service.popularity.recommend(k=POOL_K, exclude=exclude))
+        pop_recs[user_id] = pop_ids[:FINAL_K]
+        pool = service.candidate_pool(user_id)
+        cold_pool_recs[user_id] = _ids(pool)[:FINAL_K]
+        for lam in MMR_LAMBDAS:
+            mmr_recs[lam][user_id] = _ids(mmr_rerank(pool, FINAL_K, lam, service.similarity))
         if i % 50 == 0:
-            print(f"  ... retrieve {i}/{len(user_ids)}")
+            print(f"  ... warm {i}/{len(warm_ids)}")
 
-    print(f"--- retrieve relevant>={RELEVANT_MIN:.0f} Recall@{POOL_K} ---")
-    retrieve_scores: dict[str, float] = {}
-    for label, recs in pools.items():
-        if label == "ials_rating_ge_5" and ials_ge5 is None:
-            print(f"Recall@{POOL_K} {label:<28}: SKIP (run python -m scripts.train_ials)")
-            continue
-        if label == "two_tower" and two_tower is None:
-            print(f"Recall@{POOL_K} {label:<28}: SKIP (run python -m scripts.train_two_tower)")
-            continue
-        score = mean_recall_at_k(recs, truth, POOL_K)
-        retrieve_scores[label] = score
-        print(f"Recall@{POOL_K} {label:<28}: {score:.6f}")
-
-    print(f"--- retrieve-only relevant>={RELEVANT_MIN:.0f} @{FINAL_K} ---")
-    for label in RANK_CHANNELS:
-        recs10 = {u: recs[:FINAL_K] for u, recs in pools[label].items()}
-        _print_pair(
-            "single",
-            FINAL_K,
-            label,
-            mean_recall_at_k(recs10, truth, FINAL_K),
-            mean_ndcg_at_k(recs10, rel, FINAL_K),
-        )
-
-    rank_dir = resolve_path(cfg.get("ranking", {}).get("artifact_dir", "data/processed/ranker"))
-    loaded_rankers: list[tuple[str, Ranker]] = []
-    for model_name, cls in RANKERS.items():
-        loaded = load_ranker(rank_dir, model_name)
-        if loaded is None:
-            print(f"[ranker] {cls.name}: SKIP (run python -m scripts.train_ranker)")
-            continue
-        loaded_rankers.append((cls.name, loaded))
-
-    print(f"--- retrieve x ranker relevant>={RELEVANT_MIN:.0f} @{FINAL_K} ---")
-    funnel_recs: dict[tuple[str, str], dict[str, list[str]]] = {
-        (ch, rname): {} for ch in RANK_CHANNELS for rname, _ in loaded_rankers
+    print(f"--- warm relevant>={RELEVANT_MIN:.0f} @{FINAL_K} ---")
+    scores = {
+        "pop": _print_row("pop", pop_recs, warm_truth, warm_rel, catalog_n, item_category, vector_of),
+        "pop+cold": _print_row(
+            "pop+cold", cold_pool_recs, warm_truth, warm_rel, catalog_n, item_category, vector_of
+        ),
     }
-    for ch in RANK_CHANNELS:
-        for user_id in user_ids:
-            cand = pools[ch].get(user_id, [])
-            if not cand or service.features is None:
-                for rname, _ in loaded_rankers:
-                    funnel_recs[(ch, rname)][user_id] = []
-                continue
-            history = service.train_by_user.get(user_id, [])
-            feat = service.features.matrix(user_id, history, cand)
-            for rname, ranker in loaded_rankers:
-                order = ranker.score(feat).argsort()[::-1][:FINAL_K]
-                funnel_recs[(ch, rname)][user_id] = [cand[int(i)] for i in order]
-    for ch in RANK_CHANNELS:
-        for rname, _ in loaded_rankers:
-            recs = funnel_recs[(ch, rname)]
-            _print_pair(
-                "funnel",
-                FINAL_K,
-                f"{ch}+{rname}",
-                mean_recall_at_k(recs, truth, FINAL_K),
-                mean_ndcg_at_k(recs, rel, FINAL_K),
-            )
-
-    print(f"--- boost-solo catalog relevant>={RELEVANT_MIN:.0f} @{FINAL_K} ---")
-    solo_recs: dict[str, dict[str, list[str]]] = {rname: {} for rname, _ in loaded_rankers}
-    for i, user_id in enumerate(user_ids, start=1):
-        history = service.train_by_user.get(user_id, [])
-        cand = [iid for iid in catalog_ids if iid not in set(history)]
-        if not cand or service.features is None:
-            for rname, _ in loaded_rankers:
-                solo_recs[rname][user_id] = []
-            continue
-        feat = service.features.matrix(user_id, history, cand)
-        for rname, ranker in loaded_rankers:
-            order = ranker.score(feat).argsort()[::-1][:FINAL_K]
-            solo_recs[rname][user_id] = [cand[int(i)] for i in order]
-        if i % 10 == 0:
-            print(f"  ... catalog {i}/{len(user_ids)}")
-    for rname, _ in loaded_rankers:
-        _print_pair(
-            "solo",
-            FINAL_K,
-            f"catalog+{rname}",
-            mean_recall_at_k(solo_recs[rname], truth, FINAL_K),
-            mean_ndcg_at_k(solo_recs[rname], rel, FINAL_K),
+    for lam in MMR_LAMBDAS:
+        scores[f"mmr_{lam}"] = _print_row(
+            f"mmr_div={lam}",
+            mmr_recs[lam],
+            warm_truth,
+            warm_rel,
+            catalog_n,
+            item_category,
+            vector_of,
         )
+
+    pop_r = scores["pop"]["recall"]
+    pop_ild = scores["pop"]["ild"]
+    pop_uniq = scores["pop"]["uniq"]
+    eligible: list[tuple[float, float]] = []
+    for lam in MMR_LAMBDAS:
+        row = scores[f"mmr_{lam}"]
+        ild_up = row["ild"] > pop_ild or row["uniq"] > pop_uniq
+        recall_ok = (pop_r - row["recall"]) < 0.04 and row["recall"] >= 0.15
+        print(
+            f"[rule] mmr_div={lam}: ild_or_cat_up={ild_up} recall_ok={recall_ok} "
+            f"(drop={pop_r - row['recall']:.4f})"
+        )
+        if ild_up and recall_ok:
+            eligible.append((lam, row["ild"]))
+    if not eligible:
+        print("[serve] MMR off (rule not met)")
+        chosen = None
+    else:
+        chosen = max(eligible, key=lambda t: t[1])[0]
+        print(f"[serve] MMR on lambda_diversity={chosen}")
+
+    cold_rel, cold_truth = _relevant_maps(cold_user_df)
+    cold_truth, cold_rel, cold_ids = _cap(cold_truth, cold_rel, MAX_USERS)
+    print(f"--- cold-user relevant>={RELEVANT_MIN:.0f} @{FINAL_K} n={len(cold_truth)} ---")
+    if cold_ids:
+        c_pop: dict[str, list[str]] = {}
+        c_mmr: dict[str, list[str]] = {}
+        default_lam = chosen if chosen is not None else 0.7
+        for user_id in cold_ids:
+            pool = service.candidate_pool(user_id)
+            c_pop[user_id] = _ids(pool)[:FINAL_K]
+            c_mmr[user_id] = _ids(mmr_rerank(pool, FINAL_K, default_lam, service.similarity))
+        _print_row("cold-user pop", c_pop, cold_truth, cold_rel, catalog_n, item_category, vector_of)
+        _print_row(
+            f"cold-user mmr={default_lam}",
+            c_mmr,
+            cold_truth,
+            cold_rel,
+            catalog_n,
+            item_category,
+            vector_of,
+        )
+    else:
+        print("cold-user: none")
+
+    item_truth = {
+        u: {iid for iid in items if iid not in service.train_item_ids}
+        for u, items in warm_truth.items()
+    }
+    item_truth = {u: s for u, s in item_truth.items() if s}
+    item_rel = {u: {iid: warm_rel[u][iid] for iid in s} for u, s in item_truth.items()}
+    item_ids = list(item_truth.keys())[:MAX_USERS]
+    item_truth = {u: item_truth[u] for u in item_ids}
+    item_rel = {u: item_rel[u] for u in item_ids}
+    print(f"--- cold-item GT (warm users) @{FINAL_K} n={len(item_truth)} ---")
+    if item_ids:
+        _print_row(
+            "cold-item pop",
+            {u: pop_recs[u] for u in item_ids},
+            item_truth,
+            item_rel,
+            catalog_n,
+            item_category,
+            vector_of,
+        )
+        _print_row(
+            "cold-item pop+cold",
+            {u: cold_pool_recs[u] for u in item_ids},
+            item_truth,
+            item_rel,
+            catalog_n,
+            item_category,
+            vector_of,
+        )
+        for lam in MMR_LAMBDAS:
+            _print_row(
+                f"cold-item mmr={lam}",
+                {u: mmr_recs[lam][u] for u in item_ids},
+                item_truth,
+                item_rel,
+                catalog_n,
+                item_category,
+                vector_of,
+            )
+    else:
+        print("cold-item GT: none")
     print("OK")
 
 
