@@ -53,7 +53,13 @@ class RecommendService:
         if not train_path.exists() or not items_path.exists():
             raise FileNotFoundError("처리된 데이터가 없습니다. download_data → prepare_splits 순서로 실행해주세요.")
 
-        pop = PopularityRetriever.from_train(train_path, top_n=int(cfg["retrieval"]["popularity_top_n"])) # 인기도 추천 서비스 초기화
+        pop_n = int(cfg["retrieval"]["popularity_top_n"])
+        pop_min = cfg["retrieval"].get("popularity_min_rating")
+        pop = PopularityRetriever.from_train(
+            train_path,
+            top_n=pop_n,
+            min_rating=float(pop_min) if pop_min is not None else None,
+        )
         train = pd.read_parquet(train_path, columns=["user_id", "item_id", "rating", "timestamp"]) # 학습 데이터 로드
         train = train.sort_values("timestamp") # 학습 데이터 정렬
         train_by_user = (train.groupby("user_id")["item_id"].apply(lambda s: s.astype(str).tolist()).to_dict()) # 사용자 히스토리 생성
