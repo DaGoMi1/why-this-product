@@ -1,4 +1,8 @@
-"""popularity 후보 위 부스팅 랭커 학습 (LightGBM / XGBoost / CatBoost)."""
+"""popularity 후보 위 부스팅 랭커 학습 (LightGBM / XGBoost / CatBoost).
+
+양성은 train `rating >= popularity_min_rating`(기본 5) 시퀀스의 마지막 아이템.
+후보·drop 기준은 같은 임계의 popularity top-N. item_mean_rating은 전 평점.
+"""
 
 from __future__ import annotations
 
@@ -41,10 +45,13 @@ def _build_table(cfg: dict) -> tuple[np.ndarray, np.ndarray]:
         raise FileNotFoundError(f"Missing {train_path} or {items_path}. Run prepare_splits first.")
 
     pop_n = int(cfg["retrieval"]["popularity_top_n"])
+    pop_min = cfg["retrieval"].get("popularity_min_rating", 5)
     train = pd.read_parquet(train_path, columns=["user_id", "item_id", "rating", "timestamp"])
     train = train.sort_values("timestamp")
     items = pd.read_parquet(items_path)
-    popularity = PopularityRetriever.from_train(train_path, top_n=pop_n)
+    popularity = PopularityRetriever.from_train(
+        train_path, top_n=pop_n, min_rating=float(pop_min)
+    )
 
     content = None
     index_dir = resolve_path(cfg["rag"]["faiss_index_dir"])
@@ -63,11 +70,13 @@ def _build_table(cfg: dict) -> tuple[np.ndarray, np.ndarray]:
         train, popularity, _items_meta(items), content, ials
     )
 
+    positives = train[train["rating"] >= float(pop_min)]
     by_user = (
-        train.groupby("user_id", sort=False)["item_id"]
+        positives.groupby("user_id", sort=False)["item_id"]
         .apply(lambda s: s.astype(str).tolist())
         .to_dict()
     )
+    n_train_users = int(train["user_id"].nunique())
     n_users = len(by_user)
     n_multi = sum(1 for hist in by_user.values() if len(hist) >= 2)
     xs: list[np.ndarray] = []
@@ -94,8 +103,8 @@ def _build_table(cfg: dict) -> tuple[np.ndarray, np.ndarray]:
             print(f"  ... scanned {i}/{n_users} kept={kept}")
 
     print(
-        f"[coverage] train_users={n_users:,} multi_review={n_multi:,} "
-        f"({100.0 * n_multi / n_users:.1f}%)"
+        f"[coverage] train_users={n_train_users:,} ge{int(pop_min)}_users={n_users:,} "
+        f"multi_ge{int(pop_min)}={n_multi:,} ({100.0 * n_multi / max(n_users, 1):.1f}% of ge{int(pop_min)})"
     )
     print(
         f"[coverage] kept_users={kept:,} dropped_positive_not_in_pop={dropped_not_in_pop:,} "
