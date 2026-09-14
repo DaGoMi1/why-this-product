@@ -13,10 +13,25 @@ def test_health() -> None:
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "ok"
-    assert body["phase"] == "phase1"
+    assert body["phase"] == "phase5"
 
 
-def test_recommend_validation() -> None:
+def test_explain_validation() -> None:
     client = TestClient(app)
-    response = client.post("/api/recommend", json={})
+    response = client.post("/api/explain", json={})
     assert response.status_code == 422
+
+
+def test_explain_missing_openai_key(monkeypatch) -> None:
+    from backend.routers import explain as explain_mod
+    from ml.rag.llm import MissingOpenAIKeyError
+
+    class _Svc:
+        def explain(self, *args, **kwargs):
+            raise MissingOpenAIKeyError("OPENAI_API_KEY is required for /api/explain")
+
+    monkeypatch.setattr(explain_mod, "get_explain_service", lambda: _Svc())
+    client = TestClient(app)
+    response = client.post("/api/explain", json={"item_ids": ["B000000000"]})
+    assert response.status_code == 503
+    assert "OPENAI_API_KEY" in response.json()["detail"]
