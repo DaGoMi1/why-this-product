@@ -21,8 +21,8 @@ LLM은 **이미 좁혀진 후보 안에서만** 설명·선택합니다. 없는 
 |------|------|
 | Frontend | Streamlit |
 | Backend | FastAPI |
-| Retrieval | popularity (기본) + content FAISS + iALS. RRF hybrid는 pop 미달. two-tower 탈락 |
-| Ranking | LightGBM / XGBoost / CatBoost on popularity 후보 (`use_ranker`, 기본 off — 최고 XGB 0.0938 < pop). DeepFM/LTR 비교는 남음 |
+| Retrieval | popularity (기본, `rating>=5` 카운트) + content FAISS + iALS. RRF·two-tower는 pop@10 미달 |
+| Ranking | LightGBM / XGBoost / CatBoost 실험 후 서빙 off. 관련 R@10 최고 재정렬 0.0575 < pop 0.1900 |
 | Re-rank | MMR |
 | RAG | sentence-transformers, FAISS |
 | LLM | OpenAI `gpt-4o-mini` (필수) |
@@ -55,12 +55,12 @@ flowchart LR
 
 ## MVP 범위
 
-- popularity retrieve (기본). content FAISS(`per_seed`) + iALS(`rating_ge_5`). RRF는 `use_hybrid`
-- LightGBM / XGBoost / CatBoost rank (`use_ranker`, 기본 off — 최고 XGB 0.0938 < pop 0.1689)
+- popularity retrieve (기본, train `rating>=5` 카운트). content FAISS(`per_seed`) + iALS(`rating_ge_5`). RRF는 `use_hybrid`
+- LightGBM / XGBoost / CatBoost rank (`use_ranker` 플래그만, 서빙 off). Phase 3에서 pop 0.1900이 이김. DeepFM 없음
 - MMR 다양성
 - RAG 기반 “왜 이 상품?” 설명 API / UI
 
-이후 단계( 랭커 선정·ablation → cold-start → 비용·지연 리포트 → Docker )는 [docs/ROADMAP.md](docs/ROADMAP.md)를 보세요.
+이후 단계( MMR·cold-start → RAG 설명 → 비용·지연 리포트 → Docker )는 [docs/ROADMAP.md](docs/ROADMAP.md)를 보세요.
 
 ---
 

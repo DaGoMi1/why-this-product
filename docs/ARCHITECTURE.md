@@ -26,8 +26,8 @@ flowchart LR
 |--------|--------|------|
 | Serving | `backend/` | HTTP API, 스키마, 요청 오케스트레이션 |
 | UI | `frontend/` | Streamlit 데모 (유저/쿼리 입력 → 추천·설명) |
-| Retrieve | `ml/retrieval/` | popularity (기본), content FAISS, iALS. RRF로 합칠 수 있음. two-tower 탈락 |
-| Rank | `ml/ranking/` | LightGBM / XGBoost / CatBoost on popularity 후보 (`use_ranker`, 기본 off). DeepFM/LTR은 ablation으로 선정 |
+| Retrieve | `ml/retrieval/` | popularity (기본, `rating>=5` 카운트), content FAISS, iALS. RRF로 합칠 수 있음. two-tower 탈락 |
+| Rank | `ml/ranking/` | LightGBM / XGBoost / CatBoost (`use_ranker`, 실험 후 서빙 off). 선정은 popularity 단일 |
 | Re-rank | `ml/rerank/` | MMR, 카테고리·브랜드 다양성, 비즈니스 룰 |
 | RAG | `ml/rag/` | 상품 문서 검색 + OpenAI 설명/선택 (후보 id만, API 키 필수) |
 | Embeddings | `ml/embeddings/` | sentence-transformers 래퍼 |
@@ -38,7 +38,7 @@ flowchart LR
 
 1. `POST /api/recommend` — user_id 또는 seed item / query
 2. Retrieve: 기본 popularity. `use_hybrid`면 pop ∪ iALS ∪ content를 RRF
-3. Rank: 기본은 retrieve 순서. `use_ranker`면 부스팅으로 pop 후보 재정렬 후 top-N
+3. Rank: 기본은 retrieve 순서(popularity). `use_ranker`는 플래그만 — 부스팅은 pop@10을 못 넘겨 서빙 off
 4. Re-rank: MMR로 final_k
 5. (옵션) `POST /api/explain` — 각 ASIN에 대해 메타+리뷰 근거로 설명
 6. 응답: `{ items: [{asin, score, reason?}], latency_ms }`

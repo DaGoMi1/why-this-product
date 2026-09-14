@@ -10,33 +10,123 @@
 
 | 지표 | 용도 | 비고 |
 |------|------|------|
-| Recall@K | retrieve·최종 리스트 | K = 10, 50 |
-| NDCG@K | 순위 품질 | K = 10 |
-| Coverage | 롱테일·다양성 | 추천된 unique item / catalog |
-| Intra-list diversity | MMR 효과 | 임베딩·카테고리 기준 |
-| Latency p50/p95 | 서빙 | retrieve / rank / rerank / rag 분해 (Phase 6) |
+| Recall@K (관련) | retrieve 풀 / 최종 리스트 | GT = valid `rating >= 5`. retrieve K=200, 최종 K=10 |
+| NDCG@10 (등급) | 리스트 순위 (Recall과 별도) | 관련도 = valid 별점 1~5, 없으면 0. DCG gain = `2^rel - 1` |
+| Coverage | 롱테일·다양성 | 추천된 unique item / catalog (아직 미사용) |
+| Intra-list diversity | MMR 효과 | Phase 4 |
+| Latency p50/p95 | 서빙 | Phase 6 |
 
-(선택, 후속) IPS / 노출 편향 보정은 Phase 3+에서 검토.
+주 문제는 별점 예측(RMSE)이 아니라 **리스트 추천**. 존재 Recall·관련>=4 숫자는 레거시.
+
+## 지표 확정 (rating >= 5 통일)
+
+긍정은 전부 **`rating >= 5`**. pop 카운트, iALS, 랭커 라벨, Recall GT가 같다. 4점은 Recall 정답이 아니다. NDCG만 1~5 등급을 따로 본다.
+
+표본: warm 유저 중 valid 5점이 있는 사람 최대 200명.
+
+세 갈래:
+
+1. Retrieve 단독: 각 채널 top-10 + 풀 Recall@200
+2. Retrieve × 랭커: 그 채널 200을 LGBM/XGB/Cat이 재정렬 → top-10 (학습은 pop-200 ge_5 한 번)
+3. 부스팅 단독: 카탈로그(히스토리 제외)를 세 랭커가 직접 top-10
+
+### 실험 전 예측
+
+| 항목 | 사전 예측 | 실측 |
+|------|-----------|------|
+| 단독 retrieve 1위 (R@10 / NDCG@10) | pop top-10. >=4 때(0.2023)보다 Recall은 낮을 것 | **pop 0.1900 / 0.0698** (Recall만 낮아짐) |
+| retrieve Recall@200 1위 | pop | **RRF(pop, content) 0.3500** (pop 0.3350. 예측과 어긋남) |
+| 채널 풀 재정렬 vs 원래 순서 | 어느 채널이든 재정렬이 더 낮을 것 | 대체로 맞음. 예외: iALS+Cat 0.0500 > iALS 단독 0.0425 |
+| 부스팅 단독 vs pop 단독 | 더 낮을 것 (학습이 pop-200) | **맞음.** 최고 Cat 0.0400 / 0.0275 |
+
+실험 후: 최종 리스트는 여전히 **pop top-10**. RRF(pop, content)는 풀@200만 이기고 @10은 0.1100으로 pop에 못 미친다. 재정렬·카탈로그 단독은 전부 pop 이하. **서빙은 popularity 단일 (`min_rating=5`). `use_hybrid`·`use_ranker` 기본 off.**
+
+랭커 학습(ge_5 시퀀스, pop-200): train 유저 254,641 / 5점 유저 156,561 / 2개+ 14,790 / 양성-in-pop **8,894** (dropped 39.9%). 행 1,769,599.
+
+### Phase 3 종료
+
+선정: **popularity 단일** (`min_rating=5`). 랭커는 서빙 기본이 아니다 (`use_ranker` off).
+
+탈락 (최종 Recall@10 / NDCG@10, 관련 >=5):
+
+- iALS 0.0425 / 0.0213, content `per_seed` 0.0550 / 0.0421
+- RRF 최고 @10은 (pop, iALS) 0.1125 / 0.0451. @200 1위 RRF(pop, content) 0.3500은 풀 지표일 뿐
+- 재정렬 최고 RRF(pop, content)+CatBoost 0.0575 / 0.0364
+- 카탈로그 단독 최고 CatBoost 0.0400 / 0.0275
+
+하지 않은 것: DeepFM, LambdaMART, 채널별 랭커 재학습, RMSE. 같은 희소 라벨·pop-200 후보에서 순서를 흔드는 모델이라 격자를 뒤집는 근거가 없다. 이 결론은 All_Beauty 리스트 추천 본체에만 해당한다.
+
 
 ## MVP 스모크 (`scripts/eval_smoke.py`)
 
-Phase 1–2 스모크 기준:
+1. popularity `min_rating=5`. 랭커는 ge_5 재학습 artifact
+2. valid 5점 있는 warm 최대 200명
+3. 채널별 Recall@200 과 단독 top-10 (Recall+NDCG): pop, iALS, content `per_seed`, RRF 세 조합. two-tower는 @200만
+4. 각 채널 200 × 랭커 3 → top-10 (Recall+NDCG)
+5. 카탈로그 단독 부스팅 3줄
+6. artifact 없으면 SKIP
+7. 실패 시 non-zero exit
 
-1. train으로 만든 popularity·FAISS가 로드된다
-2. valid 유저 샘플 N명에 대해 Recall@10이 계산된다
-3. popularity-only vs popularity+content 비교가 출력된다
-4. iALS artifact가 있으면 라벨 variant 4줄(Recall@10)이 출력된다
-5. two-tower artifact가 있으면 Recall@10 한 줄이 출력된다
-6. content 단독 `mean` vs `per_seed` Recall@10이 출력된다 (전체 + multi-seed 세그먼트)
-7. RRF 세 줄이 출력된다: pop+content / pop+iALS / pop+iALS+content
-8. 랭커 artifact가 있으면 `ranker_lgbm` / `ranker_xgb` / `ranker_catboost` Recall@10이 출력된다 (없으면 SKIP)
-9. 실패 시 non-zero exit
+### retrieve Recall@200 (관련 >=5)
 
-### 최근 스모크 결과 (warm valid 200 users)
+| 구성 | Recall@200 |
+|------|------------|
+| popularity (`min_rating=5`) | 0.3350 |
+| iALS `rating_ge_5` | 0.1150 |
+| content `per_seed` | 0.0875 |
+| RRF(pop, content) | **0.3500** |
+| RRF(pop, iALS) | 0.3175 |
+| RRF(pop, iALS, content) | 0.3400 |
+| two-tower | 0.0025 |
+
+풀 1위는 RRF(pop, content). 최종 리스트 승자와 같지 않다.
+
+### 단독 top-10 (관련 >=5 Recall / 등급 NDCG)
+
+| 구성 | Recall@10 | NDCG@10 |
+|------|----------|---------|
+| popularity | **0.1900** | **0.0698** |
+| iALS | 0.0425 | 0.0213 |
+| content `per_seed` | 0.0550 | 0.0421 |
+| RRF(pop, content) | 0.1100 | 0.0496 |
+| RRF(pop, iALS) | 0.1125 | 0.0451 |
+| RRF(pop, iALS, content) | 0.0825 | 0.0476 |
+| catalog + LightGBM | 0.0050 | 0.0032 |
+| catalog + XGBoost | 0.0050 | 0.0032 |
+| catalog + CatBoost | 0.0400 | 0.0275 |
+
+### retrieve × 랭커 top-10
+
+| 풀 | +LGBM R/N | +XGB R/N | +Cat R/N |
+|----|-----------|----------|----------|
+| popularity | 0.0150 / 0.0108 | 0.0200 / 0.0188 | 0.0250 / 0.0144 |
+| iALS | 0.0250 / 0.0112 | 0.0050 / 0.0032 | 0.0500 / 0.0298 |
+| content | 0.0200 / 0.0095 | 0.0050 / 0.0032 | 0.0400 / 0.0280 |
+| RRF(pop, content) | 0.0250 / 0.0113 | 0.0100 / 0.0046 | 0.0575 / 0.0364 |
+| RRF(pop, iALS) | 0.0250 / 0.0125 | 0.0100 / 0.0071 | 0.0400 / 0.0251 |
+| RRF(pop, iALS, content) | 0.0200 / 0.0091 | 0.0050 / 0.0036 | 0.0525 / 0.0313 |
+
+재정렬 최고는 RRF(pop, content)+CatBoost 0.0575 / 0.0364. pop 단독 0.1900 / 0.0698 미달.
+
+## 이전 리그: 관련 >=4 (통일 전)
+
+pop 카운트·Recall이 >=4, 랭커는 존재 라벨. 승자 결정에 쓰지 않는다.
+
+| 구성 | Recall@10 | NDCG@10 |
+|------|----------|---------|
+| pop 단일 | 0.2023 | 0.0699 |
+| popularity + LightGBM | 0.0450 | 0.0199 |
+| popularity + XGBoost | 0.0525 | 0.0215 |
+| popularity + CatBoost | 0.0600 | 0.0271 |
+| retrieve@200 pop | 0.3527 | — |
+
+### 레거시: 존재 Recall (리뷰만 있으면 양성)
+
+아래는 1점도 정답이던 이전 리그다. 승자 결정에 쓰지 않는다.
 
 | 구성 | Recall@10 |
 |------|----------|
-| popularity | 0.1689 |
+| popularity (단일) | 0.1689 |
 | popularity+content (가중합, `per_seed`) | 0.0525 |
 | iALS `all` | 0.0475 |
 | iALS `rating_ge_3` | 0.0450 |
@@ -52,7 +142,49 @@ Phase 1–2 스모크 기준:
 | XGBoost ranker (pop 200 재정렬) | 0.0938 |
 | CatBoost ranker (pop 200 재정렬) | 0.0650 |
 
-이 데이터·split에서는 popularity가 강하다. two-tower는 탈락, content 시드 기본값은 `per_seed`. RRF와 부스팅 세 개 모두 pop을 못 넘겼다. 서빙 기본 retrieve는 popularity. `use_ranker`는 플래그만.
+이 표에서는 popularity 단일이 강하다. 랭커는 pop 순서를 흔들어 더 낮아졌다. 서빙 기본은 popularity.
+
+## Funnel vs 단일 pop (retrieve@200 승자 + 기존 랭커)
+
+질문: retrieve를 같은 K=200으로 고른 뒤, **1위 풀 200개**를 지금 있는 LightGBM / XGBoost / CatBoost로 top-10 하면, pop 단일 Recall@10(0.1689)을 넘나.
+
+랭커는 재학습하지 않는다. pop-200에서 배운 모델을 승자 풀에 그대로 얹는다.
+
+### 실험 전 예측
+
+같은 warm valid 200.
+
+| 항목 | 사전 예측 | 실측 |
+|------|-----------|------|
+| retrieve Recall@200 1위 | pop 또는 RRF(pop, iALS) | **popularity (0.3468)** |
+| pop Recall@200 | @10(0.1689)보다 높을 것 (랭커 천장) | **0.3468** |
+| 승자가 pop이면 펀넬 3줄 | 기존과 같음 (XGB 0.0938 등), pop 단일보다 낮음 | **같음. 최고 XGB 0.0938 < 0.1689** |
+| 승자가 pop이 아니면 펀넬 3줄 | 천장은 그 Recall@200. 재학습 없는 랭커가 pop@10을 넘을 가능성은 낮음 | 해당 없음 (승자=pop) |
+
+실험 후: retrieve@200도 pop이 1위다. RRF 세 조합은 0.308~0.313으로 pop(0.3468)에 못 미친다. iALS·content 단독 @200은 ~0.09. (예전 iALS@10 0.1048은 유저 벡터가 없으면 **pop fallback**을 섞은 값. 이번 retrieve 리그는 fallback 없이 채널만 본다.) pop@200 0.3468은 @10 0.1689의 약 두 배라 랭커 천장은 있다. 기존 부스팅은 그 순서를 흔들어 전부 하락. **세 줄 모두 pop 단일 이하 → 멀티스테이지 비활성. 서빙은 popularity 단일.**
+
+### retrieve Recall@200 (실측)
+
+| 구성 | Recall@200 | 비고 |
+|------|------------|------|
+| popularity | **0.3468** | 승자 |
+| iALS `rating_ge_5` | 0.0892 | pop fallback 없음 |
+| content `per_seed` | 0.0900 | |
+| RRF(pop, content) | 0.3081 | |
+| RRF(pop, iALS) | 0.3118 | |
+| RRF(pop, iALS, content) | 0.3131 | RRF 중 최고, pop 미달 |
+| two-tower | 0.0075 | |
+
+승자: **popularity**
+
+### funnel Recall@10 (승자 풀=pop 200 + 기존 랭커)
+
+| 구성 | Recall@10 |
+|------|----------|
+| pop 단일 (비교 기준) | **0.1689** |
+| popularity + LightGBM | 0.0813 |
+| popularity + XGBoost | 0.0938 |
+| popularity + CatBoost | 0.0650 |
 
 ## iALS implicit 라벨 (실험 전 예측 → 실측)
 
@@ -191,24 +323,23 @@ RRF는 점수가 아니라 **등수**만 더한다.
 
 실험 후: 테이블은 그대로(13,322 유저 / 2,651,592행). LightGBM은 재측정이 같았다. XGBoost가 셋 중 최고(0.0938)지만 popularity(0.1689)와 iALS(0.1048)를 못 넘긴다. CatBoost는 0.0650으로 가장 낮다. “비슷할 것”은 방향은 맞았고, 셋 사이 간격은 예상보다 조금 크다. **서빙 기본은 popularity. `use_ranker`는 플래그만.**
 
-## Ablation 템플릿 (README에 채울 표)
+## Ablation 템플릿 (관련 >=5 Recall / 등급 NDCG — 승자 결정용)
 
 | 구성 | Recall@10 | NDCG@10 | Coverage | p50 ms |
 |------|----------|---------|----------|--------|
-| popularity | 0.1689 | — | — | — |
-| + content FAISS (가중합, `per_seed`) | 0.0525 | — | — | — |
-| content `per_seed` (단독) | 0.0525 | — | — | — |
-| iALS (`rating_ge_5`) | 0.1048 | — | — | — |
-| two-tower (탈락) | 0.0000 | — | — | — |
-| RRF(pop, iALS) | 0.1114 | — | — | — |
-| RRF(pop, iALS, content) | 0.0817 | — | — | — |
-| + LightGBM (pop 재정렬) | 0.0813 | — | — | — |
-| + XGBoost (pop 재정렬, 부스팅 중 최고) | 0.0938 | — | — | — |
-| + CatBoost (pop 재정렬) | 0.0650 | — | — | — |
+| popularity (`min_rating=5`) | **0.1900** | **0.0698** | — | — |
+| RRF(pop, content) retrieve@10 | 0.1100 | 0.0496 | — | — |
+| RRF(pop, content) retrieve@200 | 0.3500 | — | — | — |
+| iALS (`rating_ge_5`) retrieve@10 | 0.0425 | 0.0213 | — | — |
+| content `per_seed` retrieve@10 | 0.0550 | 0.0421 | — | — |
+| + CatBoost (RRF pop+content 재정렬) | 0.0575 | 0.0364 | — | — |
+| catalog + CatBoost | 0.0400 | 0.0275 | — | — |
 | + MMR | — | — | — | — |
 | + RAG + OpenAI explain | — | — | — | cost |
 
-랭커는 DeepFM에 고정하지 않는다. Phase 3에서 부스팅·DL·LTR 후보를 같은 feature/split으로 비교한 뒤, 지표·latency·구현 복잡도를 보고 고른다.
+최종 리스트 승자는 pop 단일. @200 풀 1위 RRF는 top-10 승자가 아니다.
+
+존재(1점도 양성)·관련>=4 숫자는 위 레거시 표. DeepFM은 돌리지 않고 Phase 3를 닫는다.
 
 OpenAI는 설명/후보 내 선택에 **항상** 사용한다. 키 없는 fallback 경로는 두지 않는다.
 

@@ -26,20 +26,27 @@
 - [x] content + CF hybrid / RRF fusion — 최고 RRF(pop, iALS)=0.1114, pop(0.1689) 미달 → 서빙 기본은 popularity
 - [x] retrieve ablation 표 (iALS 라벨, two-tower 탈락, content 시드, RRF, `docs/EVAL.md`)
 
-## Phase 3 — Ranking (현재)
+
+
+## Phase 3 — Ranking
 
 - [x] 피처 + hard negative 정의 (train 마지막 아이템 양성, pop 200 위 hard neg, train 통계만)
 - [x] 첫 모델 LightGBM (pop 후보 재정렬). Recall@10 0.0813 < pop 0.1689 → 서빙 기본은 popularity, `use_ranker` 플래그
 - [x] 부스팅 후보 LightGBM / XGBoost / CatBoost. 최고 XGB 0.0938 < pop 0.1689 → 서빙 기본은 popularity
-- [ ] 랭커 후보 실험: DeepFM 등 DL, 필요 시 LambdaMART 등 LTR
-- [ ] ranker ablation (baseline vs 후보들) 후 **오프라인 지표·latency 기준으로 하나 선정**
-- [ ] 선정 이유·탈락 이유를 `docs/EVAL.md` 또는 README ablation 표에 기록
+- [x] retrieve@200 vs 펀넬@10 진단. 풀 승자 pop(0.3468), 기존 랭커 최고 0.0938 < pop 단일 0.1689 → 서빙은 단일 단계
+- [x] 오프라인 지표 확정: 관련 Recall(`rating>=4`) + 등급 NDCG@10. pop 카운트도 >=4. 승자 여전히 pop (R@10 0.2023 / NDCG 0.0699)
+- [x] 긍정 `rating>=5` 통일. retrieve×랭커 격자 + 카탈로그 단독. 최종 @10 승자 pop 0.1900 / 0.0698. @200은 RRF(pop, content) 0.3500이지만 top-10 미달 → 서빙은 popularity 단일
+- [x] DeepFM / LambdaMART 스킵. ge_5 격자에서 재정렬·카탈로그 단독이 전부 pop 미달이고 학습 라벨이 희소(양성-in-pop 8,894)
+- [x] ranker ablation 종료. 선정은 **랭커 없음 = popularity 단일** (`use_ranker` 기본 off)
+- [x] 선정·탈락·미실험 이유 `docs/EVAL.md`
 
-## Phase 4 — Re-rank & cold-start
+## Phase 4 — Re-rank & cold-start (현재)
 
 - [ ] MMR (카테고리·임베딩 다양성)
 - [ ] 신규 상품: 텍스트 임베딩 fallback
 - [ ] cold-start 세그먼트 지표
+
+
 
 ## Phase 5 — RAG shopping assistant
 
@@ -47,6 +54,8 @@
 - [ ] `POST /api/explain` — 근거 스니펫 + OpenAI로 한두 문장 이유 (`OPENAI_API_KEY` 필수)
 - [ ] LLM: 후보 안에서만 선택/문장 다듬기 (키 없으면 기동 실패)
 - [ ] latency·API 비용 표
+
+
 
 ## Phase 6 — Production polish
 
@@ -57,8 +66,11 @@
 
 ---
 
+
+
 ## 작업 원칙
 
 1. Phase를 건너뛰지 않는다. 특히 **eval 없는 모델 추가** 금지.
 2. LLM은 Phase 5 이전에도 넣지 않는다 (설명 레이어가 준비된 뒤).
 3. README 숫자는 `scripts/eval_smoke.py` / eval 리포트에서 재현 가능해야 한다.
+
