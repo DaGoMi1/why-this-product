@@ -13,7 +13,7 @@ def test_health() -> None:
     assert response.status_code == 200
     body = response.json()
     assert body["status"] == "ok"
-    assert body["phase"] == "phase5"
+    assert body["phase"] == "phase6"
 
 
 def test_explain_validation() -> None:
