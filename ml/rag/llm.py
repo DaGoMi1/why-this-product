@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from openai import OpenAI
 
@@ -29,6 +29,7 @@ class ExplainResult:
     prompt_tokens: int
     completion_tokens: int
     model: str
+    timings_ms: dict[str, float] = field(default_factory=dict)
 
 
 def require_api_key() -> str:
