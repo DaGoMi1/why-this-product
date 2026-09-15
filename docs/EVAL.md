@@ -402,6 +402,22 @@ LLM은 추천 Recall을 올리지 않는다. 후보 `item_ids` 안에서만 한�
 
 실험 후: `scripts/eval_rag.py` (쿼리 `hydrating serum` / `gentle cleanser` → recommend 10 → explain). 한 JSON에 N개를 맡기면 사유가 비는 경우가 있어 **상품마다 호출**로 바꿨다. 환각 0, 사유 20/20. latency·비용은 왕복 수만큼 올랐고 추천 Recall과 섞지 않는다. 키 없으면 설명 경로가 기동하지 않는다.
 
+## Phase 6: 요청 latency (보조)
+
+Recall과 섞지 않는다. `POST /api/recommend`는 `timings_ms.retrieve` / `rank` / `rerank`, `POST /api/explain`은 `timings_ms.rag`. 서빙 기본에서 rank는 0.
+
+표본: query `hydrating serum`, k=5, `use_mmr=true`, 이어서 같은 5개 explain (`select_k=0`).
+
+| 단계 | 경로 | ms |
+|------|------|----|
+| retrieve | content FAISS | **61.3** |
+| rank | 서빙 off | **0.0** |
+| rerank | MMR λ=0.5 | **12.3** |
+| recommend total | | **73.6** |
+| rag | 스니펫 FAISS + OpenAI (상품당 1호출) | **7885.6** |
+
+설명 지연은 거의 전부 OpenAI다. 추천 단계 합은 0.1초 아래. GitHub Actions는 넣지 않았다.
+
 ## LLM 평가
 
 - 추천 품질의 주 지표로 LLM 점수를 쓰지 않는다.

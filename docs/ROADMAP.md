@@ -53,12 +53,13 @@
 - [x] LLM: 후보 안에서만 선택/문장 다듬기 (키 없으면 503)
 - [x] latency·API 비용 표 (p50 14.16s, ~$0.0008/req, 환각 0, 사유 20/20)
 
-## Phase 6 — Production polish (현재)
+## Phase 6 — Production polish
 
-- [ ] Docker Compose (API + UI)
-- [ ] 요청당 latency breakdown (retrieve / rank / rerank / rag)
-- [ ] 데모 GIF, GitHub description·topics 정리
-- [ ] (선택) GitHub Actions: lint + `pytest` smoke
+- [x] Docker Compose (API + UI)
+- [x] 요청당 latency breakdown (retrieve / rank / rerank / rag)
+- [x] 데모 GIF, GitHub description·topics 정리
+
+Phase 0–6 플래그십 MVP는 여기서 닫는다. 배포(AWS 등)와 CI는 범위 밖이다.
 
 ---
 
