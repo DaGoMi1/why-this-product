@@ -25,6 +25,7 @@ build/
 *.log
 *.tmp
 .ipynb_checkpoints/
+notebooks/*.ipynb
 
 # Raw downloads (재다운로드 가능). 폴더 자체는 두고 내용만 무시한다.
 data/raw/*
