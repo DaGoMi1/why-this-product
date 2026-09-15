@@ -38,4 +38,5 @@ def explain(body: ExplainRequest) -> ExplainResponse:
         model=result.model,
         prompt_tokens=result.prompt_tokens,
         completion_tokens=result.completion_tokens,
+        timings_ms=result.timings_ms,
     )

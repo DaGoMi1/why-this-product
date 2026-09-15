@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 from functools import lru_cache
 
 import pandas as pd
@@ -24,6 +25,7 @@ COLD_CONTENT_MAX = 20
 class RecommendResult:
     items: list[dict]
     strategy: str
+    timings_ms: dict[str, float] = field(default_factory=dict)
 
 
 class RecommendService:
@@ -148,6 +150,18 @@ class RecommendService:
         ials_k = int(self.cfg.get("ials", {}).get("top_k", 100))
         return ials_model.recommend(user_id, k=max(final_k, ials_k), exclude=exclude)
 
+    @staticmethod
+    def _stage_ms(retrieve: float, rank: float, rerank: float) -> dict[str, float]:
+        retrieve_ms = round(retrieve * 1000, 1)
+        rank_ms = round(rank * 1000, 1)
+        rerank_ms = round(rerank * 1000, 1)
+        return {
+            "retrieve": retrieve_ms,
+            "rank": rank_ms,
+            "rerank": rerank_ms,
+            "total": round(retrieve_ms + rank_ms + rerank_ms, 1),
+        }
+
     def recommend_for_user(
         self,
         user_id: str,
@@ -166,11 +180,14 @@ class RecommendService:
         content_k = int(self.cfg["retrieval"]["content_faiss_top_k"])   # 콘텐츠 추천 상품 개수
         merge_k = int(self.cfg["retrieval"]["hybrid_merge_k"])          # 인기도와 콘텐츠 기반 추천 결과를 혼합하여 추천 상품 개수
 
+        t_pop = time.perf_counter()
         history = self.train_by_user.get(user_id, [])                   # 사용자 히스토리
         exclude = set(history)                                     # 제외할 아이템 목록
         pop_hits = self.popularity.recommend(k=pop_n, exclude=exclude)  # 인기도 추천 결과
+        pop_s = time.perf_counter() - t_pop
 
         if use_hybrid:
+            t1 = time.perf_counter()
             channels = hybrid_channels or list(
                 self.cfg["retrieval"].get("hybrid_channels", ["popularity", "ials", "content"])
             )
@@ -187,39 +204,65 @@ class RecommendService:
                 names.append("content")
             rrf_k = int(self.cfg["retrieval"].get("rrf_k", 60))
             merged = rrf_fuse(lists, rrf_k=rrf_k, merge_k=merge_k)
-            return self._to_result(merged[:final_k], "rrf_" + "_".join(names))
+            retrieve_s = pop_s + (time.perf_counter() - t1)
+            return self._to_result(
+                merged[:final_k],
+                "rrf_" + "_".join(names),
+                self._stage_ms(retrieve_s, 0.0, 0.0),
+            )
 
         # use_ials가 켜지면 iALS만 쓴다 (hybrid가 아닐 때).
         ials_model = ials if ials is not None else self.ials
         if use_ials:
+            t1 = time.perf_counter()
             hits = self._ials_hits(user_id, exclude, final_k, ials=ials)
+            retrieve_s = pop_s + (time.perf_counter() - t1)
+            timings = self._stage_ms(retrieve_s, 0.0, 0.0)
             if hits:
                 variant = ials_model.variant if ials_model is not None else "ials"
-                return self._to_result(hits[:final_k], f"ials_{variant}")
-            return self._to_result(pop_hits[:final_k], "popularity")
+                return self._to_result(hits[:final_k], f"ials_{variant}", timings)
+            return self._to_result(pop_hits[:final_k], "popularity", timings)
 
         active_ranker = ranker if ranker is not None else self.ranker
         if use_ranker and active_ranker is not None and self.features is not None and pop_hits:
+            t1 = time.perf_counter()
             cand_ids = [item_id for item_id, _ in pop_hits]
             feat = self.features.matrix(user_id, history, cand_ids)
             scores = active_ranker.score(feat)
             order = scores.argsort()[::-1]
             ranked = [(cand_ids[int(i)], float(scores[int(i)])) for i in order]
-            return self._to_result(ranked[:final_k], getattr(active_ranker, "name", "ranker_lgbm"))
+            rank_s = time.perf_counter() - t1
+            return self._to_result(
+                ranked[:final_k],
+                getattr(active_ranker, "name", "ranker_lgbm"),
+                self._stage_ms(pop_s, rank_s, 0.0),
+            )
 
         if use_content and self.content is not None and history:
+            t1 = time.perf_counter()
             content_hits = self._content_hits(history, exclude, content_k)
             merged = merge_candidates(pop_hits, content_hits, merge_k=merge_k)
-            return self._to_result(merged[:final_k], "popularity+content")
+            retrieve_s = pop_s + (time.perf_counter() - t1)
+            return self._to_result(
+                merged[:final_k],
+                "popularity+content",
+                self._stage_ms(retrieve_s, 0.0, 0.0),
+            )
 
+        t1 = time.perf_counter()
         pool = self.candidate_pool(user_id)
+        retrieve_s = time.perf_counter() - t1
         if use_mmr and pool:
+            t2 = time.perf_counter()
             lam = float(self.cfg.get("rerank", {}).get("lambda_diversity", 0.7))
             ranked = mmr_rerank(pool, final_k, lam, self.similarity)
+            rerank_s = time.perf_counter() - t2
             has_cold = any(iid not in self.train_item_ids for iid, _ in pool)
             strategy = "popularity+cold+mmr" if has_cold else "popularity+mmr"
-            return self._to_result(ranked, strategy)
-        return self._to_result(pool[:final_k], "popularity")
+            return self._to_result(ranked, strategy, self._stage_ms(retrieve_s, 0.0, rerank_s))
+        return self._to_result(
+            pool[:final_k], "popularity", self._stage_ms(retrieve_s, 0.0, 0.0)
+        )
 
     def candidate_pool(self, user_id: str) -> list[tuple[str, float]]:
         """pop-200 + train에 없는 content 이웃 최대 20. rel은 log pop count."""
@@ -247,6 +290,7 @@ class RecommendService:
         self,
         hits: list[tuple[str, float]],
         strategy: str,
+        timings_ms: dict[str, float] | None = None,
     ) -> RecommendResult:
         items = []
         for item_id, score in hits:
@@ -260,7 +304,11 @@ class RecommendService:
                     "category": meta.get("category"),
                 }
             )
-        return RecommendResult(items=items, strategy=strategy)
+        return RecommendResult(
+            items=items,
+            strategy=strategy,
+            timings_ms=timings_ms or {},
+        )
 
     # 쿼리 기반 추천 (검색: pop을 섞지 않음)
     def recommend_from_query(
@@ -273,12 +321,20 @@ class RecommendService:
         if self.content is None:
             raise RuntimeError("Content FAISS index not built. Run scripts.build_faiss")
         content_k = int(self.cfg["retrieval"]["content_faiss_top_k"])
+        t0 = time.perf_counter()
         pool = self.content.recommend_from_text(query, k=content_k)
+        retrieve_s = time.perf_counter() - t0
         if use_mmr and pool:
+            t1 = time.perf_counter()
             lam = float(self.cfg.get("rerank", {}).get("lambda_diversity", 0.7))
             ranked = mmr_rerank(pool, final_k, lam, self.similarity)
-            return self._to_result(ranked, "content+mmr")
-        return self._to_result(pool[:final_k], "content")
+            rerank_s = time.perf_counter() - t1
+            return self._to_result(
+                ranked, "content+mmr", self._stage_ms(retrieve_s, 0.0, rerank_s)
+            )
+        return self._to_result(
+            pool[:final_k], "content", self._stage_ms(retrieve_s, 0.0, 0.0)
+        )
 
 # 추천 서비스 인스턴스 캐시
 @lru_cache(maxsize=1)

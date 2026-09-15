@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from functools import lru_cache
 from pathlib import Path
 
@@ -50,8 +51,9 @@ class ExplainService:
             raise ValueError("item_ids not in RAG index")
         rag = self.cfg.get("rag", {})
         per_item = int(rag.get("snippets_per_item", 3))
+        t0 = time.perf_counter()
         snippets = self.retriever.snippets_for_items(known, query, per_item=per_item)
-        return explain_items(
+        result = explain_items(
             known,
             self.titles,
             snippets,
@@ -59,6 +61,9 @@ class ExplainService:
             model=str(rag.get("llm_model", "gpt-4o-mini")),
             select_k=select_k,
         )
+        rag_ms = round((time.perf_counter() - t0) * 1000, 1)
+        result.timings_ms = {"rag": rag_ms, "total": rag_ms}
+        return result
 
 
 @lru_cache(maxsize=1)

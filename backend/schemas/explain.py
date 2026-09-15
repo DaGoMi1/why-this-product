@@ -26,3 +26,4 @@ class ExplainResponse(BaseModel):
     model: str
     prompt_tokens: int
     completion_tokens: int
+    timings_ms: dict[str, float] = Field(default_factory=dict)

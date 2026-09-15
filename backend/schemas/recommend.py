@@ -36,3 +36,4 @@ class RecommendResponse(BaseModel):
     items: list[RecommendItem]
     strategy: str
     k: int
+    timings_ms: dict[str, float] = Field(default_factory=dict)

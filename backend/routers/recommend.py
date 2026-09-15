@@ -32,4 +32,9 @@ def recommend(body: RecommendRequest) -> RecommendResponse:
             use_ranker=body.use_ranker,
             use_mmr=body.use_mmr,
         )
-    return RecommendResponse(items=result.items, strategy=result.strategy, k=body.k)
+    return RecommendResponse(
+        items=result.items,
+        strategy=result.strategy,
+        k=body.k,
+        timings_ms=result.timings_ms,
+    )
