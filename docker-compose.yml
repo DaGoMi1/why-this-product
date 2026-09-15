@@ -1,0 +1,38 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      HF_HOME: /app/.cache/huggingface
+    volumes:
+      - ./data/processed:/app/data/processed
+      - ./configs:/app/configs
+      - hf_cache:/app/.cache/huggingface
+    command: python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  ui:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    command: >
+      python -m streamlit run frontend/app.py
+      --server.address 0.0.0.0
+      --server.port 8501
+      --server.headless true
+
+volumes:
+  hf_cache:
