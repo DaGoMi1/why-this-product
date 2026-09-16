@@ -46,7 +46,11 @@ data/processed/*.parquet
 data/processed/*.pkl
 data/processed/*.pt
 data/processed/*.bin
+data/processed/eval/
 !data/processed/.gitkeep
+
+# Docs
+docs/portfolio
 
 # Streamlit
 .streamlit/secrets.toml
