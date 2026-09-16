@@ -51,7 +51,7 @@
 - [x] 상품 문서 청크 + FAISS (설명용, train 메타+리뷰, retrieve 인덱스와 분리)
 - [x] `POST /api/explain` — 근거 스니펫 + OpenAI로 한두 문장 이유 (`OPENAI_API_KEY` 필수)
 - [x] LLM: 후보 안에서만 선택/문장 다듬기 (키 없으면 503)
-- [x] latency·API 비용 표 (p50 14.16s, ~$0.0008/req, 환각 0, 사유 20/20)
+- [x] latency·API 비용 표 (p50 5.45s, ~$0.00032/req, k=5, 환각 0/125, 사유 125/125)
 
 ## Phase 6 — Production polish
 

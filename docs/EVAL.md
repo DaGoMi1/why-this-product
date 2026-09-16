@@ -376,7 +376,7 @@ RRF는 점수가 아니라 **등수**만 더한다.
 | content `per_seed` retrieve@10 | 0.0550 | 0.0421 | — | — |
 | + CatBoost (RRF pop+content 재정렬) | 0.0575 | 0.0364 | — | — |
 | catalog + CatBoost | 0.0400 | 0.0275 | — | — |
-| + RAG + OpenAI explain | — | — | — | 14157 ms (~$0.0008/req) |
+| + RAG + OpenAI explain | — | — | — | 5448 ms (~$0.00032/req, k=5) |
 
 Phase 3 본체 승자는 pop 순서. Phase 4 서빙은 pop-200 + MMR `lambda_diversity=0.5`. @200 풀 1위 RRF는 top-10 승자가 아니다.
 
@@ -388,19 +388,21 @@ OpenAI는 설명/후보 내 선택에 **항상** 사용한다. 키 없는 fallba
 
 LLM은 추천 Recall을 올리지 않는다. 후보 `item_ids` 안에서만 한두 문장 이유를 쓴다. 청크는 **train 메타 + train 리뷰**만 (valid 누수 없음). retrieve FAISS와 인덱스를 분리한다. 키 없으면 `/api/explain`은 503.
 
-표본: recommend가 고른 후보 10개 × 소수 쿼리(또는 user_id 1명). 주 지표와 섞지 않는다.
+표본: 영어 쿼리 20 + 데모 `user_id` 5, recommend `k=5`, explain `select_k=0` (UI 기본과 같음). 사유 125건. 주 지표와 섞지 않는다. 예전 스모크는 쿼리 2 × k=10 × `select_k=3`에서 환각 0/2·사유 20/20이었다.
 
 ### 실험 전 예측
 
 | 항목 | 사전 예측 | 실측 |
 |------|-----------|------|
-| 환각률 (응답에 후보 밖 id) | 프롬프트 제약으로 **0** | **0.0000** (0/2) |
-| 설명 길이 | 한두 문장 (대략 40–120자) | **90.8자** (20/20 reasons) |
-| p50 latency (10개 explain) | 수 초 (OpenAI) | **14.157s** (후보 10개, ASIN당 1호출 + `select_k=3`) |
-| 요청당 비용 | gpt-4o-mini 기준 수 센트 미만 | **~$0.00078/요청** (2요청 합 $0.001565, 5405+1257 tok) |
+| 환각률 (후보 밖 ASIN, reason 단위) | 프롬프트·id 필터로 **0** | **0.0000** (0/125 reasons, 0/25 requests) |
+| 가격 ungrounded | 프롬프트 금지. 코드 가드는 없음 | **0/125** (언급 0) |
+| 재고 ungrounded | 프롬프트 금지. 코드 가드는 없음 | **0/125** (언급 0) |
+| 설명 길이 | 한두 문장 (대략 40–120자) | **66.4자** (125/125 reasons, empty 0) |
+| p50 latency (explain 전체) | 수 초 (OpenAI, k=5) | **5.448s** (후보 5개, ASIN당 1호출, select_k=0) |
+| 요청당 비용 | gpt-4o-mini 기준 수 센트 미만 | **~$0.00032/요청** (25요청 합 $0.008040, 27822+6444 tok) |
 | 키 없음 | 503, fallback 없음 | **503** (`POST /api/explain`) |
 
-실험 후: `scripts/eval_rag.py` (쿼리 `hydrating serum` / `gentle cleanser` → recommend 10 → explain). 한 JSON에 N개를 맡기면 사유가 비는 경우가 있어 **상품마다 호출**로 바꿨다. 환각 0, 사유 20/20. latency·비용은 왕복 수만큼 올랐고 추천 Recall과 섞지 않는다. 키 없으면 설명 경로가 기동하지 않는다.
+실험 후: `scripts/eval_rag.py`. 한 JSON에 N개를 맡기면 사유가 비는 경우가 있어 **상품마다 호출**한다. 후보 밖 ASIN·스니펫에 없는 가격·재고 언급은 이 표본에서 0. latency·비용은 왕복 수만큼 오르고 추천 Recall과 섞지 않는다. 키 없으면 설명 경로가 기동하지 않는다. 단계별 retrieve/rank/rerank 분해는 Phase 6 표를 쓴다.
 
 ## Phase 6: 요청 latency (보조)
 
@@ -421,4 +423,4 @@ Recall과 섞지 않는다. `POST /api/recommend`는 `timings_ms.retrieve` / `ra
 ## LLM 평가
 
 - 추천 품질의 주 지표로 LLM 점수를 쓰지 않는다.
-- LLM 관련은 **환각률(후보 밖 id)**, 설명 길이, 요청당 비용만 보조 지표로 둔다.
+- LLM 관련은 **후보 밖 ASIN**, 스니펫에 없는 가격·재고 언급, 설명 길이, 요청당 비용만 보조 지표로 둔다.
