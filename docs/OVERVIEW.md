@@ -2,14 +2,10 @@
 
 ## 무엇을 만드나
 
-**Why This Product?** 는 이커머스 카탈로그에서
+**Why This Product?** 는 이커머스 카탈로그에서 영어 쿼리로 상품을 찾고, RAG + OpenAI로 **왜 이 상품인가**를 스니펫 근거와 함께 설명하는 쇼핑 어시스턴트입니다.
 
-1. multi-stage RecSys로 상품 후보를 좁히고
-2. RAG + OpenAI LLM으로 **왜 이 상품을 골랐는지** 설명하는
-
-쇼핑 어시스턴트입니다.
-
-추천의 본체는 항상 RecSys funnel입니다. LLM은 이미 검색·랭킹된 후보 ASIN 안에서만 설명하거나 고릅니다.
+Phase 7의 운영 축은 검색 적합성 **라벨 기준**, 카탈로그 **속성 품질**, 설명 **근거 검수**입니다.  
+Phase 0–6 RecSys funnel(pop / iALS / 랭커)은 희소 데이터에서 popularity가 이긴 **실험 유산**으로 [EVAL.md](EVAL.md)에 남깁니다. LLM은 이미 고른 후보 ASIN 안에서만 설명합니다.
 
 ## 왜 이 프로젝트인가
 
@@ -21,19 +17,20 @@
 |----|----------------------|
 | 이커머스 도메인 | Amazon All_Beauty 카탈로그·리뷰 |
 | 혼자 end-to-end funnel | retrieve → rank → re-rank → explain → serve |
-| 평가 설계 | temporal split, Recall/NDCG, coverage, ablation |
-| LLM을 RecSys 보조로 | 후보 밖 환각 금지, 비용·지연 trade-off |
+| 평가 설계 | temporal split, Recall/NDCG, 쿼리 라벨·미탐/오탐 |
+| LLM을 RecSys 보조로 | 후보 밖 환각 금지, 스니펫 인용, 비용·지연 trade-off |
 
 ## 타깃 사용자 / 시나리오
 
-- 유저가 최근 본·산 상품(`user_id`) 또는 영어 쿼리를 주면 top-K 추천
-- 각 추천에 대해 “왜 이 상품인가” 한국어 한두 문장 설명
+- 기본: 영어 쿼리로 top-K를 찾고, 각 상품에 한국어 한두 문장 + 영어 스니펫 인용
+- 데모에 `user_id`(인기+MMR)는 남아 있다. 서빙에서 빼는 것은 Phase 8
 
 ## Goals
 
-- 산업형 multi-stage 구조를 작은 공개 데이터로 재현
-- 오프라인 지표와 서빙 latency를 README에 숫자로 남김
-- RAG/LLM을 장식이 아니라 **제약 있는 보조 모듈**로 설계
+- 검색 적합성 라벨을 재현 가능한 규칙으로 남김 ([LABELING.md](LABELING.md))
+- 카탈로그 속성 공백·쿼리 미탐/오탐을 숫자로 남김
+- RAG/LLM을 장식이 아니라 **스니펫에 묶인 보조 모듈**로 설계
+- (유산) 산업형 multi-stage를 작은 공개 데이터로 재현하고, 탈락 이유를 EVAL에 둠
 
 ## 관련 문서
 
@@ -42,3 +39,4 @@
 - [DATA.md](DATA.md) — 데이터·split
 - [FIELDS.md](FIELDS.md) — raw / processed 필드
 - [EVAL.md](EVAL.md) — 지표
+- [LABELING.md](LABELING.md) — 쿼리 적합성 라벨 규칙

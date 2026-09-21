@@ -5,6 +5,7 @@
 - 오프라인 지표 없이 모델을 README에 올리지 않는다.
 - split은 [DATA.md](DATA.md)의 **temporal** 규칙을 따른다.
 - 가능하면 세그먼트별 리포트: all / cold-user / cold-item.
+- Phase 7 쿼리 라벨은 사람이 재라벨한 GT가 아니다. 규칙: [LABELING.md](LABELING.md).
 
 ## 핵심 지표
 
@@ -418,7 +419,52 @@ Recall과 섞지 않는다. `POST /api/recommend`는 `timings_ms.retrieve` / `ra
 | recommend total | | **73.6** |
 | rag | 스니펫 FAISS + OpenAI (상품당 1호출) | **7885.6** |
 
-설명 지연은 거의 전부 OpenAI다. 추천 단계 합은 0.1초 아래. GitHub Actions는 넣지 않았다.
+설명 지연은 거의 전부 OpenAI다. 추천 단계 합은 0.1초 아래. GitHub Actions는 넣지 않았다 (Phase 7도 CI는 범위 밖).
+
+## Phase 7: 검색 운영 (라벨 · 미탐/오탐 · 속성 품질)
+
+유저 Recall@10과 섞지 않는다. 서빙은 그대로 **query = content FAISS + MMR**. BM25/RRF·`user_id` 제거는 하지 않음.
+
+Gold: `python -m scripts.build_query_gold` → `data/eval/query_gold.jsonl`. 제목·브랜드·`doc_text` 특징 토큰 AND, 쿼리당 최대 40. 프로토콜 [LABELING.md](LABELING.md).
+
+검색: `python -m scripts.eval_query`. k=10, 전략 `content+mmr`.
+
+- Recall@10 / NDCG@10 / Precision@10: **kept gold(최대 40)** 대비
+- 오탐(fp): top-10인데 **토큰 규칙 자체**를 통과하지 못한 ASIN (cap 밖이지만 규칙은 맞는 상품은 fp가 아님)
+- 미탐: kept gold가 top-10 밖. gold가 40이면 Recall 상한은 10/40=0.25
+
+| 지표 | 실측 |
+|------|------|
+| mean Recall@10 | 0.0973 |
+| mean Precision@10 | 0.3600 |
+| mean NDCG@10 | 0.3823 |
+| 미탐 건수 | 692 |
+| 오탐 건수 | 62 |
+| 쿼리 수 | 20 |
+
+성분 쿼리(retinol night cream P@10 0.90, hyaluronic acid serum 0.80, mouthwash 0.80)가 고민·범용 유형보다 낫다. `hydrating serum` / `moisturizer for dry skin` / `body lotion`은 kept gold 대비 P@10=0에 가깝다. body lotion은 카탈로그 매칭 836개인데 gold는 제목 짧은 40개만 남겨 **캡 아티팩트**가 크다(fp는 1건뿐). hydrating serum은 top-10 중 9건이 토큰 규칙을 깨서 진짜 오탐에 가깝다 (세럼이 아니거나 hydrat/moistur가 없음).
+
+CSV: `data/eval/query_misses.csv`, `data/eval/query_false_positives.csv`. 서빙 기본은 바꾸지 않음.
+
+### 카탈로그 속성 품질
+
+`python -m scripts.report_catalog_quality`. 상품 32,488.
+
+| 항목 | n | 비율 |
+|------|---|------|
+| title 공백 | 1 | ~0 |
+| brand 공백 | 15,570 | 0.479 |
+| description 공백 | 17,670 | 0.544 |
+| price 결측 | 21,141 | 0.651 |
+| doc_text가 ASIN뿐 | 2 | ~0 |
+| unique category | **1** (`All Beauty`) | — |
+| gap 플래그 ≥1 행 | 26,046 | 0.802 |
+
+Phase 4 unique category 상수와 같다. 속성 택소노미가 거의 없어 검색은 제목·설명 텍스트에 의존한다. 요약 `data/eval/catalog_quality.csv`. 행 단위 갭 목록은 로컬 `catalog_quality_gaps.csv` (gitignore, ~2.8MB).
+
+### 설명 스니펫
+
+쿼리–청크 lexical overlap + dense 순위. 쿼리 토큰이 있는 리뷰를 메타보다 우선. LLM은 스니펫에 없는 성분/효과 금지. UI는 사유 아래 `[meta]` / `[review]` 인용. 환각 보조 지표는 Phase 5와 같음 (`eval_rag`).
 
 ## LLM 평가
 

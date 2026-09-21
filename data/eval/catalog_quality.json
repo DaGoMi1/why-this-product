@@ -1,0 +1,21 @@
+{
+  "n_items": 32488,
+  "title_empty": 1,
+  "title_empty_rate": 3.1e-05,
+  "brand_empty": 15570,
+  "brand_empty_rate": 0.479254,
+  "description_empty": 17670,
+  "description_empty_rate": 0.543893,
+  "price_empty": 21141,
+  "price_empty_rate": 0.650733,
+  "doc_text_asin_only": 2,
+  "doc_text_asin_only_rate": 6.2e-05,
+  "n_unique_category": 1,
+  "n_gap_rows": 26046,
+  "top_categories": [
+    {
+      "category": "All Beauty",
+      "n": 32488
+    }
+  ]
+}

@@ -1,0 +1,765 @@
+query,intent,item_id,title,matched_tokens,n_kept
+hydrating serum,concern,B00O5CVB6Q,bsb beauty globes,moistur|serum,40
+hydrating serum,concern,B0019CK0IK,No7 Day Cream SPF 15,hydrat|serum,40
+hydrating serum,concern,B0002CD01M,ClarinsMen Under Eye Serum,moistur|serum,40
+hydrating serum,concern,B01DMPXWDG,Pixi Hydrating Milky Serum,hydrat|serum,40
+hydrating serum,concern,B00DU4QSXG,Cuccio Naturale DetoXsoak Kit,hydrat|serum,40
+hydrating serum,concern,B01EHVYK7Q,SOONPURE Vitamin C Serum 10ml,moistur|serum,40
+hydrating serum,concern,B001KYQNT2,"Dove Shine Boost Shampoo, 12 oz",moistur|serum,40
+hydrating serum,concern,B004DAP4JA,PFC COSMETICS PURE OXYGEN SERUM,moistur|serum,40
+hydrating serum,concern,B00ENH6CLW,GIGI Vitamin E Serum 120ml 4fl.oz,hydrat|serum,40
+hydrating serum,concern,B000BOYLYQ,Lip Pulse Stung Lip Plumping Serum,hydrat|serum,40
+hydrating serum,concern,B009YWFBFO,Cosmo Hurry Harry Collagen Serum Bar,moistur|serum,40
+hydrating serum,concern,B002AOUT5U,Repechage Vita Cura Travel Collection,moistur|serum,40
+hydrating serum,concern,B01EP99CQE,Avon Anew Vitamin C Brightening Serum,moistur|serum,40
+hydrating serum,concern,B0057ZHMN6,NOW- Liquid Lanolin (100% Pure) 4 fl oz,moistur|serum,40
+hydrating serum,concern,B01185LNOW,Body Wonders Apricot oil 16 fl oz 473ml,moistur|serum,40
+hydrating serum,concern,B014RUTCK2,Rhonda Allison Growth Factor Serum 1 oz.,moistur|serum,40
+hydrating serum,concern,B000URUSPK,"OHA Intensive Nutrient Complex, 0.5-Ounce",moistur|serum,40
+hydrating serum,concern,B001L521DW,Rhonda Allison Grape Seed Hydrating Serum,hydrat|serum,40
+hydrating serum,concern,B002NSB920,For Beloved One Whitening Treatment Toner,hydrat|serum,40
+hydrating serum,concern,B01DXZ8NXE,Heimish Dailism Serum Rouge #Early Bright,moistur|serum,40
+hydrating serum,concern,B00PBET1WI,Myotone&reg; 2.0 Elite Facial Toning System,hydrat|serum,40
+hydrating serum,concern,B0186LWNMW,Gratiae Renewing Morning Reactivating Serum,hydrat|serum,40
+hydrating serum,concern,B008J0B5FW,Country &amp; Stream Natural Eye Roll-on 15mL,moistur|serum,40
+hydrating serum,concern,B00J5FTW8M,Ureadin Fusion Facial Serum Anti-Wrinkle Lift,moistur|serum,40
+hydrating serum,concern,B0002ZZSAA,Joey New York Correct-A-Line for Face 1.59 oz.,hydrat|serum,40
+hydrating serum,concern,B00F9HY6HM,Chantecaille Vital Essence With Arbutin 1.7 oz.,hydrat|serum,40
+hydrating serum,concern,B006B6KJA8,Pr. Francoise Bedon Royal Lightning Lotion 500ML,hydrat|serum,40
+hydrating serum,concern,B00CHH9KLO,"Yonka Age Defense Yon-Ka Serum, 0.51 Fluid Ounce",hydrat|serum,40
+hydrating serum,concern,B00Q46AUMC,"Grown Alchemist Detox Serum Antioxidant+3, 30 mL",hydrat|serum,40
+hydrating serum,concern,B014GQRG1Y,True Derma Daily Anti-Aging Serum 1.0 fl oz/30mL,hydrat|serum,40
+hydrating serum,concern,B006VB4D78,Health &amp; Beauty Dead Sea Hair Serum Argan Oil,moistur|serum,40
+hydrating serum,concern,B00IO7WB26,"Royal Moroccan Serum Hair Treatment 50 ml, 1.69 oz",moistur|serum,40
+hydrating serum,concern,B00WAJDKYW,Nigella Therapy - Perfecting Day Serum 30 snipgels,moistur|serum,40
+hydrating serum,concern,B014GQVL0Q,True Derma Daily Revitalizing Serum 1.0 fl oz/30mL,hydrat|serum,40
+hydrating serum,concern,B000MN4J84,Lime N' Da Coconut Tan Defining W/coco Butter 13.5z,moistur|serum,40
+hydrating serum,concern,B00BPN17Z8,Alteya Organics USDA Organic BioDamascena Eye Serum,hydrat|serum,40
+hydrating serum,concern,B00FQ13MPI,DermaSilk 10 Minute Ultimate Face Lift - 1.8 OZ Set,hydrat|serum,40
+hydrating serum,concern,B00KME9ZN2,Skin of Norway Natural Moisture Repair by Geir Ness,hydrat|serum,40
+hydrating serum,concern,B00MTSEBSS,"NOW Solutions Organic Jojoba Essential Oil, 4-Ounce",moistur|serum,40
+hydrating serum,concern,B00PCJT0VE,Supre SWEET &amp; SEXY 40X BLACK BRONZER - 10.1 oz.,hydrat|serum,40
+gentle cleanser,concern,B00QZ1V9GC,IBUKI STARTER LOT 3 pz,gentle|cleanser,40
+gentle cleanser,concern,B004BRN154,DHC Olive Essentials Set,gentle|cleanser,40
+gentle cleanser,concern,B000GCPXN6,"Secura Personal Cleanser, 8 oz",gentle|cleanser,40
+gentle cleanser,concern,B00JY8FFDQ,Rapid Detox Charcoal Exfoliant,sensitive|cleanser,40
+gentle cleanser,concern,B01E618T3I,Moisturizing Shampoo Olivu 426,gentle|cleanser,40
+gentle cleanser,concern,B011OFHJ30,Algae and Mineral Shower Gel 30ml,gentle|cleanser,40
+gentle cleanser,concern,B012H56FTK,Medicalia Gentle Cleanser 4 fl oz,gentle|cleanser,40
+gentle cleanser,concern,B00ENL2O88,Cleansing Spa Water: Size - 480 ml,gentle|cleanser,40
+gentle cleanser,concern,B0017DQ0U8,"Eminence Cleanser, Lemon, 8.4 Ounce",sensitive|cleanser,40
+gentle cleanser,concern,B0017MTBUA,St. Ives Olive Cleanser -- 6.75 oz.,gentle|cleanser,40
+gentle cleanser,concern,B004APQ924,Ayuuri Shikakai (Acacia) Powder 100g,mild|cleanser,40
+gentle cleanser,concern,B000BKXGXW,"NOW Red Clay Powder Moroccan, 6-Ounce",sensitive|cleanser,40
+gentle cleanser,concern,B00A9OVI8U,Nature's Essence Bridal Glow Pack 60g,sensitive|cleanser,40
+gentle cleanser,concern,B017NRCD52,No7 Beautiful Skin Hot Cloth Cleanser,gentle|cleanser,40
+gentle cleanser,concern,B00GF82YE6,Pears Shower Gel Original 8.5oz = 250ml,gentle|cleanser,40
+gentle cleanser,concern,B00WVQAB5K,Skin Obsession Spa Facial Milk Cleanser,gentle|cleanser,40
+gentle cleanser,concern,B0051MQ3LW,"Philosophy Purity Cleansing Bar, 7 Ounce",gentle|cleanser,40
+gentle cleanser,concern,B013M359CU,Clayton Shagal Lotion Gel Cleanser 7.44oz,sensitive|cleanser,40
+gentle cleanser,concern,B001R21J3W,Lavera Faces Rose Cleansing Milk - 2.5 oz.,gentle|cleanser,40
+gentle cleanser,concern,B00E0IEBJY,Anna Lotan Liquid Intimild Foam Wash 200ml,mild|cleanser,40
+gentle cleanser,concern,B01H3XN8G4,H2O Plus Dual Action Pore Perfecting Brush,gentle|cleanser,40
+gentle cleanser,concern,B00JUZPH9U,Norwex Makeup Removal Cloth Set; Three Pack,sensitive|cleanser,40
+gentle cleanser,concern,B000IS25WA,"Suave Naturals Ocean Breeze Shampoo, 15 Ounce",gentle|cleanser,40
+gentle cleanser,concern,B00T3GUV2O,Ecotools Facial Sponge Sensitive Skin (6 Pack),mild|cleanser,40
+gentle cleanser,concern,B01EIIN506,Pacifica Quinoa Sensitive Super Gently Face Wash,sensitive|face wash,40
+gentle cleanser,concern,B01GCOZOWQ,[Laneige] Foam Cleanser Moisture Cleansing 180ml,gentle|cleanser,40
+gentle cleanser,concern,B01FPUP9OG,"Woolzies 100% pure sweet Almond oil, moisturizing",gentle|cleanser,40
+gentle cleanser,concern,B01AJQ6OZE,RAIN by Dre Organic Moisturizing Spearmint Cleanser,mild|cleanser,40
+gentle cleanser,concern,B015ROL64M,Colure Body Volume Shampoo and Conditioner 32oz. Set,gentle|cleanser,40
+gentle cleanser,concern,B003M6WYW6,"Gillette Fusion Aftershave Lotion - 3.3 Oz, Pack of 2",sensitive|face wash,40
+gentle cleanser,concern,B00HGPT6KM,UltraKlenz Wound and Skin Cleanser 8 oz. Spray Bottle,gentle|cleanser,40
+gentle cleanser,concern,B00028NL6U,Fragrance Free Cleanser Magick Botanicals 16 oz Liquid,sensitive|cleanser,40
+gentle cleanser,concern,B0174VGWG8,Amie Radiant Dawn Exfoliating Face Wash 150 ml by Amie,gentle|face wash,40
+gentle cleanser,concern,B01G96JBGC,SALICA Acne Face Wash and Cleanser with Salicylic Acid,sensitive|cleanser,40
+gentle cleanser,concern,B00WF6WDH0,"Ava Anderson Non-Toxic Baby Body Wash and Shampoo, 8 oz",mild|cleanser,40
+gentle cleanser,concern,B01E9LZYS8,Vanity Planet Moxispin On-the-Go Facial Cleansing Brush,gentle|cleanser,40
+gentle cleanser,concern,B000NN7FT8,"Ambi Skincare Even &amp; Clear Foaming Cleanser, 6 Ounce",gentle|cleanser,40
+gentle cleanser,concern,B001NXPJI6,Lindi Skin - Face Moisturizer  (2 Ounce / 60 Milliliter),gentle|face wash,40
+gentle cleanser,concern,B005LN5I3A,"Algenist Gentle Rejuvenating Cleanser for Women, 4 Ounce",gentle|cleanser,40
+gentle cleanser,concern,B00OY2H440,Pierres Estheticians Formula Gentle Exfoliating Cleanser,gentle|cleanser,40
+moisturizer for dry skin,concern,B000CRG9G0,Body Heal,moistur|dry,40
+moisturizer for dry skin,concern,B018WFUEZK,EMOLLIENCE 2oz,moistur|dry,40
+moisturizer for dry skin,concern,B00DBDAU08,Fresh Face Toner,moistur|dry,40
+moisturizer for dry skin,concern,B01G93Z22M,Coconut Hair Milk,moistur|dry,40
+moisturizer for dry skin,concern,B000P7R33K,5 lbs Kapok Fibers,moistur|dry,40
+moisturizer for dry skin,concern,B007UTCJDK,Heat Styling Cream,moistur|dry,40
+moisturizer for dry skin,concern,B00E5QA2A8,Amlactin Ultra Crm,moistur|dry,40
+moisturizer for dry skin,concern,B0000535US,Witch Vera Gel 8 oz.,moistur|dry,40
+moisturizer for dry skin,concern,B00DSQVI4U,Healfast Repair Cream,moistur|dry,40
+moisturizer for dry skin,concern,B00QZ1V9GC,IBUKI STARTER LOT 3 pz,moistur|dry,40
+moisturizer for dry skin,concern,B00286WV1U,Advanced Cleansing Silk,moistur|dry,40
+moisturizer for dry skin,concern,B01H2IIXJC,Amalia Antioxidant Milk,moistur|dry,40
+moisturizer for dry skin,concern,B0149KFUVU,Dremu Oil 1 oz. by Dremu,moistur|dry,40
+moisturizer for dry skin,concern,B01DN8V9K0,Nerd Clarifying Cleanser,moistur|dry,40
+moisturizer for dry skin,concern,B00005RI8E,Hydrosol Refresher - 7 oz,hydrat|dry,40
+moisturizer for dry skin,concern,B0015MTSOQ,Swisa Beauty Facial Toner,moistur|dry,40
+moisturizer for dry skin,concern,B0031EMVOK,Anti.gravity Lotion 150ml,moistur|dry,40
+moisturizer for dry skin,concern,B007PL7SRA,Conditioning Belly Butter,moistur|dry,40
+moisturizer for dry skin,concern,B00HH1DETY,Muk Haircare - Curl Stick,moistur|dry,40
+moisturizer for dry skin,concern,B00SH87YPQ,Oh My Aching Hands Lotion,moistur|dry,40
+moisturizer for dry skin,concern,B0000Y3LQ6,Wibi Dry Skin Lotion 16 Oz,moistur|dry,40
+moisturizer for dry skin,concern,B000BGIOA6,Italian Citrus Hand Lotion,moistur|dry,40
+moisturizer for dry skin,concern,B001BKLWZK,VIT E CREAM JAR WMILL 4 OZ,moistur|dry,40
+moisturizer for dry skin,concern,B001RVBM7Q,Weather Everything Mascara,moistur|dry,40
+moisturizer for dry skin,concern,B005FP5UQY,Almond Cookie Dry Oil Mist,moistur|dry,40
+moisturizer for dry skin,concern,B00C7O0PUW,Vagisan Moisturising Cream,moistur|dry,40
+moisturizer for dry skin,concern,B00TZ96TSE,Pure Organic Macadamia Oil,moistur|dry,40
+moisturizer for dry skin,concern,B0002WUHU4,Nailtiques Nail Moisturizer,moistur|dry,40
+moisturizer for dry skin,concern,B00P85Q3JY,Matte Perfection Foundation,hydrat|dry,40
+moisturizer for dry skin,concern,B000TSV12E,100% Pure Avocado Cream 8 Oz,moistur|dry,40
+moisturizer for dry skin,concern,B006UCER10,Patanjali Aloevera Gel 150ml,moistur|dry,40
+moisturizer for dry skin,concern,B00AQ9BQG2,Erbaviva Erbaviva Hand Cream,moistur|dry,40
+moisturizer for dry skin,concern,B00DIMJQPW,Patchouli Orange Shampoo Bar,moistur|dry,40
+moisturizer for dry skin,concern,B001IWM7TQ,Old Asin - List Under New one,moistur|dry,40
+moisturizer for dry skin,concern,B004LRR3V2,Aveeno Creamy Moist Oil 300ml,moistur|dry,40
+moisturizer for dry skin,concern,B000OQFVLS,"ONOX Foot Solution Spray, 4 oz",moistur|dry,40
+moisturizer for dry skin,concern,B00WF6N7RA,Destiny Perfume Oil Spray 2 oz,moistur|dry,40
+moisturizer for dry skin,concern,B0119UR59I,Body Wonders Walnut oil - 16oz,moistur|dry,40
+moisturizer for dry skin,concern,B01ASQZOKG,Cleomee Donkey Snowy Pore Balm,moistur|dry,40
+moisturizer for dry skin,concern,B000FAC1ZW,Fake Bake Body Polish 6 fl. oz.,moistur|dry,40
+mineral sunscreen,ingredient,B0016Q50SY,0.32 oz Instant Mineral SPF 30,mineral|spf,40
+mineral sunscreen,ingredient,B01GGMFMVW,Zinc Oxide USP Non-Nano (4 fl oz),zinc|sunscreen,40
+mineral sunscreen,ingredient,B006XLW2NS,Hawaiian Blend Kona Browning Lotion 8 oz.,mineral|sunscreen,40
+mineral sunscreen,ingredient,B001BDI9YO,Becca Mineral SPF Primer SPF 30 50ml/1.7oz,mineral|spf,40
+mineral sunscreen,ingredient,B00ZXQUMQ8,3 X Sheer Cover Nourishing Moisturizer SPF 15,mineral|spf,40
+mineral sunscreen,ingredient,B01E68ABUA,GM Collin Mineral BB Cream SPF 25 Beige Tinted,mineral|spf,40
+mineral sunscreen,ingredient,B000R92W2S,Murad Sheer Lustre Day Moisture SPF 15 (1.7 oz),mineral|sunscreen,40
+mineral sunscreen,ingredient,B000WB4NIW,"UV Natural SPF 30+ Baby Sunscreen, 5.29 oz size",zinc|sunscreen,40
+mineral sunscreen,ingredient,B01EGR7Y1K,Heliocare Compact SPF50 Mineral Formula (Brown),mineral|spf,40
+mineral sunscreen,ingredient,B0002IETRU,SUPER SKIN LIGHTENER - BLEACHING GEL with Kojic Acid,mineral|sunscreen,40
+mineral sunscreen,ingredient,B002HG4JLQ,"Peter Thomas Roth Instant Mineral SPF 45, 0.12 Ounce",mineral|spf,40
+mineral sunscreen,ingredient,B0096M7TQG,bareMinerals bareMinerals Customizable Get Started Kit,mineral|spf,40
+mineral sunscreen,ingredient,B00EEEFJV8,SPF 15 Oil-Free Moisturizer Mineral Fusion 3.4 oz Lotion,mineral|spf,40
+mineral sunscreen,ingredient,B00C4VAYRM,"Senna Cosmetics, Barely Base Sheer Mineral Makeup, Vanilla",mineral|sunscreen,40
+mineral sunscreen,ingredient,B004BPSWYQ,LIP INK Vegan Tinted Lip Moisturizer Bottle - Cream Truffle,mineral|spf,40
+mineral sunscreen,ingredient,B007JLYEYQ,Badger SPF 16 Face Sunscreen Lotion - Damascus Rose .85 fl oz,mineral|sunscreen,40
+mineral sunscreen,ingredient,B005DMBC0C,LIP INK Shine Moisturizer Organic Vegan Lip Gloss (0.25 fl oz),mineral|spf,40
+mineral sunscreen,ingredient,B00NFV0GE6,Solar Sense Spf#50 Clear Zinc Sport Body Stick 1.45oz (2 Pack),zinc|spf,40
+mineral sunscreen,ingredient,B00C1LIXY6,Trukid Sunny Days Daily SPF 30+ Mineral Sunscreen 3.5oz - 2pack,mineral|sunscreen,40
+mineral sunscreen,ingredient,B00C9OU8U2,UV Clear SPF 30+ Collagen Facial Cream with Vitamin E by Merino,titanium|sunscreen,40
+mineral sunscreen,ingredient,B00TSK7RYU,Aveeno Baby Natural Protection with Spf 50 Face Stick Sunscreen,mineral|sunscreen,40
+mineral sunscreen,ingredient,B00TB7AKUI,Vanicream Sunscreen Broad Spectrum SPF 35 Sport 4 Oz - Pack of 1,zinc|sunscreen,40
+mineral sunscreen,ingredient,B00K3IRESK,Derma E - Derma E Sunscreen - Body Antioxidant - 4 Oz - Pack Of 1,zinc|sunscreen,40
+mineral sunscreen,ingredient,B012GA1ASM,Etude House Precious Mineral Magic Any Cushion #Peach 0.52 Oz/15g,mineral|sunscreen,40
+mineral sunscreen,ingredient,B00028F2XU,"Sunscreen SPF 18, Chemical Free, Oil Free for Sensitive Skin, 4 oz.",titanium|sunscreen,40
+mineral sunscreen,ingredient,B0007QKYA8,"LIP INK Vegan Classic Lip Shine Moisturizer, Large Bottle Lip Gloss",mineral|spf,40
+mineral sunscreen,ingredient,B00OQKNYAS,Neutrogena Sensitive Skin Sunscreen Lotion SPF 60+ 3 oz (Pack of 6),zinc|sunscreen,40
+mineral sunscreen,ingredient,B00TRQE46E,Kanebo ALLIE Extra UV Protector Gel Mineral Moist Neo Sunscreen 90g,mineral|sunscreen,40
+mineral sunscreen,ingredient,B013CRF354,PETER THOMAS ROTH - Instant Mineral Broad Spectrum SPF 45 Sunscreen,mineral|sunscreen,40
+mineral sunscreen,ingredient,B000089GIE,"Coppertone Oil Free Sunblock Lotion, Sensitive Skin, SPF 30 - 4 fl oz",zinc|sunscreen,40
+mineral sunscreen,ingredient,B002RMKXR4,Doc Martin's Maui NexGen Waterproof Sunscreen SPF 36 - 2 ounce (1 Tube),zinc|sunscreen,40
+mineral sunscreen,ingredient,B00MN6NH86,"Safe Harbor Natural Suncare Sensitive Lotion Sunscreen, SPF 50, 4 fl oz",mineral|sunscreen,40
+mineral sunscreen,ingredient,B000065CIG,"Sea &amp; Ski Faces Sensitive Skin Sunblock Lotion, SPF 50 4 Fluid Ounces",zinc|sunscreen,40
+mineral sunscreen,ingredient,B0007QKYAS,"LIP INK Natural Vegan Organic Shine Moisturizer Lip Gloss, Squeeze Bottle",mineral|spf,40
+mineral sunscreen,ingredient,B001ATGAZY,BareMinerals Beauty-On-The-Go Kit Refillable Compact with Brush and Mirror,mineral|spf,40
+mineral sunscreen,ingredient,B00O53EX1K,"bareMinerals Prime Time BB Primer-Cream Daily Defense SPF 30, Tan, 1 Ounce",mineral|spf,40
+mineral sunscreen,ingredient,B00O53GQK6,"bareMinerals Prime Time BB Primer-Cream Daily Defense SPF 30, Fair, 1 Ounce",mineral|spf,40
+mineral sunscreen,ingredient,B000RMQNXO,Skinceuticals Physical UV Defense Broad-spectrum UVA And UVB Sunscreen SPF 30,zinc|sunscreen,40
+mineral sunscreen,ingredient,B006ZUIHP4,Bare Escentuals BareMinerals Matte SPF15 Foundation - Golden Dark - 6g/0.21oz,mineral|spf,40
+mineral sunscreen,ingredient,B00FMPAF3U,ettusais - BB Mineral White SPF 45 PA++ #20 Natural Skin (Limited Edition) 40g,mineral|spf,40
+retinol night cream,ingredient,B00014357U,Retinol Re Pulp - 30ml/1oz,retinol|night,40
+retinol night cream,ingredient,B01CAW573A,Retinol Q10+C+O2 Eye Cream,retinol|cream,40
+retinol night cream,ingredient,B0001EKQNG,Afirm 3x 0.60 % Retinol-1.05 oz,retinol|cream,40
+retinol night cream,ingredient,B000R90N60,Afirm 1x 0.15 % Retinol-1.05 oz,retinol|cream,40
+retinol night cream,ingredient,B00014GUJA,Skin Rejuvenation Eye Cream-0.5 oz,retinol|cream,40
+retinol night cream,ingredient,B00UQ5B92M,Retinol Advanced Firming Cream 16 oz,retinol|cream,40
+retinol night cream,ingredient,B00JEEDLOU,Peter Thomas Roth Un-Wrinkle Night 0.3oz,retinol|night,40
+retinol night cream,ingredient,B01DQ24X7Y,Passport Organics Retinol Face Cream 2.5%,retinol|cream,40
+retinol night cream,ingredient,B00QF1H614,PreVentin-AT Intensive Retinol Night Treatment,retinol|night,40
+retinol night cream,ingredient,B017GBAEOW,Sanitas Skincare Retinol Peeling Cream (15 Ml.),retinol|cream,40
+retinol night cream,ingredient,B000OIFGF2,Dr. Denese FirmaTone Rx RetinolMax Firming Serum,retinol|night,40
+retinol night cream,ingredient,B01B1ODE3I,new! Overnight Retinol Repair + Buffer Cream .5oz,retinol|cream,40
+retinol night cream,ingredient,B003H3S85G,Dr. Denese RestorEyes Night/Day Eye Cream 15g/0.5 oz,retinol|cream,40
+retinol night cream,ingredient,B000PUVJNC,Avon ANEW ADVANCED All-In-One MAX SPF 15 UVA/UVB Cream,retinol|cream,40
+retinol night cream,ingredient,B001VOCZQ6,Ponds Age Miracle Daily Resurfacing Cream SPF15 - 50ml,retinol|cream,40
+retinol night cream,ingredient,B01EM7QIIO,Peter Thomas Roth Retinol Fusion Eye Cream Large 1 oz Size,retinol|cream,40
+retinol night cream,ingredient,B00F3B6TN8,PrecisionMD Vivatia Active Repair Complex 0.5% Retinol (1.7 oz),retinol|cream,40
+retinol night cream,ingredient,B01GM65RSA,RetiNewPro Advanced Regenerating Firming Eye Contour Cream - 0.5 oz,retinol|cream,40
+retinol night cream,ingredient,B019HXCJS6,Snake Venom Cream Anti Aging 50ml Proteins Made of Snake Poison by Orange Care,retinol|cream,40
+retinol night cream,ingredient,B01E9WXV6O,Predire Paris Breaktrough Anti-Aging Formula Daily Moisturizer 50ml / 1.7 fl oz,retinol|cream,40
+retinol night cream,ingredient,B00AIKU00W,Kate Somerville RetAsphere 2-in-1 Retinol Night Cream - Anti-Aging Treatment (1 Fl. Oz.),retinol|cream,40
+retinol night cream,ingredient,B006OG1LM0,Skin Effects by Dr. Jeffrey Dover EYE REPAIR SERUM with Retinol Complex 0.5 fl oz / 15 mL,retinol|night,40
+retinol night cream,ingredient,B00KO7UZFO,Retinol and Caffeine Cellulite &amp; Skin Firming Cream - 6oz - Made in USA FDA Regulated Lab,retinol|cream,40
+retinol night cream,ingredient,B00V7II1AK,"RoC Retinol Correxion Deep Wrinkle Night Cream 1 oz x 2 with Bonus Sensitive Eye Cream, 0.5 oz",retinol|cream,40
+retinol night cream,ingredient,B00PCSIYW6,Night - 0.25% Retinol &amp; 3% Niacinamide - Wrinkle Reducing Moisturizing Lotion for Blemish Prone Skin - 1 fl.oz,retinol|night,40
+retinol night cream,ingredient,B00DZZETZ4,"THE Ultimate Peptide Cream,hydrating, Repair, Wrinkle Cream,post Peel, 10% Argireline,matrixyl 3000,coenzyme Q10, 2 Oz",retinol|cream,40
+retinol night cream,ingredient,B00HRE2A50,"Best Retinol Cream - Vitamin A Cream for Face and Body - Moisturizer - Organic - No Parabens Natural Ingredients 899,999 IU!",retinol|cream,40
+retinol night cream,ingredient,B01BX1DRM2,Exclusive Concentrated Youth Appearance Booster Anti Wrinkle Cream with Retinol Day and Night Age 65+ by Exclusive Cosmetica,retinol|cream,40
+retinol night cream,ingredient,B00QJ42EN2,Retinol 2.5% + Gift Pink Airline Travel Bag Cosmetic Case - Nourish and Protect Your Skin Day and Night - 100% Satisfaction Guaranteed!,retinol|night,40
+retinol night cream,ingredient,B019FB6NYG,"Paula's Choice PC4MEN Men's Travel Kit - Includes Face Wash, Shave Cream, Aftershave, Daytime Moisturizer SPF 30, Nighttime Moisturizer with Retinol",retinol|cream,40
+retinol night cream,ingredient,B014968YV2,Retinol Face Cream - Master Aestetician Formulated To Deliver The Maximum Effects of Vitamin A - Code FACECRM6 for $6.00 OFF NOW- Ella Grace Organics,retinol|cream,40
+retinol night cream,ingredient,B01CT5SNQQ,"Advanced Clinicals Wrinkle Repair Night Cream with Retinol Targets and reduces fine lines, wrinkles, enlarged pores, sagging skin, and dryness 4 Fl. Oz.",retinol|cream,40
+retinol night cream,ingredient,B00IDU2BZG,Fiora Botanica Perfect Complexion Gold-R Retilnol Face &amp; Neck Oil Noncomedogenic Anti-Aging Anti-Wrinkle Serum/Light-Weight Cream for Men and Women 1.69 oz,retinol|cream,40
+retinol night cream,ingredient,B01G7TWQH2,"Dr. O&rsquo;Neil's Best Choice Acne Treatment Cream with 2.5% Benzoyl Peroxide, Retinol and Tea Tree Oil. Specially Formulated for Minimal Skin Irritation and Fast Results.",retinol|cream,40
+retinol night cream,ingredient,B00KQC7X5M,Best Cellulite Cream  Maximum Strength Retinol and Caffeine  Spa Professional Line - Natural Organic Ingredients - Results Guaranteed or We'll Give You Back Your Money - Full 4oz Size,retinol|cream,40
+retinol night cream,ingredient,B01GOQWVSW,"Am&eacute;lie Moisturizer With Retinol, Vitamin E &amp; Hyaluronic Acid. Night Cream For Wrinkles, Lines &amp; Other Signs of Aging. Anti-aging Formula With Organic and Natural Ingredients.",retinol|cream,40
+retinol night cream,ingredient,B011I8D6L2,"CLIA Beauty Retinol Moisturizer For Stretch Mark Scars With Collagen, Caffeine and Vitamin E, Helps Remove and Prevent New And Old Stretch Marks and Scars, Best Formula For Pregnant And Nursing Moms",retinol|cream,40
+retinol night cream,ingredient,B01AKA04KK,"(4 oz) 2.5% Retinol Moisturizer Cream for Face with Vitamin A, Vitamin E - Anti-Aging Facial Moisturizer, Improves Skin Tone, Wrinkles, Reduce Skin Discoloration, Clears up Acne and Helps Sun Damage",retinol|cream,40
+retinol night cream,ingredient,B01GQKM0AK,"Supreme Retinol Moisturizer Cream By WiseNaturals | Perfect Anti Aging &amp; Wrinkle Face Formula | With Hyaluronic Acid, Active Retinol, Vitamin E &amp; Green Tea Extracts | 1.7 OZ (Packaging May Vary)",retinol|cream,40
+retinol night cream,ingredient,B01H5MUJSI,"Night Cream For Dry Skin - Intensive Repair Anti-Aging Formula - Restore Youthful Skin With Organic &amp; Natural Hyaluronic Acid, Jojoba Oil, Peptides, Aloe Vera, Retinol Best Under Eye Face Moisturizer",retinol|cream,40
+niacinamide serum,ingredient,B00O5CVB6Q,bsb beauty globes,niacinamide|serum,6
+niacinamide serum,ingredient,B00R4BDH6C,Elfa Pharm Rebuilding Burdock Hair Balm-Mask 200Ml,niacinamide|serum,6
+niacinamide serum,ingredient,B01F7WH7E2,"Baebody Niacinamide Vitamin B3 Serum - Facial Serum for Reducing Appearance of Acne, Breakout, Fine Lines 1oz",niacinamide|serum,6
+niacinamide serum,ingredient,B00LESV8YY,"Mulberry &amp; Licorice Skin Brightening Facial Serum, Vitamin C, Niacinamide (Vitamin B3), Calendula Extract, Aloe, Shea Oil - 1oz",niacinamide|serum,6
+niacinamide serum,ingredient,B014BXT3DQ,"Upgraded 30% Vitamin C Serum with Hyaluronic Acid and Vit E,Anti Aging Face Serum for Face Eyes,Anti Wrinkle Vitamin C Facail Serum",niacinamide|serum,6
+niacinamide serum,ingredient,B00L2TXLZO,"GloxiniaLife by Dr. Calle Clear Acne MD- Acne Treatment Kit for Normal to Dry Facial Skin- For Adults and Teen Boys and Girls- Fights Blackheads, Blemishes, Pimples, and Acne Bacteria, 4 item kit",niacinamide|serum,6
+eye cream dark circles,concern,B0002CD01M,ClarinsMen Under Eye Serum,under eye|dark circle,40
+eye cream dark circles,concern,B01B9YSTXK,CLINIQUE Pep-Start Eye Cream,eye cream|puff,40
+eye cream dark circles,concern,B007E9HLAM,Aroma Magic Under Eye Gel 20ml,eye gel|dark circle,40
+eye cream dark circles,concern,B00NOFU1IY,Yalmeh Naturals Eye Bright Gel,eye gel|dark circle,40
+eye cream dark circles,concern,B0119UR59I,Body Wonders Walnut oil - 16oz,under eye|dark circle,40
+eye cream dark circles,concern,B0159ZECGI,W7 Banana Dreams Loose Face Powder,under eye|circle,40
+eye cream dark circles,concern,B01CREF0HO,Hydroxatone Intensive Beauty Collection,under eye|dark circle,40
+eye cream dark circles,concern,B001O38GF8,Theraderm Peptide Repair Eye Cr&egrave;me,under eye|dark circle,40
+eye cream dark circles,concern,B00AAIVT3Y,18Actives Eye Essence Net Wt 0.5oz (15ml),under eye|dark circle,40
+eye cream dark circles,concern,B00FQ13MPI,DermaSilk 10 Minute Ultimate Face Lift - 1.8 OZ Set,under eye|puff,40
+eye cream dark circles,concern,B001CIYI5C,Olivenol Eye Cream 15ml cream by Medipharma Cosmetics,eye cream|dark circle,40
+eye cream dark circles,concern,B00NJ7QW4E,SkinCeuticals (Skin Ceuticals) Eye Cream -.67 oz fl oz,eye cream|dark circle,40
+eye cream dark circles,concern,B01BGUPJAI,Philosophy take a deep breath oxygenating eye gel cream,eye gel|dark circle,40
+eye cream dark circles,concern,B0184SBN7I,"LA PURE 24K Gold Eye Treatment Mask, 15 Pairs (Pack of 1)",under eye|dark circle,40
+eye cream dark circles,concern,B00FOGXB9M,e.l.f. Essential All Over Cover Stick Concealer 3205 Ivory,under eye|circle,40
+eye cream dark circles,concern,B0014B2R0K,"Robert Research Laboratories Vitamin K Gel, 7.5 Fluid Ounce",under eye|circle,40
+eye cream dark circles,concern,B019PK1IO2,Duracell Hi Performance Car &amp; AC Charger- MFI Certified,under eye|dark circle,40
+eye cream dark circles,concern,B01EHO26HY,"Benton Fermentation Eye Cream for all skin types, 30g/1.05oz",eye cream|dark circle,40
+eye cream dark circles,concern,B01EXZC2F8,"1Set Newborn Infant Baby Boys Girls Romper (Age 6-12M, Gray)",under eye|dark circle,40
+eye cream dark circles,concern,B00HYB0D64,GinZing Refreshing Eye Cream To Brighten and Depuff 15ml/0.5oz,eye cream|puff,40
+eye cream dark circles,concern,B00UI3T9B0,Flyshop Clear Plastic Bullet Clutch Earring Safety Backs (144),under eye|dark circle,40
+eye cream dark circles,concern,B01DUXN3N4,"Green Goo All-Natural Skin Care, Skin Repair, Stick, 0.6 Ounce",eye cream|dark circle,40
+eye cream dark circles,concern,B01G2F2XP6,Perfjohn Stem Cell Dark Circles Puffiness Anti Aging Eye Cream,eye cream|dark circle,40
+eye cream dark circles,concern,B00R3ECYIW,Altchek Md Eye Gel Pads 10 Count Depuff-Hydrate-Refresh (3 Pack),eye gel|puff,40
+eye cream dark circles,concern,B0151MF970,Lifetrons Essential Oil Booster Micro-Vibration Eye &amp; Face Massager,under eye|dark circle,40
+eye cream dark circles,concern,B001HKTBUM,EXPIRED &amp; DISCONTINUED Eye Specialist Essential Moisture Treatment .5 oz,under eye|dark circle,40
+eye cream dark circles,concern,B00A47G8FU,eFashion Full Housing Shell Case for XBOX 360 Wireless Controller Chrome Red,under eye|dark circle,40
+eye cream dark circles,concern,B00VPNZBTQ,EYE Cream Enensilia EGF Eye Cream Fine Lines Wrinkles Puffiness and Dark Spot,eye cream|puff,40
+eye cream dark circles,concern,B01B54XW54,Pure Body Naturals Eye Cream for Dark Circles and Puffiness &ndash; 1.7 fl oz,eye cream|dark circle,40
+eye cream dark circles,concern,B00E5GK4Y2,"Petitfee Gold and EGF Eye and Spotpatch, Eyepatch 60 Each and Spotpatch 30 Each",under eye|dark circle,40
+eye cream dark circles,concern,B000H728LA,Origins Eye Care - High Potency Night-A-Mins Mineral-Enriched Eye Cream .5oz/ 15ml,eye cream|puff,40
+eye cream dark circles,concern,B001HC54SS,EXPIRED &amp; DISCONTINUED - Opti-Mologist Eye Cream With Light Diffusers .5 fl oz,eye cream|puff,40
+eye cream dark circles,concern,B013FTXIA6,Banggood 20g Red Ginseng Under Eye Cream - Remove Dark Circles Wrinkles Face Lines,eye cream|dark circle,40
+eye cream dark circles,concern,B00PG0M7NM,Amore Pacific Moisture Bound Intensive Vitalizing Eye Complex Travel Size 2 x 3 ml.,eye cream|dark circle,40
+eye cream dark circles,concern,B0184RDSMW,"Skinfood Honey&amp; Royal Jelly Firming Eye Cream (30g) Anti Puffiness, Dark Circle",eye cream|dark circle,40
+eye cream dark circles,concern,B01GCBA80C,BIBITIME 4PCS Vent Grape Ball Stress Relief Squeeze Toy Hand Wrist Toy Random Color,under eye|dark circle,40
+eye cream dark circles,concern,B01FJNYEPO,YANQINA Snail Eye Cream Whitening Moisturizing Anti-aging Wrinkle Remove Dark Circles,eye cream|dark circle,40
+eye cream dark circles,concern,B006OG1LM0,Skin Effects by Dr. Jeffrey Dover EYE REPAIR SERUM with Retinol Complex 0.5 fl oz / 15 mL,under eye|circle,40
+eye cream dark circles,concern,B01EKRVDUO,NWORLD NLIGHTEN EYE GEL naturally helps reduce puffiness and helps brighten dark circles.,eye gel|dark circle,40
+eye cream dark circles,concern,B00KTOFESA,25 Pair Golden Eye Collagen Pads with Hyaloronic Acid and Q10 - Best quality from Schlupflid weg,under eye|dark circle,40
+hydrating lip balm,concern,B002Q5T1S4,Chap Lip 24's,lip|chap,40
+hydrating lip balm,concern,B00MATKV8K,Lip Balm Base-16 oz,lip|balm,40
+hydrating lip balm,concern,B00DMZ0VTU,Oilily Lipbalm Peach,lip|balm,40
+hydrating lip balm,concern,B00DSQVI4U,Healfast Repair Cream,lip|chap,40
+hydrating lip balm,concern,B009YL4UXE,"Noyah Lip Balm, Vanilla",lip|balm,40
+hydrating lip balm,concern,B00M1VQN7K,Black Licorice Lip Balm,lip|balm,40
+hydrating lip balm,concern,B0006MVSJY,Med Lip/sun Spf23 Single,lip|chap,40
+hydrating lip balm,concern,B000NIYXDE,Peaches lip balm 0.15 oz,lip|balm,40
+hydrating lip balm,concern,B00M2JWWZI,CITY COLOR Lip Balm Berry,lip|balm,40
+hydrating lip balm,concern,B008PEU98Q,BURTS BEES ESSENTIAL KIT 1EA,lip|balm,40
+hydrating lip balm,concern,B00M2JXJD2,CITY COLOR Lip Balm - Salmon,lip|balm,40
+hydrating lip balm,concern,B0009W7MG4,Gillette M3 Power Nitro Razor,lip|chap,40
+hydrating lip balm,concern,B004F80IKA,Smoothing Watermelon Lip Balm,lip|balm,40
+hydrating lip balm,concern,B00P1SDELS,Pineapple Paradise Collection,lip|balm,40
+hydrating lip balm,concern,B0198NF3ZG,Friendley's Flavored Lip Balm,lip|balm,40
+hydrating lip balm,concern,B01DEAFJJO,Candelilla Wax - 4.4oz / 125g,lip|balm,40
+hydrating lip balm,concern,B013KVAHCG,Duo Lip Balm (YOU'RE THE BALM),lip|balm,40
+hydrating lip balm,concern,B01BOM2ZWS,bliss Bang Pow Tinted Lip Balm,lip|balm,40
+hydrating lip balm,concern,B00IZL44OY,Silkening Dragon Fruit Lip Balm,lip|balm,40
+hydrating lip balm,concern,B00JYSSYZW,Aqualibrium Lip Mender Lip Balm,lip|balm,40
+hydrating lip balm,concern,B000674YF4,"Laura Mercier Lip Balm, 0.12 oz.",lip|balm,40
+hydrating lip balm,concern,B00TSQ2GUE,Burts Bees Island Lip Balm 4 Pack,lip|balm,40
+hydrating lip balm,concern,B01AIODRAW,Chapstick Lip Moisturizer-12 Pack,lip|balm,40
+hydrating lip balm,concern,B01GGMFMVW,Zinc Oxide USP Non-Nano (4 fl oz),lip|balm,40
+hydrating lip balm,concern,B000XVXK12,Gillette Fusion Power Phenom Razor,lip|chap,40
+hydrating lip balm,concern,B000XVW2TS,Gillette Fusion Phenom Razor Manual,lip|chap,40
+hydrating lip balm,concern,B01AX7S80S,My Little Pony Applejack's Lip Balm,lip|balm,40
+hydrating lip balm,concern,B00VO8AC0K,Hersheys Jumbo Lip Balm and Keychain,lip|balm,40
+hydrating lip balm,concern,B00E5S2TKM,Cloverleaf Farm - Lemon Balm Lip Balm,lip|balm,40
+hydrating lip balm,concern,B00S8P1LNE,Beauticontrol Lip Balm 2 Piece Bundle,lip|balm,40
+hydrating lip balm,concern,B01886FP8O,Double Helix Water Age Defying Packag,lip|balm,40
+hydrating lip balm,concern,B01EG6OR20,Plantlife Lavender Lip Balm - 0.25 oz,lip|balm,40
+hydrating lip balm,concern,B00O86LTFW,"SHEA YELEEN Apple Lip Balm, 0.15 Ounce",lip|balm,40
+hydrating lip balm,concern,B00PWYUF18,Coca Cola Lip Smacker 4 Stick Lip Balm,lip|balm,40
+hydrating lip balm,concern,B01CDT7Y90,Avon Flavor Savers Strawberry Lip Balm,lip|balm,40
+hydrating lip balm,concern,B0057ZHMN6,NOW- Liquid Lanolin (100% Pure) 4 fl oz,lip|chap,40
+hydrating lip balm,concern,B019AK45D8,Hershey's Kisses Milk Chocolate Lip Balm,lip|balm,40
+hydrating lip balm,concern,B01FG9LS9G,Eco Lips MONGO KISS Banana Lip Balm (15),lip|balm,40
+hydrating lip balm,concern,B00MSKXZQG,(6 Pack) CITY COLOR Lip Balm - Ultra Pink,lip|balm,40
+hydrating lip balm,concern,B00RDEJWFU,Piping Rock Empty Lip Balm Tubes 50 Count,lip|balm,40
+hydrating toner,product,B00DBDAU08,Fresh Face Toner,toner|moistur,38
+hydrating toner,product,B004BRN154,DHC Olive Essentials Set,toner|moistur,38
+hydrating toner,product,B0015MTSOQ,Swisa Beauty Facial Toner,toner|moistur,38
+hydrating toner,product,B000ULJM2Q,Ojon Ojon Revitalizing Mist,toner|hydrat,38
+hydrating toner,product,B007XA2T9U,HABA Harbour G Lotion 180 Ml,toner|moistur,38
+hydrating toner,product,B00HORTB66,Dr Hauschka Facial Toner 100ml,toner|moistur,38
+hydrating toner,product,B002AOUT5U,Repechage Vita Cura Travel Collection,toner|moistur,38
+hydrating toner,product,B00A9OVI8U,Nature's Essence Bridal Glow Pack 60g,toner|moistur,38
+hydrating toner,product,B001R1DVNO,"WELEDA, Wild Rose Facial Care Kit - 1 Kit",toner|moistur,38
+hydrating toner,product,B002NSB920,For Beloved One Whitening Treatment Toner,toner|hydrat,38
+hydrating toner,product,B00XKRXMYG,PATANJALI Neem Aloe Vera Face Pack (60 Grams),toner|hydrat,38
+hydrating toner,product,B00UF3TTV8,Charmzone Pleasium Manuka Royal Emulsion 130ml,toner|moistur,38
+hydrating toner,product,B001DD2PYW,La Rochelle One-step Express Cleaning Gel-130ml,toner|moistur,38
+hydrating toner,product,B001MA411G,Derma E Natural Body Care Refreshing Skin Toner,toner|moistur,38
+hydrating toner,product,B014T3Q9JO,Living Nature Sensitive Skin Toner and Moisturizer,toner|hydrat,38
+hydrating toner,product,B014C3R3C8,"Olay Active Botanicals Moisturizing Toner, 5.0 Fl Oz",toner|hydrat,38
+hydrating toner,product,B002AUAM9W,Intelligent Nutrient USDA Organic Purifying Tonic 3.3 oz,toner|moistur,38
+hydrating toner,product,B00UHS32VO,Skin Food - Royal Honey - Propolis Essence - Facial Care,toner|moistur,38
+hydrating toner,product,B01CH76SO0,AuraVie Skin Care 3 Piece SET Toner Eye Cream Moisturizer New,toner|moistur,38
+hydrating toner,product,B00Q6761XG,Andalou Naturals Clementine + C Illuminating Toner&nbsp;6 fl oz,toner|hydrat,38
+hydrating toner,product,B01ACWSEK8,"MAXCLINIC Caviar Honey Shine Revital Gel Cream 100ml, Sleeping Pack",toner|moistur,38
+hydrating toner,product,B00S8WUD6I,Redken Intra Force Shampoo and Toner Set for Color-treated Thinning Hair,toner|moistur,38
+hydrating toner,product,B007H5NTOU,The Face Shop Rice &amp; Ceramide Moisture Toner -All Skin Types 150ml/5.07 Fl.oz,toner|moistur,38
+hydrating toner,product,B01FEDIWC0,"Young Living ART Skin Care System: Gentle Cleanser, Light Moisturizer, and Refreshing Toner",toner|moistur,38
+hydrating toner,product,B01ATYTQP6,"Paula's Choice CALM Redness Relief Toner, 4 Ounce Bottle, for Oily/Combination Sensitive Skin",toner|hydrat,38
+hydrating toner,product,B01FLZ8UEQ,Dr. Alvin All in 1 Maintenance Set &quot;Without Soap&quot; from PSCF 100% Authentic [Set of 3 Pcs],toner|moistur,38
+hydrating toner,product,B013BZLET6,Thanaka Powder 100 Gm &amp; Kusumba Oil 100 Ml for Permanent Hair Removal Myanmar Traditional Secret,toner|hydrat,38
+hydrating toner,product,B004BD9152,"L'Or&eacute;al Paris Skincare HydraFresh Toner, Alcohol Free Toner with Pro-Vitamin B5 for Face, 8.5 fl. oz.",toner|moistur,38
+hydrating toner,product,B01GR2WU7K,Lanc&Atilde;&acute;me Tonique Confort Comforting Rehydrating Silky-soft Toner - 6.8 Fl. Oz. by Illuminations,toner|hydrat,38
+hydrating toner,product,B0091OCA86,"Andalou Naturals Clementine + C Illuminating Toner, 6 Fl oz, Facial Toner Helps Hydrate &amp; Balance Skin pH, For Clear, Bright Skin",toner|hydrat,38
+hydrating toner,product,B01ANM32PY,Nature Republic Snail Solution Skin Booster 120 Ml Emulsion 120 Ml Set Revitalizing Moisturizing Brightening Wrinkle Damged Skin Improvement,toner|moistur,38
+hydrating toner,product,B00SANEZ28,"Kathryn&rsquo;s Reserve - Handcrafted, Raw, All-Natural, All-In-One Facial Cleanser, Exfoliant, Toner, Makeup Remover, and Moisturizer Anouk, 16 oz",toner|moistur,38
+hydrating toner,product,B00DMK9BSW,"MediDerm Sensitive Revitalizing Toner Hydrating &amp; Soothing, Minimizes Pores, Oil Free, Anti Aging, Reduces Fine Lines &amp; Wrinkles - 100% Safe &amp; Paraben Free",toner|hydrat,38
+hydrating toner,product,B015RY8YC4,12 Oz Sugaring Hair Removal Kit for Men for All Body Parts + 20 Strips +3 Tongue Depressor + After Sugaring Moisturizing Toner + Sugar Wax How to Use Brochure by cocojojo,toner|moistur,38
+hydrating toner,product,B005HJSU2Y,"Sonage Hydrating Rinse - Alcohol Free Hydrating Toner with Rose Water, Ginseng and Aloe Vera - Refresh and Energize Dull Complexion - Brighten Normal to Dry Skin, Sets Makeup",toner|hydrat,38
+hydrating toner,product,B00WQAM2CG,"Hydrating Rose Water Facial Toner. Adjusts The pH Of Your Skin While Removing Remaining Oils, Dirt And Dead Skin Cells. Moroccan Rose Water Toner For Skin Leaves Your Skin Smooth And Silky Soft. 4 OZ",toner|hydrat,38
+hydrating toner,product,B00CR0ECAK,FREE INTERNATIONAL SHIPPING + SPECIAL EVENT!!! IOPE Trouble Clinic Soothing Toner (150ml) + Trouble Clinic Control Emulsion (130ml) + Trouble Clinic Cleansing Foam (150ml) + Trouble Clinic Treatment Essence (40ml) + Trouble Clinic Moisturizing Cream (50ml),toner|moistur,38
+hydrating toner,product,B00QWCUT7E,"YALMEH Glorifying Vitamin C Toner- Natural and Organic Skin Toner with Organic Aloe Vera, Organic Turmeric, MSM and CoQ10 - Considered the Best Anti Aging Face Toner Available - Restore Your Skin's Natural Balance - Nourish and Hydrate the Skin Deeply for that Healthy, Radiant Glow!",toner|hydrat,38
+vitamin c serum,ingredient,B000MXRFY4,Vitamin C Plus Serum,vitamin c|serum,40
+vitamin c serum,ingredient,B01EHVYK7Q,SOONPURE Vitamin C Serum 10ml,vitamin c|serum,40
+vitamin c serum,ingredient,B01EP99CQE,Avon Anew Vitamin C Brightening Serum,vitamin c|serum,40
+vitamin c serum,ingredient,B018ZLUTTW,Skin Fitness Vital C Serum 20% w/Ellagi-C,vitamin c|serum,40
+vitamin c serum,ingredient,B0009J4BY8,Neuropeptide Facial Serum Prep - 177ml/6oz,vitamin c|serum,40
+vitamin c serum,ingredient,B009JP1T9S,JEREL JAMES Hair Care Natural Blend Gift Set,vitamin c|serum,40
+vitamin c serum,ingredient,B0119X0ED4,Moringa Oleifera Tea Organic Detox Tea - 50g,vitamin c|serum,40
+vitamin c serum,ingredient,B00ESMQKUU,Trader Joe's Nourish Antioxidant Facial Serum,vitamin c|serum,40
+vitamin c serum,ingredient,B0057O7Q06,Jovees Regrowth &amp; Revitalising Hair Pack 200g,vitamin c|serum,40
+vitamin c serum,ingredient,B001CZ34IM,Nutraceutics Serum C (Topical - 10% L-Ascorbic Aci,ascorbic|serum,40
+vitamin c serum,ingredient,B01GR25W5M,Avon Anew Vitamin C Brightening Serum by Avon Anew,vitamin c|serum,40
+vitamin c serum,ingredient,B019UKRNEG,Jeffrey James Botanicals J2 Firm Ultra Lift Serum 2oz,vitamin c|serum,40
+vitamin c serum,ingredient,B00T83843U,Advanced BioScience Vitamin C Serum and Phytoceramides,vitamin c|serum,40
+vitamin c serum,ingredient,B00X3IGHK8,Perfjohn Snail Skin Repair Moisturizing Vitamin C Serum,vitamin c|serum,40
+vitamin c serum,ingredient,B012HD1UG0,Haba Special Care White Lady Vitamin C Serum (60ml/2oz),vitamin c|serum,40
+vitamin c serum,ingredient,B00195ZZ00,GlyMed Plus GlyMed Plus Cell Science Cell Protection Serum,vitamin c|serum,40
+vitamin c serum,ingredient,B011DEMTDC,Haba Special Care White Lady Vitamin C Serum - 10ml/0.35oz,vitamin c|serum,40
+vitamin c serum,ingredient,B016J5NAA6,Isis Pharma Nano White 15 % Vitamin C Whitening Serum 28ml,vitamin c|serum,40
+vitamin c serum,ingredient,B00VIQX1EC,Reviva Firming Eye Serum Alpha Lipoic Acid 1 Oz - Pack of 2,vitamin c|serum,40
+vitamin c serum,ingredient,B003H8IYX2,Circadia by Dr. Pugliese Vitamin C Reversal Serum 0.5 fl oz.,vitamin c|serum,40
+vitamin c serum,ingredient,B015CVT3OK,L'Reve Women's LRV-VTMCTWO-RTNL Vitamin C30x Retinol Serum (,vitamin c|serum,40
+vitamin c serum,ingredient,B00H4B1980,DAKOKA Remote Controlled Vibrating Prostate Massager (black.),vitamin c|serum,40
+vitamin c serum,ingredient,B01FFZ8ZLA,Teoxane Rha Vcip Hyaluronic Acid + Vitamin C Serum 30Ml 30 Ml,vitamin c|serum,40
+vitamin c serum,ingredient,B00CS5JUYW,Benev Vitamin C 12% Serum Antioxidant and Skin Brightener 20ml,vitamin c|serum,40
+vitamin c serum,ingredient,B01F6NA14U,"Pure Body Naturals L-Ascorbic Acid Triple C Serum for Face, 1oz",ascorbic|serum,40
+vitamin c serum,ingredient,B0151EFFM2,40 Carrots Carrot + C Vitamin Serum 1 Fl Oz /29.6 Ml ( Pack of 1),vitamin c|serum,40
+vitamin c serum,ingredient,B00L2PYVDO,"Vitamin C With Hyaluronic Acid Advanced Anti-Aging Serum, 2 Fl. Oz.",vitamin c|serum,40
+vitamin c serum,ingredient,B00CPOB5KI,Bielenda Professional Cooling Algae Face Mask with Rutin and Vitamin C,vitamin c|serum,40
+vitamin c serum,ingredient,B0167XBHO6,Skederm Vitamin C X30 Power Serum. Hyaluronic Acid with Aquaxyl. 1 fl. oz.,vitamin c|serum,40
+vitamin c serum,ingredient,B01DCT0XMU,Rapid Repair Eye Serum w/ Regu-Age &amp; Vitamin C (Ester) - 15 ml / .5 oz,vitamin c|serum,40
+vitamin c serum,ingredient,B00FNQSGNO,COENZYME Q10 100% HYALURONIC ACID VITAMIN C EGF AGE REVERSAL COLLAGEN SERUM,vitamin c|serum,40
+vitamin c serum,ingredient,B01BHPJFO8,VITAMIN C 30% + E in PURE HYALURONIC ACID Anti Aging - Serum 1.2oz for Face,vitamin c|serum,40
+vitamin c serum,ingredient,B01C4LEQ98,Vered Organic Botanicals Therapeutic Balancing Face OIL 100% Certified Organic,vitamin c|serum,40
+vitamin c serum,ingredient,B015MLJOB2,Skederm Vitamin C X30 Aqua Serum. Hyaluronic Acid with Argireline. 1 fl. oz. / 30ml,vitamin c|serum,40
+vitamin c serum,ingredient,B00AET376G,Serious Skincare Serious-c C Serum Vitamin C Ester Skin Conditioner 1 Fl. Oz. / 29 Ml,vitamin c|serum,40
+vitamin c serum,ingredient,B00K47VXN2,"Derma Roller Kit for Face and Body 1200 Pins,0.75 mm Micro Needle Roller Skin Care Tools",vitamin c|serum,40
+vitamin c serum,ingredient,B019S2ED4O,"NARDO'S NATURAL Anti-Aging Serum | Vitamin C, Peptides, Algae Extract, Acai Berry and More",vitamin c|serum,40
+vitamin c serum,ingredient,B01GQA7J8S,Ad-Vent Products Hyaluronic Acid Serum with Vitamin C E - Anti Aging Face Cream Moisturizer- 1 oz,vitamin c|serum,40
+vitamin c serum,ingredient,B00TBVU9XW,"Ylass Vitamin C Serum for Face, Topical Facial Serum with Hyaluronic Acid &amp; Vitamin E (1 Fl oz)",vitamin c|serum,40
+vitamin c serum,ingredient,B009ITQZ4E,"Ylass Vitamin C Serum for Face, Topical Facial Serum with Hyaluronic Acid &amp; Vitamin E (5, fl.oz)",vitamin c|serum,40
+hyaluronic acid serum,ingredient,B00O5CVB6Q,bsb beauty globes,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00BTNB7I6,Hyaluronic Acid Face Serum,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01F8LGI6K,LANBENA Hyaluronic Acid Serum 15ml,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01EHVYKRQ,SOONPURE Hyaluronic Acid Serum 10ml,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B009YWFBFO,Cosmo Hurry Harry Collagen Serum Bar,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01BT842LO,Hyaluronic Acid Serum with Green Tea,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00WA79MDC,Nigella Therapy - Perfecting Night Serum,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00J5FTW8M,Ureadin Fusion Facial Serum Anti-Wrinkle Lift,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B0002ZZSAA,Joey New York Correct-A-Line for Face 1.59 oz.,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B0196B2X2G,"Caudalie Resveratrol Lift Firming Serum, 1 Ounce",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00WAJDKYW,Nigella Therapy - Perfecting Day Serum 30 snipgels,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01B5KTY3W,Deko Vitamin-C Anti-Aging Serum with Hyaluronic Acid,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01EMXVZR2,SOONPURE Concentrated Hyaluronic Acid Eyes Serum 10 ml,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01EB2PBW4,REGENIST ARS 4~5 Intensely regenerating serum-concentrate,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00VIQX1EC,Reviva Firming Eye Serum Alpha Lipoic Acid 1 Oz - Pack of 2,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00H4B1980,DAKOKA Remote Controlled Vibrating Prostate Massager (black.),hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01FFZ8ZLA,Teoxane Rha Vcip Hyaluronic Acid + Vitamin C Serum 30Ml 30 Ml,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B003XSINE6,Be Natural Organics Niacin Complex Balancing Mist 2 Oz (60 ml),hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00UI3T9B0,Flyshop Clear Plastic Bullet Clutch Earring Safety Backs (144),hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00YCGF5T4,Elleda 50x Strength Hyaluronic Acid Serum For Skin &ndash; 15 ml,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00L2PYVDO,"Vitamin C With Hyaluronic Acid Advanced Anti-Aging Serum, 2 Fl. Oz.",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01F5BNNKW,Mother Nature - Hyaluronic Acid-Serum || Angi-Aging || Double Strength,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B0167XBHO6,Skederm Vitamin C X30 Power Serum. Hyaluronic Acid with Aquaxyl. 1 fl. oz.,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00FNQSGNO,COENZYME Q10 100% HYALURONIC ACID VITAMIN C EGF AGE REVERSAL COLLAGEN SERUM,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01BHPJFO8,VITAMIN C 30% + E in PURE HYALURONIC ACID Anti Aging - Serum 1.2oz for Face,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00ARM4Q7O,Eveline Eyelash Growth Activator Concentrated Serum 3 In 1 Advance Volumiere,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B007IDQ2SG,University Medical Face Lift Wrinkle Filling Serum with Hyaluronic Acid (5pk),hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00VPMTFMQ,Hyaluronic Acid Serum with Resveratrol and Vitamin E - Natural Anti-aging Formula,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B015MLJOB2,Skederm Vitamin C X30 Aqua Serum. Hyaluronic Acid with Argireline. 1 fl. oz. / 30ml,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00IKTM7GI,Niu Hyaluronic Acid Serum Anti Aging Formula | Pro Aging Products from Gina Alexander,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00FNQLX1Q,COPPER PEPTIDE 100% HYALURONIC ACID 25% ARGIRELINE AGE REVERSAL FIRMING SERUM 1oz/30ml,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00FGY4N12,"Sublime Beauty 2 SERUM GIFT BOX with Collagen Serum, Hyaluronic Serum, 0.5 oz each in Lovely Box",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00F4SG73W,"Pure Hyaluronic Acid + Aloe Serum for Skin &amp; Anti-Aging. 100% Natural, Clinical Grade Formula",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01GQA7J8S,Ad-Vent Products Hyaluronic Acid Serum with Vitamin C E - Anti Aging Face Cream Moisturizer- 1 oz,hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00TBVU9XW,"Ylass Vitamin C Serum for Face, Topical Facial Serum with Hyaluronic Acid &amp; Vitamin E (1 Fl oz)",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B009ITQZ4E,"Ylass Vitamin C Serum for Face, Topical Facial Serum with Hyaluronic Acid &amp; Vitamin E (5, fl.oz)",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B01F7WH7E2,"Baebody Niacinamide Vitamin B3 Serum - Facial Serum for Reducing Appearance of Acne, Breakout, Fine Lines 1oz",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00M16MHHA,"Age Defying Hyaluronic Acid Serum with Vitamins C &amp; E, Professional Grade by Pure Body Naturals, 1 Fluid Ounce",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B00HXJODFE,"Babyface Miracle Serum with Hyaluronic Acid, Seaweed, Sea Kelp, Algae, Ocean Minerals. Hydrates And Repairs, 1.1 ounce",hyaluronic|serum,40
+hyaluronic acid serum,ingredient,B0151TP5I6,Hyaluronic Acid Serum for All Skin Types 1.7oz Moisture Hydration Advanced Rejuvenation Formula Antioxidant 50ml By Evassence,hyaluronic|serum,40
+sheet face mask,product,B008VBYNK8,Zeolite Ultrafine Clay - 100g,face mask,40
+sheet face mask,product,B000141J5K,Got2b Spa Face Mask Get Firming 6,face mask,40
+sheet face mask,product,B00G3N039G,Replenish Intense Hydration Masque,face mask,40
+sheet face mask,product,B000OYMD6G,"Not Soap, Radio Spa Chocolat Gift Set",face mask,40
+sheet face mask,product,B00JFRMO08,"Mask, Anesthesia, Adult Large, Size 6",face mask,40
+sheet face mask,product,B018JVEGFQ,MaskerAide Radiant Beauty Mask Gift Set,sheet mask,40
+sheet face mask,product,B00N0V9M00,Nyah - Neem &amp; Mint Face Mask - 125gm,face mask,40
+sheet face mask,product,B006ZK2ZUW,Mask-arade The Queen Headscarf Royal Mask,face mask,40
+sheet face mask,product,B01C2NFSAO,BCL Saborino Morning Face Mask (5 Sheets),face mask,40
+sheet face mask,product,B004UMG7MY,Obey Your Body J413 Bio Magnetic Face Mask,face mask,40
+sheet face mask,product,B006L44UA0,Royal Nectar Face Mask with Bee Venom 50ml,face mask,40
+sheet face mask,product,B00SASK3QU,Purupuru eye sheet mask 60 pieces set of 5,sheet mask,40
+sheet face mask,product,B000E39PAO,Uncle Harry's Natural Sandalwood Face Mask (3 oz),face mask,40
+sheet face mask,product,B000W7D5E4,Bliss Steep Clean Pore Purifying Face Mask 3 4 Oz,face mask,40
+sheet face mask,product,B00HY8BFE6,Wandebijin Thick Face Mask 10 Sheets (Essence 140g),face mask,40
+sheet face mask,product,B00TU9XUZY,Vanedo Beauty Friends Sheet Mask- White (12 Sheets),sheet mask,40
+sheet face mask,product,B015DZXQKC,LuckyFine Blackhead Remover Face Mask Peel-off (#2),face mask,40
+sheet face mask,product,B01BZZPY5O,Ishizawa Rice Japan Face Mask - 10pcs (Green Tea Set),face mask,40
+sheet face mask,product,B01G0QCUKU,"Sea Kelp Extract, USDA Certified Organic - 2.0floz / 60ml",face mask,40
+sheet face mask,product,B01180SRYG,Dr Jart Clearing Solution Ultra-Fine Microfiber Sheet Mask,sheet mask,40
+sheet face mask,product,B01E8LLDXE,ROHTO (Japan) Melano CC Intensive Face Mask 20-pcs (195ml),face mask,40
+sheet face mask,product,B01CIR766S,Bal&eacute;a Brightening Sheet Mask for Dark Spots (6x21ml),sheet mask,40
+sheet face mask,product,B01F8LYRFY,Simple Kind To Skin Deep Cleansing Face Mask 75Ml by Simple,face mask,40
+sheet face mask,product,B016I98EQI,Pure sandalwood powder face mask and rose water combo -1.75 OZ,face mask,40
+sheet face mask,product,B01BRIKLAC,Lanocreme Soothing Face Mask (5) Pack Manuka Honey New Zealand,face mask,40
+sheet face mask,product,B00IFROMCM,"SANA Namerakahonpo Soymilk Moisturizing Sheet Mask 1pack, 32pcs",sheet mask,40
+sheet face mask,product,B00RX67UZW,Black Spandex With Latex Balaclava Hood Mask Adult Sexy Face Mask,face mask,40
+sheet face mask,product,B00EHT6XBK,Face Mask 3 Ply Latex Free Medical Grade *PANA Brand* (Pink Color),face mask,40
+sheet face mask,product,B01DJTIJNI,SEPHORA COLLECTION Face Mask (Pearl - perfecting &amp; brightening),face mask,40
+sheet face mask,product,B00CPOB5KI,Bielenda Professional Cooling Algae Face Mask with Rutin and Vitamin C,face mask,40
+sheet face mask,product,B019CI48T4,Powerful Thin Face Bandage Sleep Thin Face Mask Get Rid of Double Chin,face mask,40
+sheet face mask,product,B01EINU626,By Nature Nourishing &amp; Firming Face Mask With Rosehip Oil 5 x 25 g,face mask,40
+sheet face mask,product,B017GM8C9K,[2-packs Value Set] LuLuLun Face Mask Balance Moisture Type 42 Sheets x 2,face mask,40
+sheet face mask,product,B00OK66JZK,AshopZ Men Women Cool Halloween Roman/Greek Warrior Venetian Half Face Mask,face mask,40
+sheet face mask,product,B00OQTOMW8,10 x Gold Crystal Collagen Lip Facial Face Mask Lip Care by Boolavard&reg; TM,face mask,40
+sheet face mask,product,B014KN3FRW,HENGSONG Wrapping Waterproof Silicone Facial Moisturizing Mask for Sheet Mask,sheet mask,40
+sheet face mask,product,B01FKLB3EU,Face Mask - Oat Protein Gentle Exfoliating Formula For All Skin Types - 3.2oz,face mask,40
+sheet face mask,product,B013GBXSEE,France Wispun Gold Collagen Crystal Facial Mask Anti Aging Hydrating Face Mask,face mask,40
+sheet face mask,product,B01CZX29YE,MagiDeal Silicone Reuse Waterproof Face Moisturizing Mask for Sheet Mask Cover,sheet mask,40
+sheet face mask,product,B00G9K4JAC,FOREVER YUNG 2 Pcs Dotted Elastic Straps Dust Proof Earloop Face Mask Black White,face mask,40
+mascara,product,B00NMBS3IK,Zoria Boost Mascara,mascara,40
+mascara,product,B00EWSYDWW,Avocado Seed Oil Mascara,mascara,40
+mascara,product,B0145WNT88,Lor Volms Superstr Wtp Bl,mascara,40
+mascara,product,B001RVBM7Q,Weather Everything Mascara,mascara,40
+mascara,product,B01DEAFJJO,Candelilla Wax - 4.4oz / 125g,mascara,40
+mascara,product,B00O41UUCO,Power Lash by Model Co Eye Duo,mascara,40
+mascara,product,B004K4RHQC,The Rave Cosmetics Mascara Navy,mascara,40
+mascara,product,B00TY60ZYM,Noevir Super Long Mascara Black,mascara,40
+mascara,product,B01FEG5ICO,Cg Mascara Veryblck C3a Size .4z,mascara,40
+mascara,product,B0080MWNEQ,Cire Trudon ~ Abd El Kader Candle,mascara,40
+mascara,product,B00Q2CCSAA,PDC Pmel Clear Essence Mascara 8g,mascara,40
+mascara,product,B0178SOJRQ,Longcils Boncza So Mythic Mascara,mascara,40
+mascara,product,B01FH1KGYG,Cg Mascara Blk Brown C3a Size .4z,mascara,40
+mascara,product,B016TRSJFU,GOSH Boombastic Swirl Mascara 13 ml,mascara,40
+mascara,product,B01DMIT1II,"SMASHBOX X-rated Mascara, 0.3 Ounce",mascara,40
+mascara,product,B005XHEEZM,10 Glitter Colors Mascara Makeup Set,mascara,40
+mascara,product,B001GTI03S,Longcils Boncza Le Cake Mascara Black,mascara,40
+mascara,product,B007HUSKPI,Cezanne / Eyebrow Mascara Light Brown,mascara,40
+mascara,product,B00FKX918O,Fat Lash by Model Co Ultimate Eye Duo,mascara,40
+mascara,product,B015OOLBP4,Longcils Boncza Le Cake Mascara Brown,mascara,40
+mascara,product,B00CSGHF6Q,Etuse Rush Version up /Mascara Base 6g,mascara,40
+mascara,product,B005CN4BE6,Stargazer - Fancy Dress Mascara - White,mascara,40
+mascara,product,B00DF48HIU,ModelCo All About Eyes Kit (Smokey Eye),mascara,40
+mascara,product,B00M5IIS0Y,Bourjois Volume Glam Ultra Curl Mascara,mascara,40
+mascara,product,B00FREKJ96,W7 Electric Mascara - Electric Blue 15ml,mascara,40
+mascara,product,B00TQ2DEDI,Kirkland Signature Lash Defining Mascara,mascara,40
+mascara,product,B00VST00HU,Estee Lauder Sumptuous Infinite 01 Black,mascara,40
+mascara,product,B0101MBRZ8,Pure Ziva Mascara Lash Thickening Primer,mascara,40
+mascara,product,B0182P7LC4,Golden Rose Essential Waterproof Mascara,mascara,40
+mascara,product,B0037MOMH0,Rimmel The MAX Volume Flash Mascara Black,mascara,40
+mascara,product,B017HTF8M6,W3LL PEOPLE - All Natural Bright Eyes Kit,mascara,40
+mascara,product,B007BBVVWM,Stargazer Eye Colour Mascara Make Up White,mascara,40
+mascara,product,B018WHB97U,Hard Candy Lashaholic Color-blackest Black,mascara,40
+mascara,product,B01DCH4616,smashbox Try It Kit: Lash Primer + Mascara,mascara,40
+mascara,product,B00DF48H44,ModelCo All About Eyes Kit (Bronze Goddess),mascara,40
+mascara,product,B00UUCSCJE,Max Factor 2000 Calorie Mascara (3 Options),mascara,40
+mascara,product,B01A5OLMHK,LashFood Conditioning Drama Mascara - Black,mascara,40
+mascara,product,B0015XMBEY,Isadora Build-Up Volume Mascara 05 Royal Blue,mascara,40
+mascara,product,B006LXA2E4,Deborah Mascara Black &amp; Long Carbon Black,mascara,40
+mascara,product,B010GOALZ8,(3 Pack) MILANI Runway Lashes Mascara - Black,mascara,40
+foundation for oily skin,concern,B004FK7R02,essie Nail Color,foundation|oil,40
+foundation for oily skin,concern,B0027MZ3C4,Neat Feet By Trim,foundation|matte,40
+foundation for oily skin,concern,B00UPK9NQW,Gosh BB Powder No. 2,foundation|shine,40
+foundation for oily skin,concern,B00P85Q3JY,Matte Perfection Foundation,foundation|oil,40
+foundation for oily skin,concern,B01DUTSKTU,Dermacol Invisible Fixing Powder,foundation|oil,40
+foundation for oily skin,concern,B01DUU06FK,Dermacol Invisible Fixing Powder,foundation|oil,40
+foundation for oily skin,concern,B004ETIWL2,Face Secrets Small Ultra Wedge 80ct.,foundation|oil,40
+foundation for oily skin,concern,B012TYYJZG,Bio Brightener Duo 2 pcs by W3LL PEOPLE,foundation|oil,40
+foundation for oily skin,concern,B00515GRUG,Blood Orange Olive Oil Bar Soap by 80 Acres,foundation|oil,40
+foundation for oily skin,concern,B00TIZZEF4,Dr. Hauschka Foundation 02 - Almond 30ml/1oz,foundation|oil,40
+foundation for oily skin,concern,B00ZXQUMQ8,3 X Sheer Cover Nourishing Moisturizer SPF 15,foundation|oil,40
+foundation for oily skin,concern,7250468162,No7 Stay Perfect Foundation Cool Vanilla by No7,foundation|oil,40
+foundation for oily skin,concern,B01BSY7IW4,Boots No7 Stay Perfect Foundation 30ml - Calico,foundation|oil,40
+foundation for oily skin,concern,B01D46AYR0,COVER FX Natural Finish Oil Free Foundation P 20,foundation|oil,40
+foundation for oily skin,concern,B000JYO87S,Dermalogica Treatment Foundation #2G - 40ml/1.3oz,foundation|oil,40
+foundation for oily skin,concern,B006JZ0L7C,"Too Faced Natural at Night Collection, 0.39 Ounce",foundation|matte,40
+foundation for oily skin,concern,B01ELIMQ9E,"Maybelline Dream Velvet, 92 Caramel by Maybelline",foundation|matte,40
+foundation for oily skin,concern,B003NR08QS,RIMMEL STAY MATTE FOUNDATION~SOFT BEIGE 103 PACK OF 2,foundation|matte,40
+foundation for oily skin,concern,B000RBW9H4,Clinique - Superpowder - No. 09 Matte Cream 10g/0.35oz,foundation|matte,40
+foundation for oily skin,concern,B001N5O7EG,Boots No7 Moisture Quench Day Fluid 3.3 fl oz (100 ml),foundation|oil,40
+foundation for oily skin,concern,B0096M7TQG,bareMinerals bareMinerals Customizable Get Started Kit,foundation|matte,40
+foundation for oily skin,concern,B00M681DWI,EX1 Cosmetics Invisiwear Liquid Foundation Number F300,foundation|oil,40
+foundation for oily skin,concern,B009LNXIEW,"Senna Cosmetics, Mineral Mix Pressed Foundation, Medium",foundation|oil,40
+foundation for oily skin,concern,B016CUMWNO,Serious Skincare Pretty Fast - Diffuse Perfecting Serum,foundation|shine,40
+foundation for oily skin,concern,B000NRWP2Q,Lavera All Natural Make-Up Fluid Foundation -- Light No. 2,foundation|oil,40
+foundation for oily skin,concern,B013D9SRAY,"stila Perfectly Pore Less Putty Perfect Makeup, Tan, 11 g.",foundation|matte,40
+foundation for oily skin,concern,B00E6WLFJI,"GABRIEL COSMETICS Dual Powder Foundation Refill, 0.32 Ounce",foundation|oil,40
+foundation for oily skin,concern,B01APSKNA8,Shiseido Translucent Loose Powder (Travel Size) 2g Set of 2,foundation|oil,40
+foundation for oily skin,concern,B000F31A10,Bourjois Matt Lovely Mattifying Liquid Foundation Beige Rose 24,foundation|oil,40
+foundation for oily skin,concern,B007H2NWUY,Nzuri Hair Follicle Food 61 Ancient Miracle Hair Growth Oil 4oz,foundation|oil,40
+foundation for oily skin,concern,B00SBDURRY,L'Oreal Paris Infallible 24H Matte Foundation 35ml - 11 Vanilla,foundation|shine,40
+foundation for oily skin,concern,B001GMU7MM,Max Factor Colour Adapt Skin Tone Adapting Makeup 45 Warm Almond,foundation|oil,40
+foundation for oily skin,concern,B00FGSV6QS,Maybelline SuperStay 24Hr Powder Foundation Waterproof - 30 Sand,foundation|oil,40
+foundation for oily skin,concern,B002T3SRRE,MAKE UP FOR EVER HD Microperfecting Primer To Go 0 Neutral 0.5 oz,foundation|oil,40
+foundation for oily skin,concern,B00MSKXOJE,(6 Pack) RIMMEL LONDON Stay Matte Liquid Mousse Foundation - Sand,foundation|matte,40
+foundation for oily skin,concern,B00791F1RK,"Lakme Absolute Matt Skin Natural Mousse 16h, Golden Medium 03, 25g",foundation|matte,40
+foundation for oily skin,concern,B00VX6U99W,Revlon Colorstay Make Up Combination Oily Skin 320 True Beige 30ml,foundation|oil,40
+foundation for oily skin,concern,B013SW23QU,L'Oreal Paris Infallible 24H Matte Foundation 35ml - 30 Honey/Miel,foundation|matte,40
+foundation for oily skin,concern,B00U9EIWCA,L'Oreal Paris Infallible 24H Matte Foundation 35ml - 12 Natural Rose,foundation|shine,40
+foundation for oily skin,concern,B00YQC5P1W,Shiseido the Makeup Dual Balancing Foundation B 20 Natural Light Beige,foundation|oil,40
+perfume roll on oil,product,B0009SQHF0,Roll-On Bottle (.5 FL OZ),perfume|roll,40
+perfume roll on oil,product,B000M5YFY0,Renova Green Toilet Paper,fragrance|roll,40
+perfume roll on oil,product,B00BI9CJFQ,Nag Champa Perfume Oil .33oz,perfume|roll,40
+perfume roll on oil,product,B00BI9DACM,Nag Champa Fragrance Oil (1oz),perfume|roll,40
+perfume roll on oil,product,B01E6RAQLK,"David Mallett Volume Powder, 7.5g",perfume|roll,40
+perfume roll on oil,product,B00XIY8IMM,Roll the Bitch Away Rollie Perfume,perfume|roll,40
+perfume roll on oil,product,B0006B4YPU,Sage Roll-on Perfume Oil - Turquoise,perfume|roll,40
+perfume roll on oil,product,B000WGZ3UE,Green People - Natural Deodorant - 75ml,fragrance|roll,40
+perfume roll on oil,product,B003S3I7CE,Pitrok Crystal - Roll-On Deodorant - 50ml,fragrance|roll,40
+perfume roll on oil,product,B011B6872Y,Barr Co Solid Perfume Original Scent 1oz.,perfume|roll,40
+perfume roll on oil,product,B000HLCMN0,Provence Sante Apricot Gift Soap 2.7oz bar,fragrance|roll,40
+perfume roll on oil,product,B00NAX00LI,Byredo - Gypsy Water Roll-On Eau de Parfum,perfume|roll,40
+perfume roll on oil,product,B00QN3DN70,Lilac Perfume Oil - Roll-On Applicator 5ml,perfume|roll,40
+perfume roll on oil,product,B000HLAMJ6,"PROVENCE SANTE Soap Bar Bergamot, 2.7 Ounce",fragrance|roll,40
+perfume roll on oil,product,B01D87O1O2,Asrar Perfume Oil - 3ml Roll-on by Al-Rehab,perfume|roll,40
+perfume roll on oil,product,B002BJZQGG,Ocean Song - Auric Blends Scented/Perfume Oil,perfume|roll,40
+perfume roll on oil,product,B017VOQ6LO,21 drops Transform Essential Oil Blend roll on,fragrance|roll,40
+perfume roll on oil,product,B000LD8WPG,"PROVENCE SANTE Soap Bar Sweet Almond, 2.7 Ounce",fragrance|roll,40
+perfume roll on oil,product,B00FKIT4PO,Roll-on Fragrance Oil .3oz/10ml (Egyptian Musk),fragrance|roll,40
+perfume roll on oil,product,B00TPM17WO,RoC KEOPS Sensitive Deodorant Roll-On 30 ml DUO,perfume|roll,40
+perfume roll on oil,product,B00962KO8Q,TRAVALO ROLLERBALL Touch Elegance Roll-On N Gold,fragrance|roll,40
+perfume roll on oil,product,B00NC3VQLE,Dr. Hauschka Neem Nail &amp;amp; Cuticle Pen 3ml,fragrance|roll,40
+perfume roll on oil,product,B0195O819S,d Hardy Love Kills Slowly Shimmering Body Lotion,fragrance|roll,40
+perfume roll on oil,product,B0072N7GQY,Malie Organics Malie Organics Roll-On Perfume Oil,perfume|roll,40
+perfume roll on oil,product,B0072N7HJK,Malie Organics Malie Organics Roll-On Perfume Oil,perfume|roll,40
+perfume roll on oil,product,B018IIZ9UQ,Demeter Earthworm Roll On Perfume Oil 8.8ml/0.29oz,perfume|roll,40
+perfume roll on oil,product,B005ARVM3C,Casting Creme Gloss by L'Oreal Paris 412 Iced Cocoa,fragrance|roll,40
+perfume roll on oil,product,B00B2X4RCG,Choco-Vanilla Fragrance Oil by GreenPlanet-Organics,perfume|roll,40
+perfume roll on oil,product,B00BQ1D9CS,Women Perfume Premium Quality Fragrance Oil Roll On,perfume|roll,40
+perfume roll on oil,product,B018YM46T6,Demeter Poison Ivy Roll On Perfume Oil 8.8ml/0.29oz,perfume|roll,40
+perfume roll on oil,product,B0196FMODK,Demeter Sandalwood Roll On Perfume Oil 8.8ml/0.29oz,perfume|roll,40
+perfume roll on oil,product,B0196FMJO4,Demeter Riding Crop Roll On Perfume Oil 8.8ml/0.29oz,perfume|roll,40
+perfume roll on oil,product,B00N74JJGM,Body Care by Dr. Hauschka Sage Deodorant Roll-On 50ml,fragrance|roll,40
+perfume roll on oil,product,B0189ZQQ4G,Demeter Black Bamboo Roll On Perfume Oil 8.8ml/0.29oz,perfume|roll,40
+perfume roll on oil,product,B018VF88L8,Demeter Black Pepper Roll On Perfume Oil 8.8ml/0.29oz,perfume|roll,40
+perfume roll on oil,product,B001OHX6K4,Night Queen - Song of India Perfume Oil - 12cc Roll On,perfume|roll,40
+perfume roll on oil,product,B01950QIAQ,Demeter Suntan Lotion Roll On Perfume Oil 8.8ml/0.29oz,perfume|roll,40
+perfume roll on oil,product,B00HC1HV16,Pink Sugar for Unisex Fragrance Body Oil Roll On 0.33oz,fragrance|roll,40
+perfume roll on oil,product,B00AROCOOY,"SHALIMAR TYPE Personal Fragrance Oil 10ML,3Pcs (Roll On)",fragrance|roll,40
+perfume roll on oil,product,B00C9ES160,"Demeter Sex On The Beach Roll On Perfume Oil, 0.29 Ounce",perfume|roll,40
+electric shaver,product,B00009RB11,Mens Electric Razor,shaver|electric,40
+electric shaver,product,B000E5BJVA,Parks Shave Ease 7oz.,shaver|electric,40
+electric shaver,product,B00009RB1H,Norelco RC1776 Razor Cleaner,shaver|electric,40
+electric shaver,product,B00006RSKS,Braun 5441 Flex Integral System,shaver|foil,40
+electric shaver,product,B0013NB7DW,"Williams Lectric Shave, 7 Ounce",razor|electric,40
+electric shaver,product,B000EG8HLE,Philips Norelco BG2020 BodyGroom,shaver|foil,40
+electric shaver,product,B000WS1QA8,SHAVE DELUXE SHAVING OIL 18.75ML,razor|electric,40
+electric shaver,product,B00009RB12,Norelco Mens Electric Razor - 7845XL,shaver|electric,40
+electric shaver,product,B002B4VBV0,Philips Norelco Speed Electric Razor,shaver|electric,40
+electric shaver,product,B000068PBK,Norelco 8865XL Spectra Shaving System,shaver|electric,40
+electric shaver,product,B019809F9Y,Lectric Shave Pre-Shave Original 3 oz,razor|electric,40
+electric shaver,product,B000068PBN,Norelco 7825XL Quadra Action Dry Razor,shaver|electric,40
+electric shaver,product,B00017K2KA,Norelco 6705X Advantage electric razor,razor|electric,40
+electric shaver,product,B004ILUAGQ,Body Bare and the PS335 T Head Trimmer,razor|rotary,40
+electric shaver,product,B00517W5LY,Braun Series 1-150s Men's Shaver 1 Count,shaver|electric,40
+electric shaver,product,B000PKNPES,Philips Norelco arcitec 1050 Men's Shaver,shaver|rotary,40
+electric shaver,product,B001AJ6YS2,Philips Norelco 7310 Men's Shaving System,shaver|electric,40
+electric shaver,product,B00KD74628,"Philips Norelco HQ9 ReplaceHeads, 2 Count",razor|electric,40
+electric shaver,product,B000FI6A38,Remington SP18 Microflex TCT Rotary heads.,shaver|rotary,40
+electric shaver,product,B000050FDN,Braun 5414 Flex Integral Rechargeable Shaver,shaver|electric,40
+electric shaver,product,B000Q9AKVE,Panasonic Close Curves Wet/Dry Ladies Shaver,shaver|electric,40
+electric shaver,product,B000FED5DK,Philips Norelco G380 All-in-1 Grooming System,shaver|foil,40
+electric shaver,product,B000FED5DU,Philips Norelco G370 All-in-1 Grooming System,shaver|foil,40
+electric shaver,product,B001VEK1GW,"Braun bodyCruzer Men's Body Groomer, Titanium",shaver|electric,40
+electric shaver,product,B00CQARQZO,"Eltron Shave Ease Cleaner, Lubricant, Sharpener",shaver|electric,40
+electric shaver,product,B00E8PCOTI,Lectric Shave Pre-Shave Original 3 oz(Pack of 6),razor|electric,40
+electric shaver,product,B00009RB1I,Philips Norelco HQ110 Shaving Head Cleaning Spray,razor|electric,40
+electric shaver,product,B000FEGUIM,Philips Norelco 7110 Cordless Rechargeable Shaver,shaver|rotary,40
+electric shaver,product,B000PKKAFK,Philips Norelco arcitec 1060 Men's Shaving System,shaver|rotary,40
+electric shaver,product,B001CJ693A,ShaverAid Electric Shaver Cleaning Brush (1-Pack),shaver|electric,40
+electric shaver,product,B001P5HCKK,Braun Series 5-590cc Men's Shaving System 1 Count,shaver|electric,40
+electric shaver,product,B00009RB15,"Philips Norelco Electric Razor Shaver, Model 6705X",shaver|electric,40
+electric shaver,product,B000FRUL8O,Remington MicroScreen SF-3 Electric Cordless Shaver,shaver|electric,40
+electric shaver,product,B000PKMA2G,Philips Norelco 1050CC arcitec Men's Shaving System,shaver|rotary,40
+electric shaver,product,B00009RB1B,Philips Norelco D350 DFiner Precise Facial Hair Shaper,shaver|foil,40
+electric shaver,product,B000FEGUIW,Philips Norelco 7140 Cord/Cordless Rechargeable Shaver,shaver|rotary,40
+electric shaver,product,B001E0C9LI,Philips Norelco BG2030 Professional BodyGrooming System,shaver|foil,40
+electric shaver,product,B000050FDP,Braun 6520 Flex Integral Ultra Speed Rechargeable Shaver,shaver|electric,40
+electric shaver,product,B0001HYKBC,Philips Norelco 7775X Cool Skin Lotion Dispensing Shaver,shaver|electric,40
+electric shaver,product,B0001HYKBM,Philips Norelco 7735X Cool Skin Lotion Dispensing Shaver,shaver|electric,40
+mouthwash,product,B008YQM4A6,Colgate Enamel Health Mouthwash,mouthwash,40
+mouthwash,product,B000052YD8,Scope Original Mint Mouthwash 50.7 Fl Oz,mouthwash,40
+mouthwash,product,B002775INI,Scope Original Mouthwash 50.7 Fl oz 2-pack,mouthwash,40
+mouthwash,product,B0084Z0VTS,Scope Original Mint Mouthwash (Pack of 48),mouthwash,40
+mouthwash,product,B001E0X72I,"PERI-GUM PERI-GUM MOUTHWASH, 1 FZ, PACK OF 3",mouthwash,40
+mouthwash,product,B005NCIJV2,Scope Dualblast Mouthwash Icy Mint Blast 750 Ml,mouthwash,40
+mouthwash,product,B007KXO7LS,Scope Dualblast Mouthwash Fresh Mint Blast 750 Ml,mouthwash,40
+mouthwash,product,B00HSSFEA8,"Heritage Products Ipsadent Herbal Mouthwash, 16 OZ",mouthwash,40
+mouthwash,product,B00SU68LT8,Aesop Mouthwash Bain De Bouche 16.9 Fl Oz / 500 Ml,mouthwash,40
+mouthwash,product,B00UVAGPLM,"XLEAR Sparx Xylitol Candy Refills, Citrus, 6 Count",oral rinse,40
+mouthwash,product,B000ORS718,Elmex Sensitive Mouthwash with Amine Flouride 400 Ml,mouthwash,40
+mouthwash,product,B005ADZZZ2,Fixodent Plus Scope Denture Cleanser Tablets 36 Count,mouthwash,40
+mouthwash,product,B00INWYJ90,"Sensodyne Pronamel Fluoride Rinse Mouthwash, 15.5 Ounce",mouthwash,40
+mouthwash,product,B00QU9QNL0,DR.TICHENORS PEPPERMINT MOUTHWASH 4 oz by Dr. Tichenors,mouthwash,40
+mouthwash,product,B007JUIBMI,Crest Pro-Health Clinical Deep Clean Mint Mouthwash 473 Ml,mouthwash,40
+mouthwash,product,B00DG0XXZA,"Spry SparX Xylitol Candies, Natural Berry, 30 Gram (6 Pack)",oral rinse,40
+mouthwash,product,B01AD37FE2,REACH ESSENTIAL 6 IN 1 BENEFITS ORAL RINSE 13.5oz (2 BOTTLES),oral rinse,40
+mouthwash,product,B001L3ZDPW,Oral-B Complete Fresh Scope Medium Bristles Toothbrush 2 Count,mouthwash,40
+mouthwash,product,B0043ZJR9S,Scope Outlast Long Lasting Mint Mouthwash 42.3 Fl Oz (Pack of 2),mouthwash,40
+mouthwash,product,B01BX04XRG,"Listerine Antiseptic Mouthwash, Original, 3.2 ounce, (Pack of 6)",mouthwash,40
+mouthwash,product,B003EGEMQU,Act&reg; Anticavity Flouride Rinse Kids (mouthwash) - 1 oz (pink),mouthwash,40
+mouthwash,product,B007K6LID0,Crest Pro-Health Clinical Deep Clean Mint Flavor Mouthwash 237 mL,mouthwash,40
+mouthwash,product,B0085RZLVS,Philips Sonicare HX8111/30 Airfloss Rechargeable Electric Flosser,mouthwash,40
+mouthwash,product,B01ACFJL8Y,Binaca Whitening Peppermint Mouthwash Alcohol Free 16 Oz (4 Pack),mouthwash,40
+mouthwash,product,B008YQM44C,"Colgate Optic White Mouthwash Sparkling, Fresh Mint, 8 Fluid Ounce",mouthwash,40
+mouthwash,product,B016LF0SX6,"The Tongue Cleaner 3 Pureline Scraper Oralcare Colors Vary, Set of 3",mouthwash,40
+mouthwash,product,B001ECQRTG,Eludril Antibacterial Mouthwash &amp; Gargle with Measuring Cup 250ml,mouthwash,40
+mouthwash,product,B004NN5IJS,Crest Pro-Health Invigorating Clean Mint Mouthwash 250 Ml (Pack of 2),mouthwash,40
+mouthwash,product,B0028K3JU8,"Scope Outlast Long Lasting Peppermint Rinse, 750 Ml Bottles (Pack Of 9)",mouthwash,40
+mouthwash,product,B003CP12QQ,"Scope Outlast Long Lasting Mint Mouthwash, 42.3 Fluid Ounce (Pack of 6)",mouthwash,40
+mouthwash,product,B00CAGJHX8,"Colgate Total Advanced Pro-Shield Mouthwash, Wintermint Rush, 8.4 Fluid Ounce",mouthwash,40
+mouthwash,product,B003XDQ74O,Crest Pro-Health Complete Clean Mint Flavor Fluoride Mouthwash 1 L (Pack of 6),mouthwash,40
+mouthwash,product,B00CAGJHVA,"Colgate Total Advanced Pro-Shield Mouthwash, Wintermint Rush, 16.9 Fluid Ounce",mouthwash,40
+mouthwash,product,B00CAGJKSK,"Colgate Total Advanced Pro-Shield Mouthwash, Spearmint Surge, 16.9 Fluid Ounce",mouthwash,40
+mouthwash,product,B018IVMI5M,Biotene Anti-Plaque Mouthwash with Tartar Control - 16 oz ( 3-Pack) by Biotene,mouthwash,40
+mouthwash,product,B00CAGJHWO,"Colgate Total Advanced Pro-Shield Mouthwash, Peppermint Blast, 16.9 Fluid Ounce",mouthwash,40
+mouthwash,product,B00WOPGU8A,"ACT Advanced Care Plaque Guard Mouthwash, Frosted Mint 18 fl oz (510 g) Pack of 2",mouthwash,40
+mouthwash,product,B00K35EEE0,"Listerine Total Care Plus Whitening Anticavity Mouthwash, Fresh Mint 16 oz (Pack of 2)",mouthwash,40
+mouthwash,product,B01BE2EJ0O,INCOK Tongue Cleaner | Scraper | Fresher Breath | Taste Enhancer | Surgical Grade Austenitic Steel (Saville Row),mouthwash,40
+mouthwash,product,B003VUOBJC,"Listerine Total Care Whitening Mouthwash, 6 Benefit Fluoride Anticavity Mouthwash for Stain Removal and Bad Breath, Fresh Mint Flavor, 16 fl. oz",mouthwash,40
+body lotion,product,B000CRG9G0,Body Heal,body|butter,40
+body lotion,product,B001LXP5GO,Vita C Creme,body|cream,40
+body lotion,product,B00E5QA2A8,Amlactin Ultra Crm,body|cream,40
+body lotion,product,B01EM5UMSS,Nlighten Body Cream,body|cream,40
+body lotion,product,B007PL7RDA,Vitamin C Face Scrub,body|butter,40
+body lotion,product,B00SUPCAN2,STEAMCREAM FIONA 75g,body|cream,40
+body lotion,product,B00DSQVI4U,Healfast Repair Cream,body|cream,40
+body lotion,product,B0119NBT4W,Steamcream Splash 75g,body|cream,40
+body lotion,product,B0002IPWOY,Cellu-Sculpt Treatment,body|lotion,40
+body lotion,product,B001MQ6884,Jasmine Beaty Gift Set,body|lotion,40
+body lotion,product,B007ZK7LCS,"Caffeine, 100 Capsules",body|lotion,40
+body lotion,product,B000P9TRQ4,Aphrodisiac Body Lotion,body|lotion,40
+body lotion,product,B0019CNDES,Canus Goats Milk Lotion,body|lotion,40
+body lotion,product,B00AEU6D8E,Earthly Body Skin Butter,body|butter,40
+body lotion,product,B00Y11XC9A,Seacret Body Butter Pure,body|butter,40
+body lotion,product,B0031EMVOK,Anti.gravity Lotion 150ml,body|lotion,40
+body lotion,product,B007PL7SRA,Conditioning Belly Butter,body|butter,40
+body lotion,product,B00UUBXLMS,Spongelle' Spongette Trio,body|cream,40
+body lotion,product,B000I7T8GW,OSCAR by Oscar de la Renta,body|lotion,40
+body lotion,product,B0049RVRIE,Akhassa Retreat Body Lotion,body|lotion,40
+body lotion,product,B000TSV12E,100% Pure Avocado Cream 8 Oz,body|cream,40
+body lotion,product,B00BPPQ2NS,Onsen Floral Fusion Nail Kit,body|lotion,40
+body lotion,product,B00GMQ3QDE,Pp Travel Bottle 4pk Size Ea,body|lotion,40
+body lotion,product,B0161FINI8,Steamcream Xmas Lumiukko 75g,body|cream,40
+body lotion,product,B0161FIQHQ,Steamcream Xmas Kikunoen 75g,body|cream,40
+body lotion,product,B001FTBWNO,Vera Wang Velvety Body Butter,body|butter,40
+body lotion,product,B003Y0MRJ0,Dare Original Shave Cream 8oz,body|cream,40
+body lotion,product,B006LXD6C4,"AXE Denim Cologne Talc, 300Gm",body|lotion,40
+body lotion,product,B008VBYNK8,Zeolite Ultrafine Clay - 100g,body|cream,40
+body lotion,product,B00A72I9ZE,HEALING GARDEN BEAUTY by Coty,body|lotion,40
+body lotion,product,B00GIX7WMM,Body Heat 8 Fl.oz. - Cinnamon,body|lotion,40
+body lotion,product,B00M5KDD8O,Mannatech FIRM with Ambrotose,body|cream,40
+body lotion,product,B00P1SDELS,Pineapple Paradise Collection,body|cream,40
+body lotion,product,B009SAVQ7E,Kai by Kai Gift Set Travel Set,body|lotion,40
+body lotion,product,B00JV3GN9O,Neat 3B Body Saver Cream 2.6oz,body|cream,40
+body lotion,product,B005HRT0U2,Aveeno Daily Moisture Gift Pack,body|lotion,40
+body lotion,product,B009ZSNXJI,Orla Kiely Geranium Body Lotion,body|lotion,40
+body lotion,product,B00MOWO7VK,Nip + Fab Glycolic Fix Body Gel,body|lotion,40
+body lotion,product,B015HRU6RW,"Hemp Seed Skin Butter, Lavender",body|cream,40
+body lotion,product,B01GEHC4Q0,SLOW IT / BODY LOTION - 8 FL OZ,body|lotion,40
+nail polish,product,B00J7ZLZCQ,NPC109 Moon Dust,nail lacquer,40
+nail polish,product,B00MY5OB9K,essie Nail Color Polish,nail polish,40
+nail polish,product,B00TJO6GOC,COLOR GEL PINK BABYDOLL,nail polish,40
+nail polish,product,B004GSX0ZY,Hello Kitty Cosmetic Set,nail polish,40
+nail polish,product,B00G7UFXJA,Red and Even Nail Polish,nail polish,40
+nail polish,product,B002D4OVUG,NAIL POLISH REMOVER 6OZ REG.,nail polish,40
+nail polish,product,B004AGIOB2,FingerPaints Pink Imagination,nail polish,40
+nail polish,product,B00IA8QME2,Orly Nail Polish-Gorgeous 131,nail polish,40
+nail polish,product,B00K3UEID2,Orly Nail Polish-Seashell 186,nail polish,40
+nail polish,product,B00KOWH444,Orly Nail Polish-Preamp 40453,nail polish,40
+nail polish,product,B00KOWKUNQ,Orly Nail Polish-Gidget 40656,nail polish,40
+nail polish,product,B019VIBPB4,Pixy Stix scented nail polish,nail polish,40
+nail polish,product,B01B4RMKAK,Q-Tips Cotton Swabs 375 Count,nail polish,40
+nail polish,product,B01E7UKR38,essie Gel Couture Nail Polish,nail polish,40
+nail polish,product,B004BBMD0O,Qtica Extending Top Coat .5 oz,nail polish,40
+nail polish,product,B01BLY2L28,"Reveal Nail Polish, 0.5 Oz #143",nail polish,40
+nail polish,product,B01EA9AXUI,200ML Empty Nail Polish Remover,nail polish,40
+nail polish,product,B001BUGLPQ,Essie Bermuda Shorts Nail Polish,nail polish,40
+nail polish,product,B004QZHP4E,NSI Polish Pro Top Coat - .5 oz.,nail polish,40
+nail polish,product,B006B8HSUU,Ciate Paint Pot - Power Dressing,nail lacquer,40
+nail polish,product,B00KOWH4JO,Orly Nail Polish-Shockwave 40454,nail polish,40
+nail polish,product,B014GCS7MK,Piggy Polish Nail Polish Remover,nail polish,40
+nail polish,product,B001M51RNG,Ms. &amp; Mrs. Bridessentials Kit,nail polish,40
+nail polish,product,B007L9E0I6,Brucci Nail Polish (58 mono blue),nail polish,40
+nail polish,product,B00I6M6RRE,Seche Nail Polish-Uplifting 69347,nail polish,40
+nail polish,product,B016EO7ZSA,Gel Effect By Nina SPUN SUGAR 163,nail polish,40
+nail polish,product,B008EJJ50A,Nail Art Real Dried Flower Kit Set,nail polish,40
+nail polish,product,B016HTR1SG,Gel Effect By Nina PUNKI PINK #165,nail polish,40
+nail polish,product,B00IEKOPQ8,Seche Nail Polish-Head To Toe 83207,nail polish,40
+nail polish,product,B00IEKOSYW,Seche Nail Polish-Buttoned Up 83211,nail polish,40
+nail polish,product,B00KOWKPNQ,Orly Nail Polish-Robo Romance 40635,nail polish,40
+nail polish,product,B005UOEBSS,SpaRitual Nail Lacquer - Hot Blooded,nail lacquer,40
+nail polish,product,B00WZVCOPG,"Sensationail gel color, barely there",nail polish,40
+nail polish,product,B00IA8QKW6,Orly Nail Polish-Bus Stop Crimson 087,nail polish,40
+nail polish,product,B00WNCK0QC,Essence The Gel Nail Polish Base Coat,nail polish,40
+nail polish,product,B010FX04RA,Blu Ink Nail Lacquer 1132 Nail Polish,nail polish,40
+nail polish,product,B00LNOIDPG,LOL Cosmetics Nail Polish (Peach Puff),nail polish,40
+nail polish,product,B00TBXW8GG,MILANI Fierce Foil Nail Lacquer - Rome,nail lacquer,40
+nail polish,product,B01D7GK2HO,Paint It Pink - Sephora Favorites L.E.,nail polish,40
+nail polish,product,B00CMFMKYK,Rimmel 60 Seconds 120 Hot Chilli Pepper,nail polish,40
+exfoliating scrub,product,B00505FE4M,PFB Vanish,exfoliat,40
+exfoliating scrub,product,B00BIPWVGC,Mytee Mitt,scrub,40
+exfoliating scrub,product,B00E5QA2A8,Amlactin Ultra Crm,exfoliat,40
+exfoliating scrub,product,B007PL7RDA,Vitamin C Face Scrub,scrub,40
+exfoliating scrub,product,B00N4OJDLG,Khadi Herbal Spa Kit,scrub,40
+exfoliating scrub,product,B00XWDMPG4,Loveux Sugar Body Scrub,exfoliat,40
+exfoliating scrub,product,B01H2IIXJC,Amalia Antioxidant Milk,exfoliat,40
+exfoliating scrub,product,B001CNQA94,Yonka Guarana Scrub 50ml,scrub,40
+exfoliating scrub,product,B00P83QVXY,One Minute Mini Trio Set,exfoliat,40
+exfoliating scrub,product,B0006Q014S,Gena Pedi-Scrub Gel 32 oz,exfoliat,40
+exfoliating scrub,product,B002WX0A4Y,Spa Slipper Foot Care Set,scrub,40
+exfoliating scrub,product,B00UUBXLMS,Spongelle' Spongette Trio,exfoliat,40
+exfoliating scrub,product,B000H7XZ7Q,Lab Series Clay Mask 3.4 oz.,exfoliat,40
+exfoliating scrub,product,B0016ZMQMS,Gena Pedi-Scrub Gel 8.5 fl oz,exfoliat,40
+exfoliating scrub,product,B008VBYNK8,Zeolite Ultrafine Clay - 100g,exfoliat,40
+exfoliating scrub,product,B000H723LU,SK-II Facial Treatment Essence,exfoliat,40
+exfoliating scrub,product,B003JBN266,Baudelaire Sisal Body Scrubber,exfoliat,40
+exfoliating scrub,product,B00JY8FFDQ,Rapid Detox Charcoal Exfoliant,exfoliat,40
+exfoliating scrub,product,B000FAC1ZW,Fake Bake Body Polish 6 fl. oz.,exfoliat,40
+exfoliating scrub,product,B000RZ652K,Comfort Zone Lip Blooming Scrub,scrub,40
+exfoliating scrub,product,B00MOWO7VK,Nip + Fab Glycolic Fix Body Gel,exfoliat,40
+exfoliating scrub,product,B01AQH55DS,Pixi Overnight Glow Serum 30 ml,exfoliat,40
+exfoliating scrub,product,B0001EL17Q,Glyderm Solution Plus 12% - 4 oz,exfoliat,40
+exfoliating scrub,product,B007BQNDB4,Sigma Spa Solutions Complete Kit,exfoliat,40
+exfoliating scrub,product,B00I94YB8G,Lemongrass Essential Oil (15 mL),scrub,40
+exfoliating scrub,product,B018V9LBPO,"Sun Coast Salts, Lemongrass Sage",exfoliat,40
+exfoliating scrub,product,B00EA1PRZ8,Moppy: Floor Cleaner and Scrubber,scrub,40
+exfoliating scrub,product,B00TE8HLB0,HEMPZ Bath &amp; Body Travel Trio,scrub,40
+exfoliating scrub,product,B00Y4NCHQE,Daily Concepts Your Back Scrubber,scrub,40
+exfoliating scrub,product,B01G5MBIM0,European Wax Center The Exfoliate,exfoliat,40
+exfoliating scrub,product,B0002LJXQE,"Karin Herzog Mild Scrub, 1.7 Ounce",exfoliat,40
+exfoliating scrub,product,B000851N8A,Body Crystal Ayate 100% Agave Mitt,exfoliat,40
+exfoliating scrub,product,B000HGJLL6,"The Body Shop Bath Gloves, Natural",exfoliat,40
+exfoliating scrub,product,B0064P81II,Spa Touch Green Tea Mint Salt Glow,exfoliat,40
+exfoliating scrub,product,B01EB9AMM6,Secret Serums Exfoliating Cleanser,exfoliat,40
+exfoliating scrub,product,B0017MTBUA,St. Ives Olive Cleanser -- 6.75 oz.,exfoliat,40
+exfoliating scrub,product,B00GX8RMRW,ARTISTRY essentials Polishing Scrub,exfoliat,40
+exfoliating scrub,product,B00YD4A3GK,Mr. Bean Organic Coffee Scrub - Man,scrub,40
+exfoliating scrub,product,B000GCNCNE,Nail Scrub Cleaner With Brush - 2 Oz,scrub,40
+exfoliating scrub,product,B002LMVRLG,Avalon Exfoliate Scrub Lavender 4 Oz,exfoliat,40

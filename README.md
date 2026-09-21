@@ -67,7 +67,8 @@ flowchart LR
 - popularity retrieve (기본, train `rating>=5` 카운트). content FAISS(`per_seed`) + iALS(`rating_ge_5`). RRF는 `use_hybrid`
 - LightGBM / XGBoost / CatBoost rank (`use_ranker` 플래그만, 서빙 off). Phase 3에서 pop 0.1900이 이김. DeepFM 없음
 - MMR 다양성 (`use_mmr` 기본 on, `lambda_diversity=0.5`). warm R@10 0.1700 / ILD 0.864
-- RAG 기반 “왜 이 상품?” 설명 API / UI (`POST /api/explain`, `OPENAI_API_KEY` 필수). 사유는 한글, 검색 쿼리는 영어
+- RAG 기반 “왜 이 상품?” 설명 API / UI (`POST /api/explain`, `OPENAI_API_KEY` 필수). 사유는 한글, 검색 쿼리는 영어. 사유 아래 스니펫 인용
+- Phase 7: 쿼리 gold·미탐/오탐·카탈로그 속성 품질 ([docs/LABELING.md](docs/LABELING.md) / [docs/EVAL.md](docs/EVAL.md)). FAISS+MMR vs gold mean P@10 0.36. 서빙 채널·`user_id` API는 그대로. CI·배포는 범위 밖
 - Docker Compose (API + UI). 요청 `timings_ms`: retrieve / rank / rerank / rag
 
 단계별 실험·탈락 이유는 [docs/ROADMAP.md](docs/ROADMAP.md) / [docs/EVAL.md](docs/EVAL.md).
@@ -83,7 +84,8 @@ flowchart LR
 | -------------------------------------------- | --------------------------- |
 | [docs/OVERVIEW.md](docs/OVERVIEW.md)         | 문제 정의, 포지셔닝, Non-goals      |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | funnel · 모듈 책임              |
-| [docs/ROADMAP.md](docs/ROADMAP.md)           | Phase 0–6 체크리스트 (완료)        |
+| [docs/ROADMAP.md](docs/ROADMAP.md)           | Phase 0–7 체크리스트              |
+| [docs/LABELING.md](docs/LABELING.md)         | 쿼리 적합성 라벨 규칙               |
 | [docs/DATA.md](docs/DATA.md)                 | 데이터셋 · 스키마 · temporal split |
 | [docs/FIELDS.md](docs/FIELDS.md)             | raw / processed 필드 사전       |
 | [docs/EVAL.md](docs/EVAL.md)                 | 오프라인 지표 · 스모크 기준            |
@@ -100,7 +102,7 @@ flowchart LR
 ├── backend/          # FastAPI
 ├── frontend/         # Streamlit
 ├── ml/               # retrieval · ranking · rerank · rag · eval
-├── scripts/          # download · split · build_faiss · build_rag_index · train_* · eval_smoke · eval_rag
+├── scripts/          # download · split · build_faiss · build_rag_index · train_* · eval_* · catalog quality
 ├── notebooks/        # EDA (exploratory)
 ├── configs/          # mvp.yaml
 ├── docs/             # 설계·평가. demo.gif
@@ -153,6 +155,9 @@ python -m scripts.train_two_tower
 python -m scripts.train_ranker
 python -m scripts.eval_smoke
 python -m scripts.eval_rag
+python -m scripts.build_query_gold
+python -m scripts.report_catalog_quality
+python -m scripts.eval_query
 ```
 
 
@@ -176,7 +181,7 @@ python -m uvicorn backend.main:app --reload
 python -m streamlit run frontend/app.py
 ```
 
-기본은 영어 `query` 검색입니다. 카탈로그·임베딩이 영어라 `I need a hydrating serum`처럼 써야 합니다. 화면에 예시 문장과 데모 `user_id` 5명이 있습니다. 추천 후 `POST /api/explain`을 호출합니다. API는 `API_URL`(기본 `http://127.0.0.1:8000`)입니다.
+기본은 영어 `query` 검색입니다. 카탈로그·임베딩이 영어라 `I need a hydrating serum`처럼 써야 합니다. 화면에 예시 문장과 데모 `user_id` 5명이 있습니다. 추천 후 `POST /api/explain`을 호출하고, 사유 아래에 영어 스니펫을 인용합니다. API는 `API_URL`(기본 `http://127.0.0.1:8000`)입니다.
 
 ### 5. Docker Compose
 

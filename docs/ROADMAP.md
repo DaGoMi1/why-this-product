@@ -59,7 +59,15 @@
 - [x] 요청당 latency breakdown (retrieve / rank / rerank / rag)
 - [x] 데모 GIF, GitHub description·topics 정리
 
-Phase 0–6 플래그십 MVP는 여기서 닫는다. 배포(AWS 등)와 CI는 범위 밖이다.
+## Phase 7 — 검색 운영 (라벨·품질·근거)
+
+서빙 계약은 그대로다. `user_id` 제거, BM25/RRF 하이브리드 서빙, GitHub Actions·클라우드 배포는 **Phase 8 이전까지 범위 밖**.
+
+- [x] 쿼리 적합성 gold + 라벨 가이드 ([docs/LABELING.md](LABELING.md): 적합/애매/오탐, 쿼리 유형)
+- [x] content FAISS(+MMR) vs gold: Recall·미탐·오탐 (`scripts/eval_query.py`). 서빙 기본 채널은 바꾸지 않음
+- [x] 카탈로그 속성 품질 CSV (빈 title/brand/description, category 붕괴, price 결측)
+- [x] 쿼리 조건 스니펫 선정 + UI 인용. RAG 환각 보조 지표 유지
+- [x] OVERVIEW에 검색 운영(라벨·품질·근거). RecSys ablation은 EVAL 유산
 
 ---
 
@@ -70,4 +78,6 @@ Phase 0–6 플래그십 MVP는 여기서 닫는다. 배포(AWS 등)와 CI는 �
 1. Phase를 건너뛰지 않는다. 특히 **eval 없는 모델 추가** 금지.
 2. LLM은 Phase 5 이전에도 넣지 않는다 (설명 레이어가 준비된 뒤).
 3. README 숫자는 `scripts/eval_smoke.py` / eval 리포트에서 재현 가능해야 한다.
+4. Phase 7 숫자는 `scripts/eval_query.py` / `scripts/report_catalog_quality.py`에서 재현한다. 라벨은 사람이 검수한 것처럼 포장하지 않는다.
+5. CI·배포·query-only 서빙은 Phase 8에서만 연다.
 

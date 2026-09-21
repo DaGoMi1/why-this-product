@@ -1,0 +1,9 @@
+metric,n,rate,note
+n_items,32488,1.0,catalog size
+title_empty,1,3.1e-05,missing title
+brand_empty,15570,0.479254,missing brand
+description_empty,17670,0.543893,missing description
+price_empty,21141,0.650733,missing price
+doc_text_asin_only,2,6.2e-05,doc_text is empty or equal to ASIN
+n_unique_category,1,,Phase 4 unique cat ~1 on All_Beauty
+n_gap_rows,26046,,rows with at least one gap flag

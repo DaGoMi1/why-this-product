@@ -1,0 +1,63 @@
+query,intent,item_id,kind
+hydrating serum,concern,B01DTE6SX6,fp
+hydrating serum,concern,B01ATP26DY,fp
+hydrating serum,concern,B00NO89SC6,fp
+hydrating serum,concern,B000RPVX5O,fp
+hydrating serum,concern,B019HXNL7O,fp
+hydrating serum,concern,B017YNEK3S,fp
+hydrating serum,concern,B002GHZD70,fp
+hydrating serum,concern,B0002BSRF2,fp
+hydrating serum,concern,B001IB236E,fp
+gentle cleanser,concern,B019ZYWATK,fp
+gentle cleanser,concern,B00JVYBLCW,fp
+gentle cleanser,concern,B0083WOS9Q,fp
+gentle cleanser,concern,B00IY2AFHE,fp
+gentle cleanser,concern,B00L4CGHD2,fp
+gentle cleanser,concern,B019P4QNBG,fp
+moisturizer for dry skin,concern,B01B7ADYBS,fp
+moisturizer for dry skin,concern,B00QF4JZC4,fp
+moisturizer for dry skin,concern,B00BJ8NBOY,fp
+moisturizer for dry skin,concern,B00XYF2GGE,fp
+mineral sunscreen,ingredient,B014PRF6UW,fp
+mineral sunscreen,ingredient,B01DTJEAV8,fp
+mineral sunscreen,ingredient,B00E966ZVE,fp
+mineral sunscreen,ingredient,B01F0SPIYO,fp
+retinol night cream,ingredient,B0104E9H8W,fp
+niacinamide serum,ingredient,B01CZW3O94,fp
+niacinamide serum,ingredient,B019ZQTXSO,fp
+niacinamide serum,ingredient,B01F6QA2K0,fp
+niacinamide serum,ingredient,B0049OK8XM,fp
+niacinamide serum,ingredient,B01EMXW39Q,fp
+niacinamide serum,ingredient,B017YNEK3S,fp
+niacinamide serum,ingredient,B00T9GTXMM,fp
+niacinamide serum,ingredient,B00SG6Y1Q4,fp
+niacinamide serum,ingredient,B01AS23WO0,fp
+eye cream dark circles,concern,B0171AM7TI,fp
+eye cream dark circles,concern,B000OQ75C6,fp
+hydrating lip balm,concern,B0189K350Y,fp
+hydrating toner,product,B0178NB4LK,fp
+hydrating toner,product,B000RPVX5O,fp
+hydrating toner,product,B016KSLUC2,fp
+hydrating toner,product,B0099DPGNK,fp
+hydrating toner,product,B0009F5ZHO,fp
+hydrating toner,product,B01FNPNPDU,fp
+hydrating toner,product,B01BP998SO,fp
+vitamin c serum,ingredient,B017YNEK3S,fp
+vitamin c serum,ingredient,B0170JXNK2,fp
+hyaluronic acid serum,ingredient,B00JG8F5XO,fp
+sheet face mask,product,B01HEC4UDO,fp
+sheet face mask,product,B004BBR2TG,fp
+sheet face mask,product,B01DWI7FXQ,fp
+sheet face mask,product,B00Y1SEA8K,fp
+foundation for oily skin,concern,B000RBKWK0,fp
+foundation for oily skin,concern,B00NBGJCKE,fp
+foundation for oily skin,concern,B013KD7L3W,fp
+foundation for oily skin,concern,B01614T7IY,fp
+foundation for oily skin,concern,B01B7ADZEO,fp
+foundation for oily skin,concern,B00687D7DQ,fp
+electric shaver,product,B001BAFHAQ,fp
+electric shaver,product,B018E5IGCQ,fp
+mouthwash,product,B00NZPY91I,fp
+mouthwash,product,B01D47ON76,fp
+body lotion,product,B00BJ8NBOY,fp
+nail polish,product,B01DJHEQIW,fp

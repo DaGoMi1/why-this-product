@@ -89,6 +89,7 @@ data/processed/
   ials/            # gitignore
   two_tower/       # gitignore
   ranker/          # gitignore (lightgbm / xgboost / catboost)
+data/eval/         # query gold · catalog quality · query miss/fp CSV (git 추적)
 ```
 
 ## 재현
@@ -103,4 +104,9 @@ python -m scripts.train_two_tower
 python -m scripts.train_ranker
 python -m scripts.eval_smoke
 python -m scripts.eval_rag
+python -m scripts.build_query_gold
+python -m scripts.report_catalog_quality
+python -m scripts.eval_query
 ```
+
+쿼리 gold·속성 품질 CSV는 `data/eval/` (git 추적, 사람이 재라벨한 세트가 아님). 규칙: [LABELING.md](LABELING.md).

@@ -138,5 +138,12 @@ if items:
         reason = (row.get("reason") or "").strip() or fallback
         st.write(f"추천 상품 {i}: {title}")
         st.write(f"추천 사유 {i}: {reason}")
+        for snip in (row.get("snippets") or [])[:3]:
+            src = (snip.get("source") or "snippet").strip() or "snippet"
+            text = " ".join(str(snip.get("text") or "").split())
+            if len(text) > 220:
+                text = text[:217].rstrip() + "..."
+            if text:
+                st.caption(f"[{src}] {text}")
         if i < len(items):
             st.text("----")

@@ -46,7 +46,8 @@ data/processed/*.parquet
 data/processed/*.pkl
 data/processed/*.pt
 data/processed/*.bin
-data/processed/eval/
+# Query-eval artifacts that explode with the full catalog
+data/eval/catalog_quality_gaps.csv
 !data/processed/.gitkeep
 
 # Docs

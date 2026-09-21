@@ -88,6 +88,8 @@ def _reason_for_one(
         "Do not write the reason in English even if the query, title, and snippets are English. "
         "Product names and brand names may stay in English. "
         "Use only the provided snippets. Do not invent price, stock, or facts. "
+        "Do not claim ingredients or effects that are not in the snippets. "
+        "If the query asks for something the snippets do not support, say only what the snippets support. "
         "Write about this one product only. One or two sentences. "
         'Reply JSON only: {"item_id":"...","reason":"..."}'
     )
