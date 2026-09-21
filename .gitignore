@@ -38,6 +38,7 @@ checkpoints/
 mlruns/
 wandb/
 data/processed/faiss_index/
+data/processed/eval/
 data/processed/rag_index/
 data/processed/ials/
 data/processed/two_tower/
