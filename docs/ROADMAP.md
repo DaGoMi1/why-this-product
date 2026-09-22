@@ -61,7 +61,7 @@
 
 ## Phase 7 — 검색 운영 (라벨·품질·근거)
 
-서빙 계약은 그대로다. `user_id` 제거, BM25/RRF 하이브리드 서빙, GitHub Actions·클라우드 배포는 **Phase 8 이전까지 범위 밖**.
+서빙 계약은 그대로다. `user_id` 제거·BM25/하이브리드 서빙은 Phase 10, GitHub Actions·클라우드 배포는 Phase 11.
 
 - [x] 쿼리 적합성 gold + 라벨 가이드 ([docs/LABELING.md](LABELING.md): 적합/애매/오탐, 쿼리 유형)
 - [x] content FAISS(+MMR) vs gold: Recall·미탐·오탐 (`scripts/eval_query.py`). 서빙 기본 채널은 바꾸지 않음
@@ -69,9 +69,48 @@
 - [x] 쿼리 조건 스니펫 선정 + UI 인용. RAG 환각 보조 지표 유지
 - [x] OVERVIEW에 검색 운영(라벨·품질·근거). RecSys ablation은 EVAL 유산
 
+아래 Phase 8+는 **데이터로 RecSys를 키우기보다** 운영 루프·LLMOps·검색 서빙·엔지니어링을 앞세운다. 멀티캣 RecSys는 Phase 12(후순위).
+
+## Phase 8 — 검색·생성 운영 루프
+
+실패 유형을 고치고 같은 지표로 다시 재는 습관을 제품 루프로 고정한다.
+
+- [ ] 쿼리 유형별 오탐·미탐 리포트 → 검색/스니펫/프롬프트 중 **한 축만** 수정 후 `eval_query` / RAG 보조 지표 재측정
+- [ ] 규칙 gold 위에 **사람 검수 샘플** 소량 (적합/애매/오탐). 규칙≠사람 GT를 [LABELING.md](LABELING.md)에 명시 유지
+- [ ] 카탈로그 공백(brand/desc/price)을 메타 품질 백로그로 문서화 (모델로 메우지 않음)
+
+## Phase 9 — LLMOps (설명 경로)
+
+병렬 호출 다음 단계. 토큰·비용을 운영 지표로 쌓는다.
+
+- [ ] explain 캐시 (`query + item_id`)
+- [ ] 배치 호출 + JSON/필수 필드 검증 + 빈 사유만 부분 재시도
+- [ ] 프롬프트 버전·실험 로그 (입출력·empty·토큰을 남김)
+- [ ] 첫 사유 스트리밍/점진 UI (체감 latency)
+- [ ] 요청 로그에 p50·토큰·비용 집계 스크립트/표 갱신 ([EVAL.md](EVAL.md))
+
+## Phase 10 — 검색 서빙 정리
+
+Phase 7에서 미룬 서빙 계약.
+
+- [ ] 데모/`user_id` 제거 또는 query-only를 기본 경로로 정리 ([OVERVIEW.md](OVERVIEW.md)와 맞춤)
+- [ ] BM25 또는 lexical+dense 하이브리드 후보 → `eval_query`로 FAISS+MMR과 비교 후 **이길 때만** 서빙 반영
+- [ ] 서빙 기본 채널 변경 시 EVAL·README 숫자 재현
+
+## Phase 11 — 엔지니어링
+
+- [ ] GitHub Actions: `eval_smoke` / 단위 테스트 (키 없는 경로; OpenAI 호출 CI 제외 또는 mock)
+- [ ] 클라우드/공개 데모 배포 (Compose 기준)
+
+## Phase 12 — RecSys 데이터 확장 (후순위)
+
+모델 승을 위한 데이터 실험. **제품 서사의 주축이 아니다.** RAG 운영 스토리를 덮어쓰지 않는다.
+
+- [ ] Amazon 카테고리 2~3개 union (`reviewerID`) 후 `user_n`·cold%·unique category 재집계
+- [ ] warm 세그먼트에서 pop vs iALS 재측정; 전체 서빙 기본은 숫자로만 결정
+- [ ] RecSys ablation과 Beauty RAG 데모 범위를 DATA/EVAL에 분리 기술
+
 ---
-
-
 
 ## 작업 원칙
 
@@ -79,5 +118,7 @@
 2. LLM은 Phase 5 이전에도 넣지 않는다 (설명 레이어가 준비된 뒤).
 3. README 숫자는 `scripts/eval_smoke.py` / eval 리포트에서 재현 가능해야 한다.
 4. Phase 7 숫자는 `scripts/eval_query.py` / `scripts/report_catalog_quality.py`에서 재현한다. 라벨은 사람이 검수한 것처럼 포장하지 않는다.
-5. CI·배포·query-only 서빙은 Phase 8에서만 연다.
+5. query-only·BM25/하이브리드 서빙은 Phase 10, CI·배포는 Phase 11에서만 연다.
+6. Phase 8–9에서 프롬프트·캐시·스니펫을 바꾸면 반드시 관련 지표를 재측정한다 (eval 없는 변경 금지).
+7. Phase 12는 RecSys 전용이다. Beauty RAG·검색 운영 범위를 바꾸지 않은 채 ablation만 확장한다.
 
