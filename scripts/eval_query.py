@@ -1,4 +1,4 @@
-"""Query retrieve vs lexical gold: recall, misses, false positives. Serving unchanged."""
+"""Query retrieve vs lexical gold: recall, misses, false positives."""
 
 from __future__ import annotations
 
@@ -66,6 +66,12 @@ def main() -> None:
         f"NDCG@{EVAL_K}={summary['mean_ndcg_at_k']}"
     )
     print(f"miss={summary['n_miss']} fp={summary['n_fp']} queries={summary['n_queries']}")
+    for intent, row in (summary.get("by_intent") or {}).items():
+        print(
+            f"  intent={intent} n={row['n_queries']} "
+            f"R={row['mean_recall_at_k']} P={row['mean_precision_at_k']} "
+            f"NDCG={row['mean_ndcg_at_k']} miss={row['n_miss']} fp={row['n_fp']}"
+        )
     print(f"wrote {dump}")
     print("OK")
 

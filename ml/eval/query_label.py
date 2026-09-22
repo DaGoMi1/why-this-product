@@ -71,3 +71,23 @@ def matched_tokens(blob: str, spec: QuerySpec) -> list[str] | None:
 
 def is_positive(blob: str, spec: QuerySpec) -> bool:
     return matched_tokens(blob, spec) is not None
+
+
+def find_spec(query: str) -> QuerySpec | None:
+    q = (query or "").strip()
+    for spec in QUERY_SPECS:
+        if spec.query == q:
+            return spec
+    return None
+
+
+def filter_ids_by_query_spec(
+    item_ids: list[str],
+    query: str,
+    blobs: dict[str, str],
+) -> list[str]:
+    """Keep ids whose blob passes QuerySpec. Unknown queries: no filter."""
+    spec = find_spec(query)
+    if spec is None:
+        return list(item_ids)
+    return [iid for iid in item_ids if is_positive(blobs.get(iid, ""), spec)]

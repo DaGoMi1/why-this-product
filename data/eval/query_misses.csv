@@ -2,7 +2,6 @@ query,intent,item_id,kind
 hydrating serum,concern,B00O5CVB6Q,miss
 hydrating serum,concern,B0019CK0IK,miss
 hydrating serum,concern,B0002CD01M,miss
-hydrating serum,concern,B01DMPXWDG,miss
 hydrating serum,concern,B00DU4QSXG,miss
 hydrating serum,concern,B01EHVYK7Q,miss
 hydrating serum,concern,B001KYQNT2,miss
@@ -23,7 +22,6 @@ hydrating serum,concern,B00PBET1WI,miss
 hydrating serum,concern,B0186LWNMW,miss
 hydrating serum,concern,B008J0B5FW,miss
 hydrating serum,concern,B00J5FTW8M,miss
-hydrating serum,concern,B0002ZZSAA,miss
 hydrating serum,concern,B00F9HY6HM,miss
 hydrating serum,concern,B006B6KJA8,miss
 hydrating serum,concern,B00CHH9KLO,miss
@@ -45,7 +43,6 @@ gentle cleanser,concern,B000GCPXN6,miss
 gentle cleanser,concern,B00JY8FFDQ,miss
 gentle cleanser,concern,B01E618T3I,miss
 gentle cleanser,concern,B011OFHJ30,miss
-gentle cleanser,concern,B012H56FTK,miss
 gentle cleanser,concern,B00ENL2O88,miss
 gentle cleanser,concern,B0017DQ0U8,miss
 gentle cleanser,concern,B0017MTBUA,miss
@@ -53,7 +50,6 @@ gentle cleanser,concern,B004APQ924,miss
 gentle cleanser,concern,B000BKXGXW,miss
 gentle cleanser,concern,B00A9OVI8U,miss
 gentle cleanser,concern,B00GF82YE6,miss
-gentle cleanser,concern,B00WVQAB5K,miss
 gentle cleanser,concern,B0051MQ3LW,miss
 gentle cleanser,concern,B013M359CU,miss
 gentle cleanser,concern,B001R21J3W,miss
@@ -126,7 +122,6 @@ mineral sunscreen,ingredient,B01E68ABUA,miss
 mineral sunscreen,ingredient,B000R92W2S,miss
 mineral sunscreen,ingredient,B000WB4NIW,miss
 mineral sunscreen,ingredient,B01EGR7Y1K,miss
-mineral sunscreen,ingredient,B0002IETRU,miss
 mineral sunscreen,ingredient,B002HG4JLQ,miss
 mineral sunscreen,ingredient,B0096M7TQG,miss
 mineral sunscreen,ingredient,B00EEEFJV8,miss
@@ -134,7 +129,6 @@ mineral sunscreen,ingredient,B00C4VAYRM,miss
 mineral sunscreen,ingredient,B004BPSWYQ,miss
 mineral sunscreen,ingredient,B005DMBC0C,miss
 mineral sunscreen,ingredient,B00NFV0GE6,miss
-mineral sunscreen,ingredient,B00C1LIXY6,miss
 mineral sunscreen,ingredient,B00C9OU8U2,miss
 mineral sunscreen,ingredient,B00TSK7RYU,miss
 mineral sunscreen,ingredient,B00TB7AKUI,miss
@@ -143,7 +137,6 @@ mineral sunscreen,ingredient,B012GA1ASM,miss
 mineral sunscreen,ingredient,B00028F2XU,miss
 mineral sunscreen,ingredient,B0007QKYA8,miss
 mineral sunscreen,ingredient,B00OQKNYAS,miss
-mineral sunscreen,ingredient,B00TRQE46E,miss
 mineral sunscreen,ingredient,B000089GIE,miss
 mineral sunscreen,ingredient,B002RMKXR4,miss
 mineral sunscreen,ingredient,B000065CIG,miss
@@ -151,7 +144,6 @@ mineral sunscreen,ingredient,B0007QKYAS,miss
 mineral sunscreen,ingredient,B001ATGAZY,miss
 mineral sunscreen,ingredient,B00O53EX1K,miss
 mineral sunscreen,ingredient,B00O53GQK6,miss
-mineral sunscreen,ingredient,B000RMQNXO,miss
 mineral sunscreen,ingredient,B006ZUIHP4,miss
 mineral sunscreen,ingredient,B00FMPAF3U,miss
 retinol night cream,ingredient,B00014357U,miss
@@ -165,7 +157,6 @@ retinol night cream,ingredient,B000OIFGF2,miss
 retinol night cream,ingredient,B003H3S85G,miss
 retinol night cream,ingredient,B000PUVJNC,miss
 retinol night cream,ingredient,B001VOCZQ6,miss
-retinol night cream,ingredient,B01EM7QIIO,miss
 retinol night cream,ingredient,B00F3B6TN8,miss
 retinol night cream,ingredient,B01GM65RSA,miss
 retinol night cream,ingredient,B019HXCJS6,miss
@@ -224,7 +215,6 @@ eye cream dark circles,concern,B00PG0M7NM,miss
 eye cream dark circles,concern,B0184RDSMW,miss
 eye cream dark circles,concern,B01GCBA80C,miss
 eye cream dark circles,concern,B006OG1LM0,miss
-eye cream dark circles,concern,B01EKRVDUO,miss
 eye cream dark circles,concern,B00KTOFESA,miss
 hydrating lip balm,concern,B002Q5T1S4,miss
 hydrating lip balm,concern,B00DMZ0VTU,miss
@@ -265,7 +255,6 @@ hydrating toner,product,B004BRN154,miss
 hydrating toner,product,B0015MTSOQ,miss
 hydrating toner,product,B000ULJM2Q,miss
 hydrating toner,product,B007XA2T9U,miss
-hydrating toner,product,B00HORTB66,miss
 hydrating toner,product,B002AOUT5U,miss
 hydrating toner,product,B00A9OVI8U,miss
 hydrating toner,product,B001R1DVNO,miss
@@ -274,30 +263,23 @@ hydrating toner,product,B00UF3TTV8,miss
 hydrating toner,product,B001DD2PYW,miss
 hydrating toner,product,B001MA411G,miss
 hydrating toner,product,B014T3Q9JO,miss
-hydrating toner,product,B014C3R3C8,miss
 hydrating toner,product,B002AUAM9W,miss
 hydrating toner,product,B00UHS32VO,miss
-hydrating toner,product,B01CH76SO0,miss
 hydrating toner,product,B00Q6761XG,miss
 hydrating toner,product,B01ACWSEK8,miss
 hydrating toner,product,B00S8WUD6I,miss
 hydrating toner,product,B007H5NTOU,miss
 hydrating toner,product,B01FEDIWC0,miss
-hydrating toner,product,B01ATYTQP6,miss
 hydrating toner,product,B01FLZ8UEQ,miss
 hydrating toner,product,B013BZLET6,miss
-hydrating toner,product,B01GR2WU7K,miss
 hydrating toner,product,B0091OCA86,miss
 hydrating toner,product,B01ANM32PY,miss
 hydrating toner,product,B00SANEZ28,miss
-hydrating toner,product,B00DMK9BSW,miss
 hydrating toner,product,B015RY8YC4,miss
-hydrating toner,product,B005HJSU2Y,miss
 hydrating toner,product,B00CR0ECAK,miss
 hydrating toner,product,B00QWCUT7E,miss
 vitamin c serum,ingredient,B01EHVYK7Q,miss
 vitamin c serum,ingredient,B01EP99CQE,miss
-vitamin c serum,ingredient,B018ZLUTTW,miss
 vitamin c serum,ingredient,B0009J4BY8,miss
 vitamin c serum,ingredient,B009JP1T9S,miss
 vitamin c serum,ingredient,B0119X0ED4,miss
@@ -337,7 +319,6 @@ hyaluronic acid serum,ingredient,B0002ZZSAA,miss
 hyaluronic acid serum,ingredient,B0196B2X2G,miss
 hyaluronic acid serum,ingredient,B00WAJDKYW,miss
 hyaluronic acid serum,ingredient,B01B5KTY3W,miss
-hyaluronic acid serum,ingredient,B01EMXVZR2,miss
 hyaluronic acid serum,ingredient,B01EB2PBW4,miss
 hyaluronic acid serum,ingredient,B00VIQX1EC,miss
 hyaluronic acid serum,ingredient,B00H4B1980,miss
@@ -374,7 +355,6 @@ sheet face mask,product,B006L44UA0,miss
 sheet face mask,product,B00SASK3QU,miss
 sheet face mask,product,B000E39PAO,miss
 sheet face mask,product,B000W7D5E4,miss
-sheet face mask,product,B015DZXQKC,miss
 sheet face mask,product,B01BZZPY5O,miss
 sheet face mask,product,B01G0QCUKU,miss
 sheet face mask,product,B01180SRYG,miss
@@ -384,7 +364,6 @@ sheet face mask,product,B016I98EQI,miss
 sheet face mask,product,B01BRIKLAC,miss
 sheet face mask,product,B00IFROMCM,miss
 sheet face mask,product,B00RX67UZW,miss
-sheet face mask,product,B00EHT6XBK,miss
 sheet face mask,product,B01DJTIJNI,miss
 sheet face mask,product,B00CPOB5KI,miss
 sheet face mask,product,B019CI48T4,miss
@@ -455,13 +434,10 @@ foundation for oily skin,concern,B0096M7TQG,miss
 foundation for oily skin,concern,B00M681DWI,miss
 foundation for oily skin,concern,B009LNXIEW,miss
 foundation for oily skin,concern,B016CUMWNO,miss
-foundation for oily skin,concern,B000NRWP2Q,miss
 foundation for oily skin,concern,B013D9SRAY,miss
 foundation for oily skin,concern,B00E6WLFJI,miss
 foundation for oily skin,concern,B01APSKNA8,miss
-foundation for oily skin,concern,B000F31A10,miss
 foundation for oily skin,concern,B007H2NWUY,miss
-foundation for oily skin,concern,B00SBDURRY,miss
 foundation for oily skin,concern,B001GMU7MM,miss
 foundation for oily skin,concern,B00FGSV6QS,miss
 foundation for oily skin,concern,B002T3SRRE,miss
@@ -536,7 +512,6 @@ electric shaver,product,B000PKKAFK,miss
 electric shaver,product,B001CJ693A,miss
 electric shaver,product,B001P5HCKK,miss
 electric shaver,product,B00009RB15,miss
-electric shaver,product,B000FRUL8O,miss
 electric shaver,product,B000PKMA2G,miss
 electric shaver,product,B00009RB1B,miss
 electric shaver,product,B000FEGUIW,miss
@@ -545,12 +520,10 @@ electric shaver,product,B000050FDP,miss
 electric shaver,product,B0001HYKBC,miss
 electric shaver,product,B0001HYKBM,miss
 mouthwash,product,B000052YD8,miss
-mouthwash,product,B002775INI,miss
 mouthwash,product,B0084Z0VTS,miss
 mouthwash,product,B001E0X72I,miss
 mouthwash,product,B005NCIJV2,miss
 mouthwash,product,B007KXO7LS,miss
-mouthwash,product,B00SU68LT8,miss
 mouthwash,product,B00UVAGPLM,miss
 mouthwash,product,B000ORS718,miss
 mouthwash,product,B005ADZZZ2,miss
@@ -622,7 +595,6 @@ nail polish,product,B00TJO6GOC,miss
 nail polish,product,B004GSX0ZY,miss
 nail polish,product,B002D4OVUG,miss
 nail polish,product,B004AGIOB2,miss
-nail polish,product,B00IA8QME2,miss
 nail polish,product,B00K3UEID2,miss
 nail polish,product,B00KOWH444,miss
 nail polish,product,B00KOWKUNQ,miss

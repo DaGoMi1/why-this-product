@@ -10,6 +10,7 @@ from functools import lru_cache
 import pandas as pd
 
 from ml.config import load_mvp_config, resolve_path
+from ml.eval.query_label import blob_for_item, find_spec, is_positive
 from ml.ranking import Ranker, load_ranker
 from ml.ranking.features import FeatureBuilder
 from ml.rerank.mmr import ItemSimilarity, mmr_rerank
@@ -87,10 +88,14 @@ class RecommendService:
             title = r.title
             if title is not None and isinstance(title, float) and pd.isna(title):
                 title = None
+            doc_text = getattr(r, "doc_text", None)
+            if doc_text is not None and isinstance(doc_text, float) and pd.isna(doc_text):
+                doc_text = None
             items_meta[str(r.item_id)] = {
                 "title": title,
                 "brand": brand,
                 "category": category,
+                "doc_text": None if doc_text is None else str(doc_text),
             }
 
         content = None
@@ -311,6 +316,29 @@ class RecommendService:
         )
 
     # 쿼리 기반 추천 (검색: pop을 섞지 않음)
+    def _blob_for(self, item_id: str) -> str:
+        meta = self.items_meta.get(item_id) or {}
+        return blob_for_item(
+            meta.get("title"),
+            meta.get("brand"),
+            meta.get("doc_text"),
+        )
+
+    def _lexical_gate_pool(
+        self,
+        query: str,
+        pool: list[tuple[str, float]],
+    ) -> list[tuple[str, float]]:
+        """Drop FAISS hits that fail QuerySpec tokens. Unknown queries: unchanged."""
+        spec = find_spec(query)
+        if spec is None:
+            return pool
+        return [
+            (iid, score)
+            for iid, score in pool
+            if is_positive(self._blob_for(iid), spec)
+        ]
+
     def recommend_from_query(
         self,
         query: str,
@@ -323,17 +351,21 @@ class RecommendService:
         content_k = int(self.cfg["retrieval"]["content_faiss_top_k"])
         t0 = time.perf_counter()
         pool = self.content.recommend_from_text(query, k=content_k)
+        pool = self._lexical_gate_pool(query, pool)
         retrieve_s = time.perf_counter() - t0
+        gated = find_spec(query) is not None
         if use_mmr and pool:
             t1 = time.perf_counter()
             lam = float(self.cfg.get("rerank", {}).get("lambda_diversity", 0.7))
             ranked = mmr_rerank(pool, final_k, lam, self.similarity)
             rerank_s = time.perf_counter() - t1
+            strategy = "content+mmr+lex" if gated else "content+mmr"
             return self._to_result(
-                ranked, "content+mmr", self._stage_ms(retrieve_s, 0.0, rerank_s)
+                ranked, strategy, self._stage_ms(retrieve_s, 0.0, rerank_s)
             )
+        strategy = "content+lex" if gated else "content"
         return self._to_result(
-            pool[:final_k], "content", self._stage_ms(retrieve_s, 0.0, 0.0)
+            pool[:final_k], strategy, self._stage_ms(retrieve_s, 0.0, 0.0)
         )
 
 # 추천 서비스 인스턴스 캐시

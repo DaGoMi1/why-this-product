@@ -1,32 +1,58 @@
 {
   "k": 10,
   "n_queries": 20,
-  "mean_recall_at_k": 0.0973,
-  "mean_precision_at_k": 0.36,
-  "mean_ndcg_at_k": 0.3823,
-  "n_miss": 692,
-  "n_fp": 62,
-  "strategy": "content+mmr",
+  "mean_recall_at_k": 0.1327,
+  "mean_precision_at_k": 0.545,
+  "mean_ndcg_at_k": 0.5123,
+  "n_miss": 664,
+  "n_fp": 0,
+  "strategy": "content+mmr+lex",
+  "by_intent": {
+    "concern": {
+      "n_queries": 6,
+      "mean_recall_at_k": 0.0958,
+      "mean_precision_at_k": 0.3833,
+      "mean_ndcg_at_k": 0.3867,
+      "n_miss": 217,
+      "n_fp": 0
+    },
+    "ingredient": {
+      "n_queries": 5,
+      "mean_recall_at_k": 0.1983,
+      "mean_precision_at_k": 0.86,
+      "mean_ndcg_at_k": 0.7223,
+      "n_miss": 132,
+      "n_fp": 0
+    },
+    "product": {
+      "n_queries": 9,
+      "mean_recall_at_k": 0.1209,
+      "mean_precision_at_k": 0.4778,
+      "mean_ndcg_at_k": 0.4793,
+      "n_miss": 315,
+      "n_fp": 0
+    }
+  },
   "per_query": [
     {
       "query": "hydrating serum",
       "intent": "concern",
       "n_gold": 40,
-      "recall_at_k": 0.0,
-      "precision_at_k": 0.0,
-      "ndcg_at_k": 0.0,
-      "n_miss": 40,
-      "n_fp": 9
+      "recall_at_k": 0.05,
+      "precision_at_k": 0.2,
+      "ndcg_at_k": 0.1447,
+      "n_miss": 38,
+      "n_fp": 0
     },
     {
       "query": "gentle cleanser",
       "intent": "concern",
       "n_gold": 40,
-      "recall_at_k": 0.05,
-      "precision_at_k": 0.2,
-      "ndcg_at_k": 0.1584,
-      "n_miss": 38,
-      "n_fp": 6
+      "recall_at_k": 0.1,
+      "precision_at_k": 0.4,
+      "ndcg_at_k": 0.3967,
+      "n_miss": 36,
+      "n_fp": 0
     },
     {
       "query": "moisturizer for dry skin",
@@ -36,47 +62,47 @@
       "precision_at_k": 0.0,
       "ndcg_at_k": 0.0,
       "n_miss": 40,
-      "n_fp": 4
+      "n_fp": 0
     },
     {
       "query": "mineral sunscreen",
       "intent": "ingredient",
       "n_gold": 40,
-      "recall_at_k": 0.075,
-      "precision_at_k": 0.3,
-      "ndcg_at_k": 0.2711,
-      "n_miss": 37,
-      "n_fp": 4
+      "recall_at_k": 0.175,
+      "precision_at_k": 0.7,
+      "ndcg_at_k": 0.6,
+      "n_miss": 33,
+      "n_fp": 0
     },
     {
       "query": "retinol night cream",
       "intent": "ingredient",
       "n_gold": 40,
-      "recall_at_k": 0.225,
-      "precision_at_k": 0.9,
-      "ndcg_at_k": 0.9337,
-      "n_miss": 31,
-      "n_fp": 1
+      "recall_at_k": 0.25,
+      "precision_at_k": 1.0,
+      "ndcg_at_k": 1.0,
+      "n_miss": 30,
+      "n_fp": 0
     },
     {
       "query": "niacinamide serum",
       "intent": "ingredient",
       "n_gold": 6,
       "recall_at_k": 0.1667,
-      "precision_at_k": 0.1,
-      "ndcg_at_k": 0.1513,
+      "precision_at_k": 1.0,
+      "ndcg_at_k": 0.3026,
       "n_miss": 5,
-      "n_fp": 9
+      "n_fp": 0
     },
     {
       "query": "eye cream dark circles",
       "intent": "concern",
       "n_gold": 40,
-      "recall_at_k": 0.1,
-      "precision_at_k": 0.4,
-      "ndcg_at_k": 0.3571,
-      "n_miss": 36,
-      "n_fp": 2
+      "recall_at_k": 0.125,
+      "precision_at_k": 0.5,
+      "ndcg_at_k": 0.4419,
+      "n_miss": 35,
+      "n_fp": 0
     },
     {
       "query": "hydrating lip balm",
@@ -86,47 +112,47 @@
       "precision_at_k": 0.6,
       "ndcg_at_k": 0.6461,
       "n_miss": 34,
-      "n_fp": 1
+      "n_fp": 0
     },
     {
       "query": "hydrating toner",
       "intent": "product",
       "n_gold": 38,
-      "recall_at_k": 0.0789,
-      "precision_at_k": 0.3,
-      "ndcg_at_k": 0.3786,
-      "n_miss": 35,
-      "n_fp": 7
+      "recall_at_k": 0.2632,
+      "precision_at_k": 1.0,
+      "ndcg_at_k": 1.0,
+      "n_miss": 28,
+      "n_fp": 0
     },
     {
       "query": "vitamin c serum",
       "intent": "ingredient",
       "n_gold": 40,
-      "recall_at_k": 0.15,
-      "precision_at_k": 0.6,
-      "ndcg_at_k": 0.6759,
-      "n_miss": 34,
-      "n_fp": 2
+      "recall_at_k": 0.175,
+      "precision_at_k": 0.7,
+      "ndcg_at_k": 0.7752,
+      "n_miss": 33,
+      "n_fp": 0
     },
     {
       "query": "hyaluronic acid serum",
       "intent": "ingredient",
       "n_gold": 40,
-      "recall_at_k": 0.2,
-      "precision_at_k": 0.8,
-      "ndcg_at_k": 0.8701,
-      "n_miss": 32,
-      "n_fp": 1
+      "recall_at_k": 0.225,
+      "precision_at_k": 0.9,
+      "ndcg_at_k": 0.9337,
+      "n_miss": 31,
+      "n_fp": 0
     },
     {
       "query": "sheet face mask",
       "intent": "product",
       "n_gold": 40,
-      "recall_at_k": 0.125,
-      "precision_at_k": 0.5,
-      "ndcg_at_k": 0.542,
-      "n_miss": 35,
-      "n_fp": 4
+      "recall_at_k": 0.175,
+      "precision_at_k": 0.7,
+      "ndcg_at_k": 0.7792,
+      "n_miss": 33,
+      "n_fp": 0
     },
     {
       "query": "mascara",
@@ -142,11 +168,11 @@
       "query": "foundation for oily skin",
       "intent": "concern",
       "n_gold": 40,
-      "recall_at_k": 0.075,
-      "precision_at_k": 0.3,
-      "ndcg_at_k": 0.4085,
-      "n_miss": 37,
-      "n_fp": 6
+      "recall_at_k": 0.15,
+      "precision_at_k": 0.6,
+      "ndcg_at_k": 0.6906,
+      "n_miss": 34,
+      "n_fp": 0
     },
     {
       "query": "perfume roll on oil",
@@ -162,21 +188,21 @@
       "query": "electric shaver",
       "intent": "product",
       "n_gold": 40,
-      "recall_at_k": 0.05,
-      "precision_at_k": 0.2,
-      "ndcg_at_k": 0.1585,
-      "n_miss": 38,
-      "n_fp": 2
+      "recall_at_k": 0.075,
+      "precision_at_k": 0.3,
+      "ndcg_at_k": 0.2368,
+      "n_miss": 37,
+      "n_fp": 0
     },
     {
       "query": "mouthwash",
       "intent": "product",
       "n_gold": 40,
-      "recall_at_k": 0.2,
-      "precision_at_k": 0.8,
-      "ndcg_at_k": 0.863,
-      "n_miss": 32,
-      "n_fp": 2
+      "recall_at_k": 0.25,
+      "precision_at_k": 1.0,
+      "ndcg_at_k": 1.0,
+      "n_miss": 30,
+      "n_fp": 0
     },
     {
       "query": "body lotion",
@@ -186,17 +212,17 @@
       "precision_at_k": 0.0,
       "ndcg_at_k": 0.0,
       "n_miss": 40,
-      "n_fp": 1
+      "n_fp": 0
     },
     {
       "query": "nail polish",
       "intent": "product",
       "n_gold": 40,
-      "recall_at_k": 0.1,
-      "precision_at_k": 0.4,
-      "ndcg_at_k": 0.52,
-      "n_miss": 36,
-      "n_fp": 1
+      "recall_at_k": 0.125,
+      "precision_at_k": 0.5,
+      "ndcg_at_k": 0.5868,
+      "n_miss": 35,
+      "n_fp": 0
     },
     {
       "query": "exfoliating scrub",
