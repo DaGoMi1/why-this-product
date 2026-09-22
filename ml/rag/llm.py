@@ -4,11 +4,15 @@ from __future__ import annotations
 
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 
 from openai import OpenAI
 
 from ml.rag.index import RagChunk
+
+# 상품별 호출은 유지하되 I/O 대기는 병렬로 겹친다.
+_DEFAULT_PARALLEL_WORKERS = 8
 
 
 class MissingOpenAIKeyError(RuntimeError):
@@ -148,6 +152,7 @@ def explain_items(
     query: str | None,
     model: str,
     select_k: int = 0,
+    max_workers: int | None = None,
 ) -> ExplainResult:
     allowed = [iid for iid in item_ids if iid in snippets]
     if not allowed:
@@ -155,10 +160,9 @@ def explain_items(
     key = require_api_key()
     client = OpenAI(api_key=key)
     user_q = (query or "").strip() or "이 상품을 추천하는 이유를 짧게 설명하세요."
-    prompt_tokens = 0
-    completion_tokens = 0
-    items: list[ExplainItem] = []
-    for iid in allowed:
+    workers = max(1, min(max_workers or _DEFAULT_PARALLEL_WORKERS, len(allowed)))
+
+    def _one(iid: str) -> tuple[ExplainItem, int, int]:
         snips = [{"text": c.text, "source": c.source} for c in snippets[iid]]
         reason, pin, pout = _reason_for_one(
             client,
@@ -168,9 +172,16 @@ def explain_items(
             snips,
             user_q,
         )
-        prompt_tokens += pin
-        completion_tokens += pout
-        items.append(ExplainItem(item_id=iid, reason=reason, snippets=snips))
+        return ExplainItem(item_id=iid, reason=reason, snippets=snips), pin, pout
+
+    prompt_tokens = 0
+    completion_tokens = 0
+    items: list[ExplainItem] = []
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for item, pin, pout in pool.map(_one, allowed):
+            items.append(item)
+            prompt_tokens += pin
+            completion_tokens += pout
     selected: list[str] = []
     if select_k > 0:
         rows = [{"item_id": it.item_id, "reason": it.reason} for it in items]
