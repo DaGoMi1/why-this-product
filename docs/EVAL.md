@@ -399,27 +399,31 @@ LLM은 추천 Recall을 올리지 않는다. 후보 `item_ids` 안에서만 한�
 | 가격 ungrounded | 프롬프트 금지. 코드 가드는 없음 | **0/125** (언급 0) |
 | 재고 ungrounded | 프롬프트 금지. 코드 가드는 없음 | **0/125** (언급 0) |
 | 설명 길이 | 한두 문장 (대략 40–120자) | **66.4자** (125/125 reasons, empty 0) |
-| p50 latency (explain 전체) | 수 초 (OpenAI, k=5) | **5.448s** (후보 5개, ASIN당 1호출, select_k=0) |
+| p50 latency (explain 전체) | 수 초 (OpenAI, k=5) | **5.448s** (직렬: 후보 5개, ASIN당 1호출, select_k=0) |
 | 요청당 비용 | gpt-4o-mini 기준 수 센트 미만 | **~$0.00032/요청** (25요청 합 $0.008040, 27822+6444 tok) |
 | 키 없음 | 503, fallback 없음 | **503** (`POST /api/explain`) |
 
 실험 후: `scripts/eval_rag.py`. 한 JSON에 N개를 맡기면 사유가 비는 경우가 있어 **상품마다 호출**한다. 후보 밖 ASIN·스니펫에 없는 가격·재고 언급은 이 표본에서 0. latency·비용은 왕복 수만큼 오르고 추천 Recall과 섞지 않는다. 키 없으면 설명 경로가 기동하지 않는다. 단계별 retrieve/rank/rerank 분해는 Phase 6 표를 쓴다.
 
+직렬 호출이 LLM 대기의 합이 되므로, 이후 **건별 호출은 유지한 채 ThreadPool로 병렬화**했다 (`ml/rag/llm.py`). 토큰·비용은 같고 대기만 겹친다. 재측정은 Phase 6.
+
 ## Phase 6: 요청 latency (보조)
 
 Recall과 섞지 않는다. `POST /api/recommend`는 `timings_ms.retrieve` / `rank` / `rerank`, `POST /api/explain`은 `timings_ms.rag`. 서빙 기본에서 rank는 0.
 
-표본: query `hydrating serum`, k=5, `use_mmr=true`, 이어서 같은 5개 explain (`select_k=0`).
+표본: query `hydrating serum`, k=5, `use_mmr=true`, 이어서 같은 5개 explain (`select_k=0`). `scripts/bench_explain_latency.py` (explain 3회).
 
 | 단계 | 경로 | ms |
 |------|------|----|
-| retrieve | content FAISS | **61.3** |
+| retrieve | content FAISS | **70.6** |
 | rank | 서빙 off | **0.0** |
-| rerank | MMR λ=0.5 | **12.3** |
-| recommend total | | **73.6** |
-| rag | 스니펫 FAISS + OpenAI (상품당 1호출) | **7885.6** |
+| rerank | MMR λ=0.5 | **21.2** |
+| recommend total | | **91.8** |
+| rag (직렬, 이전) | 스니펫 + OpenAI ASIN당 1호출 순차 | **7885.6** |
+| rag (병렬, 현재) | 동일 호출을 ThreadPool 병렬 | **p50 1401.6** (3회: 6624 / 1401 / 1109). cold 첫 회 제외 시 ~1.1–1.4s |
+| 요청당 비용 | gpt-4o-mini | **~$0.00030** (토큰량은 직렬과 동일 규모) |
 
-설명 지연은 거의 전부 OpenAI다. 추천 단계 합은 0.1초 아래. GitHub Actions는 넣지 않았다 (Phase 7도 CI는 범위 밖).
+설명 지연은 여전히 거의 전부 OpenAI다. 병렬화로 **직렬 합 대기 → max(개별 대기)** 에 가깝게 줄였다. 추천 단계 합은 0.1초 전후. GitHub Actions는 넣지 않았다 (Phase 7도 CI는 범위 밖).
 
 ## Phase 7: 검색 운영 (라벨 · 미탐/오탐 · 속성 품질)
 

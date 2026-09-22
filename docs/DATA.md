@@ -104,6 +104,7 @@ python -m scripts.train_two_tower
 python -m scripts.train_ranker
 python -m scripts.eval_smoke
 python -m scripts.eval_rag
+python -m scripts.bench_explain_latency
 python -m scripts.build_query_gold
 python -m scripts.report_catalog_quality
 python -m scripts.eval_query
