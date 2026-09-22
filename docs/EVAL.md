@@ -448,7 +448,7 @@ Gold: `python -m scripts.build_query_gold` → `data/eval/query_gold.jsonl`. 제
 
 성분 쿼리(retinol night cream P@10 0.90, hyaluronic acid serum 0.80, mouthwash 0.80)가 고민·범용 유형보다 낫다. `hydrating serum` / `moisturizer for dry skin` / `body lotion`은 kept gold 대비 P@10=0에 가깝다. body lotion은 카탈로그 매칭 836개인데 gold는 제목 짧은 40개만 남겨 **캡 아티팩트**가 크다(fp는 1건뿐). hydrating serum은 top-10 중 9건이 토큰 규칙을 깨서 진짜 오탐에 가깝다 (세럼이 아니거나 hydrat/moistur가 없음).
 
-CSV: `data/eval/query_misses.csv`, `data/eval/query_false_positives.csv`. 서빙 기본은 바꾸지 않음.
+CSV: `data/eval/query_misses.csv`, `data/eval/query_false_positives.csv`. Phase 7 시점 서빙은 content+MMR만 (lexical gate 없음).
 
 ### 카탈로그 속성 품질
 
@@ -469,6 +469,50 @@ Phase 4 unique category 상수와 같다. 속성 택소노미가 거의 없어 �
 ### 설명 스니펫
 
 쿼리–청크 lexical overlap + dense 순위. 쿼리 토큰이 있는 리뷰를 메타보다 우선. LLM은 스니펫에 없는 성분/효과 금지. UI는 사유 아래 `[meta]` / `[review]` 인용. 환각 보조 지표는 Phase 5와 같음 (`eval_rag`).
+
+## Phase 8: 운영 루프 (검색 lexical gate)
+
+**한 축만 변경:** 검색. 스니펫·프롬프트 코드는 그대로.  
+`QUERY_SPECS`에 있는 쿼리만 FAISS 풀에 gold와 같은 토큰 AND 게이트 → 그다음 MMR → top-k (`content+mmr+lex`). 스펙 밖 자유 쿼리는 필터 없음. 통과분이 k 미만이면 짧은 리스트를 그대로 반환(백필 없음).
+
+재측정: `python -m scripts.eval_query` / `python -m scripts.eval_rag`.
+
+### 검색 before → after
+
+| 지표 | Phase 7 (content+mmr) | Phase 8 (content+mmr+lex) |
+|------|------------------------|----------------------------|
+| mean Recall@10 | 0.0973 | **0.1327** |
+| mean Precision@10 | 0.3600 | **0.5450** |
+| mean NDCG@10 | 0.3823 | **0.5123** |
+| 미탐 | 692 | 664 |
+| 오탐 (토큰 규칙 위반) | 62 | **0** |
+
+오탐 0은 게이트가 eval의 `is_positive`와 동일해서, 규칙 위반 상품이 top-k에 안 들어오기 때문이다. kept-gold(캡 40) 밖이지만 규칙은 맞는 상품은 여전히 fp가 아니다.
+
+`hydrating serum`: Phase 7 top-10 중 fp 9 → Phase 8 **fp 0**, P@10 **0.20** (kept gold 대비; Recall@10 0.05).
+
+### intent별 (Phase 8)
+
+| intent | n | R@10 | P@10 | NDCG@10 | miss | fp |
+|--------|---|------|------|---------|------|-----|
+| concern | 6 | 0.0958 | 0.3833 | 0.3867 | 217 | 0 |
+| ingredient | 5 | 0.1983 | 0.8600 | 0.7223 | 132 | 0 |
+| product | 9 | 0.1209 | 0.4778 | 0.4793 | 315 | 0 |
+
+ingredient가 여전히 가장 강하고, concern은 개선됐지만 상대적 약세. `niacinamide serum`은 게이트 후 풀이 얇아 **n=1**만 반환된 적이 있음(짧은 리스트 허용).
+
+### RAG 보조 (재측정)
+
+검색 후보가 바뀌어 설명 대상 ASIN이 달라짐. 스니펫·프롬프트 미변경. 25요청, k=5, select_k=0, 병렬 explain.
+
+| 항목 | Phase 5/6 근처 | Phase 8 재측정 |
+|------|----------------|----------------|
+| reasons / empty | 125 / 0 | **121** / 0 (일부 쿼리 top-k < 5) |
+| 후보 밖 ASIN | 0 | **0** |
+| 가격·재고 ungrounded | 0 | **0** |
+| mean reason chars | 66.4 | **64.1** |
+| p50 latency (explain) | ~1.4s (병렬) | **1.282s** |
+| 요청당 비용 | ~$0.00030–0.00032 | **~$0.00036** (합 $0.009017 / 25) |
 
 ## LLM 평가
 

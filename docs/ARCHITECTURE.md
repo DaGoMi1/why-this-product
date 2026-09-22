@@ -37,7 +37,7 @@ flowchart LR
 ## 요청 흐름
 
 1. `POST /api/recommend` — `user_id` 또는 `query`
-2. Retrieve: `user_id`는 popularity top-200. `query`는 content FAISS(`content_faiss_top_k`). `use_hybrid`면 user_id만 pop ∪ iALS ∪ content를 RRF
+2. Retrieve: `user_id`는 popularity top-200. `query`는 content FAISS(`content_faiss_top_k`) 후, `QUERY_SPECS`에 있는 쿼리만 title/brand/doc_text 토큰 게이트(`content+mmr+lex`). `use_hybrid`면 user_id만 pop ∪ iALS ∪ content를 RRF
 3. Rank: `user_id` 기본은 retrieve 순서(popularity). `use_ranker`는 플래그만 — 부스팅은 pop@10을 못 넘겨 서빙 off. 쿼리는 랭커 없음
 4. Re-rank: 기본 MMR(`lambda_diversity=0.5`). `"use_mmr": false`면 `user_id`는 pop 순서, `query`는 content 점수 순서
 5. `POST /api/explain` — 이미 고른 `item_ids`(1–10)만. 설명용 RAG FAISS에서 해당 ASIN 스니펫을 **쿼리 조건(lexical overlap + dense)** 으로 고른 뒤 `gpt-4o-mini`가 한국어 한두 문장. 스니펫은 영어 원문이며 UI에 인용한다. `select_k>0`이면 후보 안 부분집합만. `OPENAI_API_KEY` 없으면 **503**
